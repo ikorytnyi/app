@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Таблиця множення / Multiplikationstabelle</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Arial Rounded MT Bold', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container { width: 100%; max-width: 600px; }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    h1 {
+      color: white;
+      font-size: 1.4rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,.3);
+      flex: 1;
+    }
+
+    .lang-switcher { display: flex; gap: 8px; }
+
+    .lang-btn {
+      background: rgba(255,255,255,.25);
+      border: 2px solid rgba(255,255,255,.5);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: bold;
+      transition: all .2s;
+    }
+    .lang-btn.active { background: white; color: #764ba2; }
+    .lang-btn:hover:not(.active) { background: rgba(255,255,255,.4); }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      margin-bottom: 16px;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: .85rem;
+      font-weight: bold;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Table selector ── */
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .table-btn {
+      background: #f0f0f0;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 8px 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #555;
+      transition: all .15s;
+      text-align: center;
+    }
+    .table-btn.selected { background: #764ba2; color: white; border-color: #764ba2; }
+    .table-btn:hover:not(.selected) { border-color: #764ba2; color: #764ba2; }
+
+    .select-all-btn {
+      width: 100%;
+      background: #f0f0f0;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 8px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: bold;
+      color: #555;
+      transition: all .15s;
+    }
+    .select-all-btn:hover { border-color: #764ba2; color: #764ba2; }
+
+    /* ── Slider rows ── */
+    .slider-section { border-top: 1px solid #f0f0f0; padding-top: 16px; margin-top: 16px; }
+
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+
+    .slider-input {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #e0e0e0;
+      outline: none;
+      cursor: pointer;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #764ba2;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(118,75,162,.4);
+    }
+    .slider-input::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #764ba2;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 6px rgba(118,75,162,.4);
+    }
+    .slider-val { font-weight: bold; color: #764ba2; font-size: 1.1rem; min-width: 44px; text-align: right; }
+
+    /* ── Start button ── */
+    .start-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 15px rgba(118,75,162,.4);
+      letter-spacing: 1px;
+    }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(118,75,162,.5); }
+    .start-btn:active { transform: translateY(0); }
+
+    /* ── No-tables warning ── */
+    .no-tables-msg { text-align: center; color: #f44336; font-weight: bold; padding: 16px 0 4px; font-size: 1rem; }
+
+    /* ── Session counter ── */
+    .session-counter { font-size: .95rem; font-weight: bold; color: #aaa; text-align: center; margin-bottom: 6px; }
+
+    /* ── Question area ── */
+    .question-area { text-align: center; padding: 16px 0 0; }
+
+    /* ── Timer ring ── */
+    .timer-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+
+    .timer-ring { width: 110px; height: 110px; filter: drop-shadow(0 2px 8px rgba(0,0,0,.12)); }
+    .timer-bg-circle { fill: none; stroke: #f0f0f0; stroke-width: 8; }
+    .timer-arc-circle { fill: none; stroke: #4CAF50; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 251.33; stroke-dashoffset: 0; }
+    .timer-text-val { font-size: 19px; font-weight: bold; font-family: 'Segoe UI', monospace, sans-serif; fill: #333; font-variant-numeric: tabular-nums; }
+
+    .question-text { font-size: 3.5rem; font-weight: bold; color: #333; margin-bottom: 20px; letter-spacing: 2px; animation: popIn .3s cubic-bezier(.175,.885,.32,1.275); }
+
+    @keyframes popIn { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .answer-row { display: flex; gap: 12px; justify-content: center; }
+
+    .answer-emoji { font-size: 2.2rem; width: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    .answer-input {
+      width: 120px;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      border: 3px solid #ddd;
+      border-radius: 16px;
+      padding: 10px;
+      outline: none;
+      color: #333;
+      transition: border-color .2s;
+    }
+    .answer-input:focus { border-color: #764ba2; }
+    .answer-input.correct { border-color: #4CAF50; background: #f0fff0; animation: shake-good .4s; }
+    .answer-input.wrong   { border-color: #f44336; background: #fff0f0; animation: shake .4s; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%  { transform: translateX(-8px); }
+      40%  { transform: translateX(8px); }
+      60%  { transform: translateX(-6px); }
+      80%  { transform: translateX(6px); }
+    }
+    @keyframes shake-good { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+    .check-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 15px rgba(118,75,162,.4);
+    }
+    .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(118,75,162,.5); }
+    .check-btn:active { transform: translateY(0); }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap { background: #f0f0f0; border-radius: 10px; height: 10px; margin-top: 20px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; transition: width .3s ease; }
+
+    /* ── Session result ── */
+    .session-result { text-align: center; padding: 24px 0 8px; }
+    .result-emoji  { font-size: 4rem; margin-bottom: 8px; animation: popIn .4s cubic-bezier(.175,.885,.32,1.275); }
+    .result-title  { font-size: 1.8rem; font-weight: bold; color: #333; margin-bottom: 6px; }
+    .result-score  { font-size: 1.15rem; color: #666; margin-bottom: 20px; }
+    .again-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white; border: none; border-radius: 16px;
+      padding: 12px 36px; font-size: 1.2rem; font-weight: bold;
+      cursor: pointer; transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 15px rgba(118,75,162,.4);
+    }
+    .again-btn:hover { transform: translateY(-2px); }
+    .again-btn:active { transform: translateY(0); }
+
+    /* ── Cumulative stats card ── */
+    .stats-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .stat-value { font-size: 2rem; font-weight: bold; color: #764ba2; }
+    .stat-label { font-size: .8rem; color: #888; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Confetti ── */
+    .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 999; }
+    .confetti-piece { position: absolute; width: 10px; height: 10px; top: -20px; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+    /* ── FAB ── */
+    .fab-parent {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+      z-index: 100;
+      transition: transform .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fab-parent:hover { transform: scale(1.1); }
+
+    /* ══════════════════════════════════════
+       Parent Panel
+    ══════════════════════════════════════ */
+    .panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 200;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .panel-inner {
+      background: #f5f5f5;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 620px;
+      padding: 24px;
+      margin: auto;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .panel-title { font-size: 1.4rem; font-weight: bold; color: #333; }
+
+    .close-panel-btn {
+      background: #e0e0e0;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #555;
+      transition: background .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .close-panel-btn:hover { background: #ccc; }
+
+    /* Period tabs */
+    .period-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+    .period-tab {
+      flex: 1;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 8px 4px;
+      font-size: .9rem;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .period-tab.active { background: #764ba2; border-color: #764ba2; color: white; }
+    .period-tab:hover:not(.active) { border-color: #764ba2; color: #764ba2; }
+
+    /* Summary cards */
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+    @media (max-width: 400px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+    .summary-card { background: white; border-radius: 16px; padding: 14px 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .summary-val { font-size: 1.5rem; font-weight: bold; color: #764ba2; }
+    .summary-lbl { font-size: .72rem; color: #888; font-weight: bold; text-transform: uppercase; letter-spacing: .8px; margin-top: 2px; }
+
+    /* Activity bars */
+    .panel-section { background: white; border-radius: 16px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .panel-section-title { font-size: .8rem; font-weight: bold; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    .activity-wrap { display: flex; align-items: flex-end; gap: 3px; height: 60px; }
+    .activity-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+    .activity-bar {
+      flex: 1;
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: #e0e0e0;
+      transition: height .3s ease;
+      min-height: 2px;
+    }
+    .activity-bar.has-data { background: linear-gradient(180deg, #667eea, #764ba2); }
+    .activity-label { font-size: .6rem; color: #bbb; font-weight: bold; white-space: nowrap; }
+
+    /* Table progress */
+    .table-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .table-row-label { font-weight: bold; color: #555; font-size: .95rem; min-width: 32px; }
+    .table-bar-wrap { flex: 1; background: #f0f0f0; border-radius: 8px; height: 16px; overflow: hidden; }
+    .table-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #667eea, #764ba2); transition: width .4s ease; }
+    .table-bar-fill.low  { background: linear-gradient(90deg, #f44336, #e57373); }
+    .table-bar-fill.mid  { background: linear-gradient(90deg, #ff9800, #ffb74d); }
+    .table-row-pct { font-size: .85rem; font-weight: bold; color: #764ba2; min-width: 36px; text-align: right; }
+    .table-row-attempts { font-size: .75rem; color: #bbb; min-width: 42px; }
+
+    /* Top-5 problems */
+    .problem-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: #fff5f5; margin-bottom: 8px; border: 1px solid #ffcdd2; }
+    .problem-item:last-child { margin-bottom: 0; }
+    .problem-eq { font-size: 1.1rem; font-weight: bold; color: #333; flex: 1; }
+    .problem-acc { font-size: .85rem; font-weight: bold; color: #f44336; }
+    .problem-att { font-size: .75rem; color: #bbb; }
+
+    .no-data-msg { text-align: center; color: #bbb; padding: 20px; font-size: .95rem; }
+
+    /* ── Progress card (player view) ── */
+    .progress-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      margin-bottom: 16px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .overall-label {
+      font-size: .75rem;
+      font-weight: bold;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    .overall-pct {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #764ba2;
+      line-height: 1;
+    }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: .95rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .overall-bar-wrap {
+      background: #f0f0f0;
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .overall-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 8px;
+      transition: width .6s ease;
+    }
+
+    /* Per-table mastery grid */
+    .table-mastery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .tmc {
+      text-align: center;
+      background: #f8f8f8;
+      border-radius: 10px;
+      padding: 7px 4px 6px;
+    }
+
+    .tmc-num {
+      font-size: .82rem;
+      font-weight: bold;
+      color: #777;
+      margin-bottom: 3px;
+    }
+
+    .tmc-pct {
+      font-size: .85rem;
+      font-weight: bold;
+    }
+
+    .tmc-bar { height: 4px; border-radius: 2px; background: #e8e8e8; margin-top: 4px; overflow: hidden; }
+    .tmc-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
+  </style>
+</head>
+<body>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="container">
+  <div class="header">
+    <h1 id="appTitle"></h1>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('uk')">🇺🇦 UA</button>
+      <button class="lang-btn"        onclick="setLang('de')">🇩🇪 DE</button>
+    </div>
+  </div>
+
+  <!-- Config card -->
+  <div class="card">
+    <div class="section-label" id="labelChoose"></div>
+    <div class="tables-grid" id="tablesGrid"></div>
+    <button class="select-all-btn" id="selectAllBtn" onclick="toggleAll()"></button>
+
+    <div class="slider-section">
+      <div class="section-label" id="labelTimerConfig"></div>
+      <div class="slider-row">
+        <input type="range" class="slider-input" id="timerSlider" min="1" max="10" step="1" value="5" oninput="setTimerDuration(this.value)">
+        <span class="slider-val" id="timerDurationDisplay">5 с</span>
+      </div>
+    </div>
+
+    <div class="slider-section">
+      <div class="section-label" id="labelCountConfig"></div>
+      <div class="slider-row">
+        <input type="range" class="slider-input" id="countSlider" min="10" max="100" step="10" value="30" oninput="setSessionTotal(this.value)">
+        <span class="slider-val" id="countDisplay">30</span>
+      </div>
+    </div>
+
+    <div id="noTablesMsg" class="no-tables-msg" style="display:none"></div>
+    <button class="start-btn" id="startBtn" onclick="startSession()"></button>
+
+    <!-- Active question -->
+    <div class="question-area" id="questionArea" style="display:none">
+      <div class="session-counter" id="sessionCounter"></div>
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 100 100">
+          <circle class="timer-bg-circle"  cx="50" cy="50" r="40"/>
+          <circle class="timer-arc-circle" cx="50" cy="50" r="40" id="timerArc" transform="rotate(-90,50,50)"/>
+          <text x="50" y="50" id="timerTextEl" text-anchor="middle" dominant-baseline="central" class="timer-text-val">5.00</text>
+        </svg>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <div class="answer-row">
+        <div class="answer-emoji" id="answerEmoji"></div>
+        <input type="number" class="answer-input" id="answerInput" min="0" max="999" autocomplete="off" inputmode="numeric">
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()"></button>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Session result -->
+    <div class="session-result" id="sessionResult" style="display:none">
+      <div class="result-emoji" id="resultEmoji"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-score" id="resultScore"></div>
+      <button class="again-btn" id="againBtn" onclick="startSession()"></button>
+    </div>
+  </div>
+
+  <!-- Player progress card -->
+  <div class="progress-card">
+    <div class="progress-top">
+      <div>
+        <div class="overall-label" id="overallLabel"></div>
+        <div class="overall-pct"   id="overallPct">—</div>
+      </div>
+      <div class="streak-badge" id="streakBadge" style="display:none">
+        🔥 <span id="streakCount">0</span>&nbsp;<span id="streakUnit"></span>
+      </div>
+    </div>
+    <div class="overall-bar-wrap">
+      <div class="overall-bar-fill" id="overallBar" style="width:0%"></div>
+    </div>
+    <div class="table-mastery-grid" id="tableMasteryGrid"></div>
+  </div>
+
+  <!-- Cumulative stats -->
+  <div class="stats-card">
+    <div class="stat-item">
+      <div class="stat-value" id="statCorrect">0</div>
+      <div class="stat-label" id="labelCorrect"></div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label" id="labelTotal"></div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="statPercent">—</div>
+      <div class="stat-label" id="labelPercent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab-parent" onclick="openParentPanel()" id="fabBtn" title="📊"></button>
+
+<!-- Parent panel overlay -->
+<div class="panel-overlay" id="parentPanel" style="display:none" onclick="onOverlayClick(event)">
+  <div class="panel-inner" id="panelInner">
+    <div class="panel-header">
+      <div class="panel-title" id="panelTitle"></div>
+      <button class="close-panel-btn" onclick="closeParentPanel()">✕</button>
+    </div>
+
+    <div class="period-tabs">
+      <button class="period-tab active" id="tabDay"   onclick="setPeriod('day')"></button>
+      <button class="period-tab"        id="tabWeek"  onclick="setPeriod('week')"></button>
+      <button class="period-tab"        id="tabMonth" onclick="setPeriod('month')"></button>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card"><div class="summary-val" id="sumQ">—</div><div class="summary-lbl" id="sumQLabel"></div></div>
+      <div class="summary-card"><div class="summary-val" id="sumAcc">—</div><div class="summary-lbl" id="sumAccLabel"></div></div>
+      <div class="summary-card"><div class="summary-val" id="sumSpd">—</div><div class="summary-lbl" id="sumSpdLabel"></div></div>
+      <div class="summary-card"><div class="summary-val" id="sumDiff">—</div><div class="summary-lbl" id="sumDiffLabel"></div></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title" id="activityTitle"></div>
+      <div class="activity-wrap" id="activityChart"></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title" id="tableProgressTitle"></div>
+      <div id="tableProgressRows"></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title" id="problemsTitle"></div>
+      <div id="problemsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Translations ───────────────────────────────────────────────────────────
+  const T = {
+    uk: {
+      title:         '✖️ Таблиця множення',
+      choose:        'Оберіть таблиці',
+      selectAll:     'Вибрати всі',
+      deselectAll:   'Зняти всі',
+      timerLabel:    'Час на відповідь',
+      timerSec:      (n) => `${n} с`,
+      countLabel:    'Кількість прикладів',
+      countVal:      (n) => `${n}`,
+      start:         '▶ Старт',
+      check:         'Перевірити',
+      sessionCounter:(done, total) => `Приклад ${done + 1} з ${total}`,
+      timeout:       (ans) => `⏱️ Час вийшов! Відповідь: ${ans}`,
+      resultTitle:   (pct) => pct >= 80 ? 'Чудово!' : pct >= 50 ? 'Непогано!' : 'Спробуй ще!',
+      resultEmoji:   (pct) => pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪',
+      resultScore:   (c, t, pct) => `${c} з ${t} правильно — ${pct}%`,
+      again:         '▶ Ще раз',
+      labelCorrect:  'Правильно',
+      labelTotal:    'Всього',
+      labelPercent:  'Результат',
+      noTables:      '⚠️ Оберіть хоча б одну таблицю!',
+      streakMsg:     (n) => n >= 5 ? `🔥 ${n} підряд!` : '',
+      // parent panel
+      fabTitle:      '📊',
+      panelTitle:    '📊 Статистика для батьків',
+      periodDay:     'Сьогодні',
+      periodWeek:    'Тиждень',
+      periodMonth:   'Місяць',
+      sumQ:          'Прикладів',
+      sumAcc:        'Точність',
+      sumSpd:        'Швидкість',
+      sumDiff:       'Складність',
+      actTitle:      'Активність по днях',
+      tableTitle:    'Прогрес по числах',
+      problemsTitle: 'Топ-5 складних прикладів',
+      noData:        'Немає даних за цей період',
+      noProblems:    'Недостатньо даних',
+      attempts:      (n) => `${n} спроб`,
+      secUnit:       (n) => `${n.toFixed(1)}с`,
+      // progress card
+      overallLabel:  'Загальне засвоєння',
+      streakUnit:    (n) => n === 1 ? 'день' : n <= 4 ? 'дні' : 'днів',
+    },
+    de: {
+      title:         '✖️ Multiplikation',
+      choose:        'Tabellen wählen',
+      selectAll:     'Alle wählen',
+      deselectAll:   'Alle abwählen',
+      timerLabel:    'Zeit pro Aufgabe',
+      timerSec:      (n) => `${n} s`,
+      countLabel:    'Anzahl der Aufgaben',
+      countVal:      (n) => `${n}`,
+      start:         '▶ Start',
+      check:         'Prüfen',
+      sessionCounter:(done, total) => `Aufgabe ${done + 1} von ${total}`,
+      timeout:       (ans) => `⏱️ Zeit abgelaufen! Antwort: ${ans}`,
+      resultTitle:   (pct) => pct >= 80 ? 'Ausgezeichnet!' : pct >= 50 ? 'Nicht schlecht!' : 'Nochmal versuchen!',
+      resultEmoji:   (pct) => pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪',
+      resultScore:   (c, t, pct) => `${c} von ${t} richtig — ${pct}%`,
+      again:         '▶ Nochmal',
+      labelCorrect:  'Richtig',
+      labelTotal:    'Gesamt',
+      labelPercent:  'Ergebnis',
+      noTables:      '⚠️ Bitte mindestens eine Tabelle wählen!',
+      streakMsg:     (n) => n >= 5 ? `🔥 ${n} in Folge!` : '',
+      // parent panel
+      fabTitle:      '📊',
+      panelTitle:    '📊 Elternstatistik',
+      periodDay:     'Heute',
+      periodWeek:    'Woche',
+      periodMonth:   'Monat',
+      sumQ:          'Aufgaben',
+      sumAcc:        'Genauigkeit',
+      sumSpd:        'Geschwindigkeit',
+      sumDiff:       'Schwierigkeit',
+      actTitle:      'Aktivität nach Tagen',
+      tableTitle:    'Fortschritt pro Zahl',
+      problemsTitle: 'Top-5 schwierige Aufgaben',
+      noData:        'Keine Daten für diesen Zeitraum',
+      noProblems:    'Nicht genug Daten',
+      attempts:      (n) => `${n} Versuche`,
+      secUnit:       (n) => `${n.toFixed(1)}s`,
+      // progress card
+      overallLabel:  'Gesamtfortschritt',
+      streakUnit:    (n) => n === 1 ? 'Tag' : 'Tage',
+    },
+  };
+
+  // ─── Constants ──────────────────────────────────────────────────────────────
+  const TIMER_R             = 40;
+  const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_R;
+  const FREEZE_DURATION     = 2500; // ms
+
+  // ─── State ──────────────────────────────────────────────────────────────────
+  let lang           = 'uk';
+  let selectedTables = new Set([2,3,4,5,6,7,8,9,10]);
+  let stats          = { correct: 0, total: 0 };
+  let streak         = 0;
+  let currentA       = 0, currentB = 0;
+  let answered       = false;
+
+  // Timer
+  let timerDuration  = 5;
+  let timerRAF       = null;
+  let timerStartTime = null;
+  let timerFrozen    = false;
+
+  // Session
+  let sessionTotal   = 30;
+  let sessionDone    = 0;
+  let sessionCorrect = 0;
+  let sessionActive  = false;
+
+  // Adaptive + stats
+  let factStats         = {};
+  let dailyStats        = {};
+  let questionStartTime = null;
+  let currentPeriod     = 'day';
+
+  // ─── LocalStorage ───────────────────────────────────────────────────────────
+  function saveSettings() {
+    localStorage.setItem('mult_lang',           lang);
+    localStorage.setItem('mult_timerDuration',  timerDuration);
+    localStorage.setItem('mult_sessionTotal',   sessionTotal);
+    localStorage.setItem('mult_selectedTables', JSON.stringify([...selectedTables]));
+  }
+
+  function loadSettings() {
+    const savedLang = localStorage.getItem('mult_lang');
+    if (savedLang && T[savedLang]) {
+      lang = savedLang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
+      if (btn) btn.classList.add('active');
+    }
+    const savedTimer = localStorage.getItem('mult_timerDuration');
+    if (savedTimer) { timerDuration = parseInt(savedTimer, 10); document.getElementById('timerSlider').value = timerDuration; }
+    const savedCount = localStorage.getItem('mult_sessionTotal');
+    if (savedCount) { sessionTotal = parseInt(savedCount, 10); document.getElementById('countSlider').value = sessionTotal; }
+    const savedTables = localStorage.getItem('mult_selectedTables');
+    if (savedTables) { try { selectedTables = new Set(JSON.parse(savedTables)); } catch (_) {} }
+  }
+
+  function saveFactStats() { localStorage.setItem('mult_factStats', JSON.stringify(factStats)); }
+  function loadFactStats()  {
+    try { const r = localStorage.getItem('mult_factStats'); factStats = r ? JSON.parse(r) : {}; }
+    catch (_) { factStats = {}; }
+  }
+
+  function saveDailyStats() { localStorage.setItem('mult_dailyStats', JSON.stringify(dailyStats)); }
+  function loadDailyStats()  {
+    try { const r = localStorage.getItem('mult_dailyStats'); dailyStats = r ? JSON.parse(r) : {}; }
+    catch (_) { dailyStats = {}; }
+  }
+
+  function todayKey() { return new Date().toISOString().slice(0, 10); }
+
+  // ─── Adaptive algorithm ─────────────────────────────────────────────────────
+  function recordResponse(a, b, isCorrect, responseTimeSec) {
+    // Per-fact stats
+    const key = `${a}x${b}`;
+    const f   = factStats[key] ?? { attempts:0, correct:0, totalTime:0, correctTimes:0, lastSeen:0, streak:0 };
+    f.attempts++;
+    f.lastSeen = Date.now();
+    if (isCorrect) { f.correct++; f.streak++; f.totalTime += responseTimeSec; f.correctTimes++; }
+    else           { f.streak = 0; }
+    factStats[key] = f;
+    saveFactStats();
+
+    // Daily stats
+    const dk = todayKey();
+    const d  = dailyStats[dk] ?? { questions:0, correct:0, responseTimeSum:0, timerDurSum:0 };
+    d.questions++;
+    if (isCorrect) d.correct++;
+    d.responseTimeSum += responseTimeSec;
+    d.timerDurSum     += timerDuration;
+    dailyStats[dk] = d;
+    saveDailyStats();
+
+    // Cumulative (in-memory)
+    stats.total++;
+    if (isCorrect) stats.correct++;
+    updateStatsDisplay();
+    updateProgressCard();
+  }
+
+  function pickNextFact() {
+    const now      = Date.now();
+    const allFacts = [];
+    for (const b of selectedTables)
+      for (let a = 1; a <= 10; a++)
+        allFacts.push([a, b]);
+
+    const scored = allFacts.map(([a, b]) => {
+      const f = factStats[`${a}x${b}`];
+      if (!f || f.attempts === 0) return { pair:[a,b], score:5 };
+      const errorRate  = 1 - f.correct / f.attempts;
+      const avgTime    = f.correctTimes > 0 ? f.totalTime / f.correctTimes : timerDuration;
+      const speedScore = Math.min(avgTime / timerDuration, 1);
+      const recency    = Math.min((now - f.lastSeen) / 3600000, 1);
+      const strPenalty = Math.min(f.streak, 5) / 5;
+      return { pair:[a,b], score: Math.max(3*errorRate + 2*speedScore + recency - strPenalty + 0.05, 0.05) };
+    });
+
+    let rand = Math.random() * scored.reduce((s,x) => s + x.score, 0);
+    for (const { pair, score } of scored) { rand -= score; if (rand <= 0) return pair; }
+    return scored[scored.length - 1].pair;
+  }
+
+  // ─── Player progress card ────────────────────────────────────────────────────
+  function learningStreak() {
+    let n = 0;
+    const now = new Date();
+    for (let i = 0; i < 366; i++) {
+      const d = new Date(now); d.setDate(d.getDate() - i);
+      if ((dailyStats[d.toISOString().slice(0,10)] || {}).questions > 0) n++;
+      else break;
+    }
+    return n;
+  }
+
+  function calcOverallMastery() {
+    let tot = 0, cor = 0;
+    for (const f of Object.values(factStats)) { tot += f.attempts; cor += f.correct; }
+    return tot > 0 ? Math.round((cor / tot) * 100) : null;
+  }
+
+  function calcTableMastery(b) {
+    let tot = 0, cor = 0;
+    for (let a = 1; a <= 10; a++) {
+      const f = factStats[`${a}x${b}`];
+      if (f) { tot += f.attempts; cor += f.correct; }
+    }
+    return tot > 0 ? Math.round((cor / tot) * 100) : null;
+  }
+
+  function updateProgressCard() {
+    const t       = T[lang];
+    const overall = calcOverallMastery();
+    const streak  = learningStreak();
+
+    document.getElementById('overallLabel').textContent = t.overallLabel;
+    document.getElementById('overallPct').textContent   = overall !== null ? overall + '%' : '—';
+    document.getElementById('overallBar').style.width   = (overall ?? 0) + '%';
+
+    const badge = document.getElementById('streakBadge');
+    if (streak > 0) {
+      badge.style.display = '';
+      document.getElementById('streakCount').textContent = streak;
+      document.getElementById('streakUnit').textContent  = t.streakUnit(streak);
+    } else {
+      badge.style.display = 'none';
+    }
+
+    const grid = document.getElementById('tableMasteryGrid');
+    grid.innerHTML = '';
+    for (let d = 1; d <= 10; d++) {
+      const pct   = calcTableMastery(d);
+      const color = pct === null ? '#ccc' : pct >= 80 ? '#4CAF50' : pct >= 50 ? '#ff9800' : '#f44336';
+      const cell  = document.createElement('div');
+      cell.className = 'tmc';
+      cell.innerHTML = `
+        <div class="tmc-num">×${d}</div>
+        <div class="tmc-pct" style="color:${color}">${pct !== null ? pct + '%' : '—'}</div>
+        <div class="tmc-bar"><div class="tmc-fill" style="width:${pct ?? 0}%;background:${color}"></div></div>`;
+      grid.appendChild(cell);
+    }
+  }
+
+  // ─── Init ───────────────────────────────────────────────────────────────────
+  function init() {
+    loadSettings();
+    loadFactStats();
+    loadDailyStats();
+    buildTableButtons();
+    renderUI();
+    document.getElementById('answerInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkAnswer();
+    });
+  }
+
+  function buildTableButtons() {
+    const grid = document.getElementById('tablesGrid');
+    grid.innerHTML = '';
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.className   = 'table-btn' + (selectedTables.has(i) ? ' selected' : '');
+      btn.textContent = `×${i}`;
+      btn.onclick     = () => toggleTable(i, btn);
+      grid.appendChild(btn);
+    }
+  }
+
+  // ─── Language ────────────────────────────────────────────────────────────────
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+    saveSettings();
+    renderUI();
+  }
+
+  function renderUI() {
+    const t = T[lang];
+    document.getElementById('appTitle').textContent              = t.title;
+    document.getElementById('labelChoose').textContent           = t.choose;
+    document.getElementById('labelTimerConfig').textContent      = t.timerLabel;
+    document.getElementById('timerDurationDisplay').textContent  = t.timerSec(timerDuration);
+    document.getElementById('labelCountConfig').textContent      = t.countLabel;
+    document.getElementById('countDisplay').textContent          = t.countVal(sessionTotal);
+    document.getElementById('startBtn').textContent              = t.start;
+    document.getElementById('checkBtn').textContent              = t.check;
+    document.getElementById('labelCorrect').textContent          = t.labelCorrect;
+    document.getElementById('labelTotal').textContent            = t.labelTotal;
+    document.getElementById('labelPercent').textContent          = t.labelPercent;
+    document.getElementById('noTablesMsg').textContent           = t.noTables;
+    document.getElementById('selectAllBtn').textContent          = selectedTables.size === 10 ? t.deselectAll : t.selectAll;
+    document.getElementById('fabBtn').title                      = t.fabTitle;
+    document.getElementById('fabBtn').textContent                = t.fabTitle;
+
+    if (sessionActive)
+      document.getElementById('sessionCounter').textContent = t.sessionCounter(sessionDone, sessionTotal);
+    if (document.getElementById('againBtn'))
+      document.getElementById('againBtn').textContent = t.again;
+
+    updateStatsDisplay();
+    updateProgressCard();
+
+    // Panel static labels (if open)
+    if (document.getElementById('parentPanel').style.display !== 'none')
+      renderParentPanel();
+  }
+
+  // ─── Table selection ─────────────────────────────────────────────────────────
+  function toggleTable(num, btn) {
+    if (selectedTables.has(num)) { selectedTables.delete(num); btn.classList.remove('selected'); }
+    else                         { selectedTables.add(num);    btn.classList.add('selected'); }
+    updateSelectAllBtn();
+    updateNoTablesMsg();
+    saveSettings();
+  }
+
+  function toggleAll() {
+    if (selectedTables.size === 10) selectedTables.clear();
+    else for (let i = 1; i <= 10; i++) selectedTables.add(i);
+    buildTableButtons();
+    updateSelectAllBtn();
+    updateNoTablesMsg();
+    saveSettings();
+  }
+
+  function updateSelectAllBtn() {
+    document.getElementById('selectAllBtn').textContent = selectedTables.size === 10 ? T[lang].deselectAll : T[lang].selectAll;
+  }
+
+  function updateNoTablesMsg() {
+    document.getElementById('noTablesMsg').style.display = selectedTables.size === 0 ? '' : 'none';
+  }
+
+  // ─── Session ─────────────────────────────────────────────────────────────────
+  function setSessionTotal(val) {
+    sessionTotal = parseInt(val, 10);
+    document.getElementById('countDisplay').textContent = T[lang].countVal(sessionTotal);
+    saveSettings();
+  }
+
+  function startSession() {
+    if (selectedTables.size === 0) return;
+    sessionDone = 0; sessionCorrect = 0; sessionActive = true; streak = 0;
+    document.getElementById('questionArea').style.display  = '';
+    document.getElementById('sessionResult').style.display = 'none';
+    document.getElementById('noTablesMsg').style.display   = 'none';
+    nextQuestion();
+  }
+
+  function endSession() {
+    sessionActive = false;
+    cancelAnimationFrame(timerRAF);
+    const pct = Math.round((sessionCorrect / sessionTotal) * 100);
+    const t   = T[lang];
+    document.getElementById('questionArea').style.display  = 'none';
+    document.getElementById('sessionResult').style.display = '';
+    document.getElementById('resultEmoji').textContent = t.resultEmoji(pct);
+    document.getElementById('resultTitle').textContent = t.resultTitle(pct);
+    document.getElementById('resultScore').textContent = t.resultScore(sessionCorrect, sessionTotal, pct);
+    document.getElementById('againBtn').textContent    = t.again;
+    if (pct >= 80) spawnConfetti();
+  }
+
+  // ─── Timer ───────────────────────────────────────────────────────────────────
+  function startTimer() {
+    timerFrozen = false; timerStartTime = performance.now();
+    timerRAF = requestAnimationFrame(timerTick);
+  }
+
+  function timerTick() {
+    if (timerFrozen) return;
+    const remaining = timerDuration * 1000 - (performance.now() - timerStartTime);
+    if (remaining <= 0) { renderTimer(0); onTimeout(); return; }
+    renderTimer(remaining / 1000);
+    timerRAF = requestAnimationFrame(timerTick);
+  }
+
+  function renderTimer(seconds) {
+    const frac   = Math.max(0, seconds / timerDuration);
+    const offset = TIMER_CIRCUMFERENCE * (1 - frac);
+    const color  = frac > 0.5 ? '#4CAF50' : frac > 0.25 ? '#ff9800' : '#f44336';
+    const arc    = document.getElementById('timerArc');
+    const text   = document.getElementById('timerTextEl');
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke           = color;
+    text.textContent           = seconds.toFixed(2);
+    text.style.fill            = color;
+  }
+
+  function freezeTimer() { timerFrozen = true; cancelAnimationFrame(timerRAF); }
+
+  function setTimerDuration(val) {
+    timerDuration = parseInt(val, 10);
+    document.getElementById('timerDurationDisplay').textContent = T[lang].timerSec(timerDuration);
+    saveSettings();
+    if (!answered && sessionActive) { cancelAnimationFrame(timerRAF); startTimer(); }
+  }
+
+  // ─── Question logic ──────────────────────────────────────────────────────────
+  function nextQuestion() {
+    if (!sessionActive || selectedTables.size === 0) return;
+    cancelAnimationFrame(timerRAF);
+    timerFrozen = false;
+
+    document.getElementById('sessionCounter').textContent = T[lang].sessionCounter(sessionDone, sessionTotal);
+    document.getElementById('progressBar').style.width   = (sessionDone / sessionTotal * 100) + '%';
+
+    [currentA, currentB] = pickNextFact();
+
+    const qEl = document.getElementById('questionText');
+    qEl.innerHTML       = `${currentA} × ${currentB} = <span id="qMark">?</span>`;
+    qEl.style.animation = 'none'; void qEl.offsetWidth; qEl.style.animation = '';
+
+    document.getElementById('answerEmoji').textContent = '';
+
+    const input = document.getElementById('answerInput');
+    input.value = ''; input.className = 'answer-input'; input.disabled = false; input.focus();
+
+    answered          = false;
+    questionStartTime = performance.now();
+    startTimer();
+  }
+
+  function afterFreeze() {
+    sessionDone++;
+    if (sessionDone >= sessionTotal) endSession();
+    else nextQuestion();
+  }
+
+  function onTimeout() {
+    if (answered) return;
+    answered = true;
+    const input = document.getElementById('answerInput');
+    input.disabled = true; input.className = 'answer-input wrong';
+    const correct = currentA * currentB;
+    document.getElementById('answerEmoji').textContent = '⏱️';
+    document.getElementById('qMark').outerHTML =
+      `<span id="qMark" style="color:#4CAF50;font-weight:900">${correct}</span>`;
+    recordResponse(currentA, currentB, false, timerDuration);
+    setTimeout(() => afterFreeze(), FREEZE_DURATION);
+  }
+
+  function checkAnswer() {
+    if (answered) return;
+    const input = document.getElementById('answerInput');
+    const val   = input.value.trim();
+    if (val === '') { input.focus(); return; }
+    freezeTimer();
+
+    const userAns      = parseInt(val, 10);
+    const correct      = currentA * currentB;
+    const responseTime = (performance.now() - questionStartTime) / 1000;
+    const isCorrect    = userAns === correct;
+
+    answered = true; input.disabled = true;
+
+    if (isCorrect) {
+      sessionCorrect++;
+      streak++;
+      input.className = 'answer-input correct';
+      document.getElementById('answerEmoji').textContent = streak >= 5 ? '🔥' : '✅';
+      recordResponse(currentA, currentB, true, responseTime);
+      if (streak >= 5) spawnConfetti();
+    } else {
+      streak = 0;
+      input.className = 'answer-input wrong';
+      document.getElementById('answerEmoji').textContent = '❌';
+      document.getElementById('qMark').outerHTML =
+        `<span id="qMark" style="color:#4CAF50;font-weight:900">${correct}</span>`;
+      recordResponse(currentA, currentB, false, responseTime);
+    }
+    setTimeout(() => afterFreeze(), FREEZE_DURATION);
+  }
+
+  // ─── Cumulative stats display ─────────────────────────────────────────────────
+  function updateStatsDisplay() {
+    document.getElementById('statCorrect').textContent = stats.correct;
+    document.getElementById('statTotal').textContent   = stats.total;
+    document.getElementById('statPercent').textContent = stats.total > 0
+      ? Math.round((stats.correct / stats.total) * 100) + '%' : '—';
+  }
+
+  // ─── Parent panel ─────────────────────────────────────────────────────────────
+  function openParentPanel() {
+    document.getElementById('parentPanel').style.display = 'flex';
+    renderParentPanel();
+  }
+
+  function closeParentPanel() {
+    document.getElementById('parentPanel').style.display = 'none';
+  }
+
+  function onOverlayClick(e) {
+    if (e.target === document.getElementById('parentPanel')) closeParentPanel();
+  }
+
+  function setPeriod(p) {
+    currentPeriod = p;
+    ['day','week','month'].forEach(id => {
+      document.getElementById('tab' + id.charAt(0).toUpperCase() + id.slice(1))
+        .classList.toggle('active', id === p);
+    });
+    renderParentPanel();
+  }
+
+  // Aggregate dailyStats over last `days` calendar days (1 = today only)
+  function aggregatePeriod(days) {
+    const result = { questions:0, correct:0, responseTimeSum:0, timerDurSum:0 };
+    const now    = new Date();
+    for (let i = 0; i < days; i++) {
+      const d   = new Date(now); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const rec = dailyStats[key];
+      if (rec) {
+        result.questions      += rec.questions;
+        result.correct        += rec.correct;
+        result.responseTimeSum += rec.responseTimeSum;
+        result.timerDurSum    += rec.timerDurSum;
+      }
+    }
+    return result;
+  }
+
+  // Return array of { label, questions } for last `count` days, newest last
+  function activityBars(count) {
+    const bars = [];
+    const now  = new Date();
+    for (let i = count - 1; i >= 0; i--) {
+      const d   = new Date(now); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const label = `${d.getDate()}/${d.getMonth() + 1}`;
+      bars.push({ label, questions: (dailyStats[key] || {}).questions || 0 });
+    }
+    return bars;
+  }
+
+  // Accuracy per table number (b value, 1–10)
+  function tableProgress() {
+    const prog = {};
+    for (let d = 1; d <= 10; d++) prog[d] = { attempts:0, correct:0 };
+    for (const [key, f] of Object.entries(factStats)) {
+      const b = parseInt(key.split('x')[1], 10);
+      if (prog[b]) { prog[b].attempts += f.attempts; prog[b].correct += f.correct; }
+    }
+    return prog;
+  }
+
+  // Top-5 facts by lowest accuracy (min 3 attempts)
+  function top5() {
+    return Object.entries(factStats)
+      .filter(([, f]) => f.attempts >= 3)
+      .map(([key, f]) => {
+        const [a, b] = key.split('x').map(Number);
+        return { a, b, attempts: f.attempts, accuracy: f.correct / f.attempts };
+      })
+      .sort((x, y) => x.accuracy - y.accuracy)
+      .slice(0, 5);
+  }
+
+  function renderParentPanel() {
+    const t    = T[lang];
+    const days = currentPeriod === 'day' ? 1 : currentPeriod === 'week' ? 7 : 30;
+    const barCount = currentPeriod === 'month' ? 30 : 7;
+
+    // Labels
+    document.getElementById('panelTitle').textContent     = t.panelTitle;
+    document.getElementById('tabDay').textContent         = t.periodDay;
+    document.getElementById('tabWeek').textContent        = t.periodWeek;
+    document.getElementById('tabMonth').textContent       = t.periodMonth;
+    document.getElementById('sumQLabel').textContent      = t.sumQ;
+    document.getElementById('sumAccLabel').textContent    = t.sumAcc;
+    document.getElementById('sumSpdLabel').textContent    = t.sumSpd;
+    document.getElementById('sumDiffLabel').textContent   = t.sumDiff;
+    document.getElementById('activityTitle').textContent  = t.actTitle;
+    document.getElementById('tableProgressTitle').textContent = t.tableTitle;
+    document.getElementById('problemsTitle').textContent  = t.problemsTitle;
+
+    // Summary
+    const agg = aggregatePeriod(days);
+    document.getElementById('sumQ').textContent   = agg.questions || '—';
+    document.getElementById('sumAcc').textContent = agg.questions
+      ? Math.round((agg.correct / agg.questions) * 100) + '%' : '—';
+    document.getElementById('sumSpd').textContent = agg.questions
+      ? t.secUnit(agg.responseTimeSum / agg.questions) : '—';
+    document.getElementById('sumDiff').textContent = agg.questions
+      ? t.secUnit(agg.timerDurSum / agg.questions) : '—';
+
+    // Activity bars
+    const bars   = activityBars(barCount);
+    const maxQ   = Math.max(...bars.map(b => b.questions), 1);
+    const chart  = document.getElementById('activityChart');
+    chart.innerHTML = '';
+    bars.forEach(b => {
+      const col  = document.createElement('div');
+      col.className = 'activity-bar-col';
+      const bar  = document.createElement('div');
+      bar.className = 'activity-bar' + (b.questions ? ' has-data' : '');
+      bar.style.height = Math.round((b.questions / maxQ) * 100) + '%';
+      bar.title = `${b.label}: ${b.questions}`;
+      const lbl  = document.createElement('div');
+      lbl.className = 'activity-label';
+      // Show fewer labels on mobile
+      lbl.textContent = barCount <= 7 ? b.label : (bars.indexOf(b) % 5 === 0 ? b.label : '');
+      col.appendChild(bar);
+      col.appendChild(lbl);
+      chart.appendChild(col);
+    });
+
+    // Table progress
+    const prog = tableProgress();
+    const rows = document.getElementById('tableProgressRows');
+    rows.innerHTML = '';
+    for (let d = 1; d <= 10; d++) {
+      const { attempts, correct } = prog[d];
+      const pct  = attempts ? Math.round((correct / attempts) * 100) : null;
+      const row  = document.createElement('div');
+      row.className = 'table-row';
+
+      const lbl = document.createElement('div'); lbl.className = 'table-row-label'; lbl.textContent = `×${d}`;
+      const wrap = document.createElement('div'); wrap.className = 'table-bar-wrap';
+      const fill = document.createElement('div');
+      fill.className = 'table-bar-fill' + (pct === null ? '' : pct < 50 ? ' low' : pct < 75 ? ' mid' : '');
+      fill.style.width = (pct ?? 0) + '%';
+      wrap.appendChild(fill);
+      const pctEl = document.createElement('div'); pctEl.className = 'table-row-pct';
+      pctEl.textContent = pct !== null ? pct + '%' : '—';
+      const attEl = document.createElement('div'); attEl.className = 'table-row-attempts';
+      attEl.textContent = attempts ? t.attempts(attempts) : '';
+
+      row.append(lbl, wrap, pctEl, attEl);
+      rows.appendChild(row);
+    }
+
+    // Top-5 problems
+    const list  = document.getElementById('problemsList');
+    const probs = top5();
+    list.innerHTML = '';
+    if (probs.length === 0) {
+      list.innerHTML = `<div class="no-data-msg">${t.noProblems}</div>`;
+    } else {
+      probs.forEach(({ a, b, attempts, accuracy }) => {
+        const item = document.createElement('div');
+        item.className = 'problem-item';
+        item.innerHTML = `
+          <div class="problem-eq">${a} × ${b} = ${a * b}</div>
+          <div class="problem-acc">${Math.round(accuracy * 100)}%</div>
+          <div class="problem-att">${t.attempts(attempts)}</div>`;
+        list.appendChild(item);
+      });
+    }
+  }
+
+  // ─── Confetti ────────────────────────────────────────────────────────────────
+  const COLORS = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bcd','#c77dff'];
+
+  function spawnConfetti() {
+    const container = document.getElementById('confettiContainer');
+    for (let i = 0; i < 50; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const size = 8 + Math.random() * 10;
+      const left = Math.random() * 100;
+      const dur  = 1.5 + Math.random() * 1.5;
+      const del  = Math.random() * 0.6;
+      piece.style.cssText = `left:${left}%;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>.5?'50%':'0%'};animation-duration:${dur}s;animation-delay:${del}s`;
+      container.appendChild(piece);
+      setTimeout(() => piece.remove(), (dur + del + 0.5) * 1000);
+    }
+  }
+
+  // ─── Start ───────────────────────────────────────────────────────────────────
+  init();
+</script>
+</body>
+</html>
