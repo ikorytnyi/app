@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Читач тексту</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Themes ── */
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #23263a;
+      --border: #2e3150;
+      --accent: #5c6ef8;
+      --accent-hover: #4a5ce6;
+      --accent-glow: rgba(92, 110, 248, 0.25);
+      --text: #e8eaf6;
+      --text-muted: #7c82a8;
+      --text-strong: #ffffff;
+      --text-h2: #d8daf0;
+      --text-h3: #c0c3de;
+      --highlight: rgba(92, 110, 248, 0.18);
+      --highlight-border: rgba(92, 110, 248, 0.45);
+      --highlight-word: #f9e04b;
+      --danger: #f05252;
+      --success: #22c55e;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f4f4f8;
+      --surface: #ffffff;
+      --surface2: #ebebf3;
+      --border: #d2d2e0;
+      --accent: #4a5ce6;
+      --accent-hover: #3a4cd6;
+      --accent-glow: rgba(74, 92, 230, 0.2);
+      --text: #1c1c2e;
+      --text-muted: #5e5e80;
+      --text-strong: #0a0a18;
+      --text-h2: #242440;
+      --text-h3: #363658;
+      --highlight: rgba(74, 92, 230, 0.1);
+      --highlight-border: rgba(74, 92, 230, 0.35);
+      --highlight-word: #b45309;
+      --danger: #dc2626;
+      --success: #16a34a;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background .25s, color .25s;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      transition: background .25s, border-color .25s;
+      flex-shrink: 0;
+    }
+
+    header svg { flex-shrink: 0; }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .header-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    /* Theme toggle button */
+    .btn-theme {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+      flex-shrink: 0;
+    }
+
+    .btn-theme:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-theme .icon-sun  { display: none; }
+    .btn-theme .icon-moon { display: block; }
+    [data-theme="light"] .btn-theme .icon-sun  { display: block; }
+    [data-theme="light"] .btn-theme .icon-moon { display: none; }
+
+    /* ── Layout ── */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      overflow: hidden;
+      height: calc(100vh - 61px);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background .25s, border-color .25s;
+    }
+
+    .sidebar-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: border-color .25s;
+    }
+
+    .sidebar-section h2 {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .drop-zone svg { margin-bottom: 8px; opacity: .5; }
+    .drop-zone p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+    .drop-zone p strong { color: var(--text); }
+    .drop-zone input[type="file"] { display: none; }
+
+    /* Controls */
+    .controls { display: flex; flex-direction: column; gap: 12px; }
+
+    .control-row { display: flex; flex-direction: column; gap: 5px; }
+
+    .control-row label {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .range-val {
+      font-size: 0.73rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+      transition: background .25s, border-color .2s;
+    }
+
+    select:focus { border-color: var(--accent); }
+
+    /* Playback buttons */
+    .playback {
+      padding: 16px 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s, box-shadow .15s, border-color .15s, color .15s;
+      outline: none;
+    }
+
+    .btn:active { transform: scale(.96); }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 0 16px var(--accent-glow); }
+    .btn-primary:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
+
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-secondary:disabled { opacity: .4; cursor: not-allowed; }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid transparent;
+      flex: 0;
+      padding: 9px 11px;
+    }
+    .btn-danger:hover { border-color: var(--danger); background: rgba(240,82,82,.08); }
+
+    /* Progress */
+    .progress-wrap { padding: 0 20px 14px; }
+
+    .progress-bar-bg {
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: background .25s;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width .1s linear;
+      width: 0%;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .timer-display {
+      text-align: center;
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin-top: 6px;
+      min-height: 1.1em;
+    }
+
+    /* Status */
+    .status-bar {
+      margin: 0 20px 14px;
+      padding: 7px 11px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      transition: background .25s;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--text-muted);
+      transition: background .3s;
+    }
+
+    .status-dot.speaking { background: var(--success); animation: pulse 1s infinite; }
+    .status-dot.paused   { background: #f59e0b; }
+    .status-dot.error    { background: var(--danger); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+
+    /* File info */
+    .file-info {
+      padding: 0 20px 14px;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+    .file-info strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+    /* Auto-scroll indicator */
+    .autoscroll-badge {
+      margin: 0 20px 12px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.7rem;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #f59e0b;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    .autoscroll-badge.visible { display: flex; }
+    .autoscroll-badge svg { flex-shrink: 0; }
+
+    /* ── Content panel ── */
+    .content-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+      transition: background .25s;
+    }
+
+    .content-toolbar {
+      padding: 10px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      flex-shrink: 0;
+      transition: background .25s, border-color .25s;
+    }
+
+    .content-toolbar .toolbar-name {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 9px;
+      opacity: .4;
+      pointer-events: none;
+    }
+
+    .search-wrap input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px 5px 30px;
+      font-size: 0.8rem;
+      color: var(--text);
+      outline: none;
+      width: 190px;
+      transition: border-color .2s, background .25s;
+    }
+
+    .search-wrap input:focus { border-color: var(--accent); }
+
+    .content-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px 56px;
+    }
+
+    .content-body::-webkit-scrollbar { width: 6px; }
+    .content-body::-webkit-scrollbar-track { background: transparent; }
+    .content-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 16px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .placeholder svg { opacity: .25; }
+    .placeholder p { font-size: 0.9rem; line-height: 1.6; }
+
+    #text-display {
+      font-size: 1rem;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      max-width: 72ch;
+      margin: 0 auto;
+    }
+
+    /* Sentence spans */
+    #text-display .sentence {
+      border-radius: 3px;
+      transition: background .18s;
+      cursor: pointer;
+    }
+
+    #text-display .sentence:hover { background: var(--highlight); }
+
+    #text-display .sentence.active {
+      background: var(--highlight);
+      outline: 1px solid var(--highlight-border);
+    }
+
+    /* Markdown */
+    #text-display .md-h1 { font-size: 1.75rem; font-weight: 700; display: block; margin: 1.2em 0 .4em; color: var(--text-strong); }
+    #text-display .md-h2 { font-size: 1.35rem; font-weight: 600; display: block; margin: 1em 0 .3em; color: var(--text-h2); }
+    #text-display .md-h3 { font-size: 1.1rem;  font-weight: 600; display: block; margin: .8em 0 .25em; color: var(--text-h3); }
+    #text-display .md-bold { font-weight: 700; color: var(--text-strong); }
+    #text-display .md-italic { font-style: italic; }
+    #text-display .md-code { font-family: 'Consolas', monospace; background: var(--surface2); padding: 1px 5px; border-radius: 4px; font-size: .87em; transition: background .25s; }
+    #text-display .md-hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; display: block; transition: border-color .25s; }
+    #text-display .md-blockquote { border-left: 3px solid var(--accent); padding-left: 14px; color: var(--text-muted); margin: .4em 0; display: block; }
+    #text-display .md-li { padding-left: 1.4em; position: relative; display: block; margin: .1em 0; }
+    #text-display .md-li::before { content: '•'; position: absolute; left: .4em; color: var(--accent); }
+
+    /* Search highlight */
+    mark {
+      background: rgba(249, 224, 75, 0.28);
+      color: var(--highlight-word);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
+    @media (max-width: 700px) {
+      main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); max-height: 48vh; overflow-y: auto; }
+      .content-body { padding: 20px; }
+      #text-display { font-size: 0.95rem; }
+      .header-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+  <h1>Читач тексту</h1>
+  <span class="header-sub">Web Speech API · Ukrainian TTS</span>
+  <button class="btn-theme" id="btn-theme" title="Перемкнути тему">
+    <!-- moon = shown in dark mode, sun = shown in light mode -->
+    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+  </button>
+</header>
+
+<main>
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <!-- File upload -->
+    <div class="sidebar-section">
+      <h2>Файл</h2>
+      <label class="drop-zone" id="drop-zone">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p><strong>Перетягніть файл</strong><br/>або натисніть для вибору<br/><small>.txt · .md</small></p>
+        <input type="file" id="file-input" accept=".txt,.md,text/plain,text/markdown" />
+      </label>
+    </div>
+
+    <!-- File info -->
+    <div class="file-info" id="file-info" style="display:none">
+      <strong id="file-name">—</strong>
+      <span id="file-meta"></span>
+    </div>
+
+    <!-- Speech controls -->
+    <div class="sidebar-section">
+      <h2>Налаштування мовлення</h2>
+      <div class="controls">
+
+        <div class="control-row">
+          <label>Голос</label>
+          <select id="voice-select">
+            <option value="">— завантаження голосів… —</option>
+          </select>
+        </div>
+
+        <div class="control-row">
+          <label>Швидкість <span class="range-val" id="rate-val">1.00×</span></label>
+          <input type="range" id="rate" min="0.5" max="2" step="0.05" value="1" />
+        </div>
+
+        <div class="control-row">
+          <label>Висота тону <span class="range-val" id="pitch-val">1.00</span></label>
+          <input type="range" id="pitch" min="0.5" max="2" step="0.05" value="1" />
+        </div>
+
+        <div class="control-row">
+          <label>Гучність <span class="range-val" id="volume-val">100%</span></label>
+          <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+        </div>
+
+        <div class="control-row">
+          <label>Пауза між реченнями <span class="range-val" id="pause-val">0 мс</span></label>
+          <input type="range" id="pause" min="0" max="3000" step="100" value="0" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Очікування файлу…</span>
+    </div>
+
+    <!-- Auto-scroll paused badge -->
+    <div class="autoscroll-badge" id="autoscroll-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+      </svg>
+      Авто-прокрутку призупинено
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bar-bg" id="progress-bg" title="Натисніть для переходу">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-label">
+        <span id="prog-cur">0</span>
+        <span id="prog-total">0 речень</span>
+      </div>
+      <div class="timer-display" id="time-left"></div>
+    </div>
+
+    <!-- Playback buttons -->
+    <div class="playback">
+      <button class="btn btn-secondary" id="btn-prev" disabled title="Попереднє речення">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="btn btn-primary" id="btn-play" disabled>
+        <svg id="icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <svg id="icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        <span id="btn-play-label">Відтворити</span>
+      </button>
+      <button class="btn btn-secondary" id="btn-next" disabled title="Наступне речення">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 8.5-6V18z"/></svg>
+      </button>
+      <button class="btn btn-danger" id="btn-stop" disabled title="Зупинити">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ── Content panel ── -->
+  <section class="content-panel">
+    <div class="content-toolbar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <span class="toolbar-name" id="toolbar-name">Немає файлу</span>
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Пошук…" />
+      </div>
+    </div>
+
+    <div class="content-body" id="content-body">
+      <div class="placeholder" id="placeholder">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        <p>Завантажте файл .txt або .md,<br/>щоб почати читання</p>
+      </div>
+      <div id="text-display" style="display:none"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  // ── State ──
+  const state = {
+    sentences: [],
+    currentIdx: 0,
+    speaking: false,
+    paused: false,
+    utterance: null,
+    voices: [],
+    fileName: '',
+    rawText: '',
+    searchTerm: '',
+    autoScroll: true,       // disabled when user manually scrolls
+    programmaticScroll: false, // true during our own scrollIntoView
+    sentenceStartTime: 0,
+    totalSpokenMs: 0,
+    totalSpokenChars: 0,
+    totalMs: 0,
+  };
+
+  // ── Elements ──
+  const $ = id => document.getElementById(id);
+  const dropZone         = $('drop-zone');
+  const fileInput        = $('file-input');
+  const voiceSel         = $('voice-select');
+  const rateSlider       = $('rate');
+  const pitchSlider      = $('pitch');
+  const volSlider        = $('volume');
+  const rateVal          = $('rate-val');
+  const pitchVal         = $('pitch-val');
+  const volumeVal        = $('volume-val');
+  const pauseSlider      = $('pause');
+  const pauseVal         = $('pause-val');
+  const btnPlay          = $('btn-play');
+  const btnStop          = $('btn-stop');
+  const btnPrev          = $('btn-prev');
+  const btnNext          = $('btn-next');
+  const iconPlay         = $('icon-play');
+  const iconPause        = $('icon-pause');
+  const playLabel        = $('btn-play-label');
+  const statusDot        = $('status-dot');
+  const statusText       = $('status-text');
+  const progFill         = $('progress-fill');
+  const progCur          = $('prog-cur');
+  const progTotal        = $('prog-total');
+  const textDisplay      = $('text-display');
+  const placeholder      = $('placeholder');
+  const fileInfo         = $('file-info');
+  const fileNameEl       = $('file-name');
+  const fileMeta         = $('file-meta');
+  const toolbarName      = $('toolbar-name');
+  const searchInput      = $('search-input');
+  const contentBody      = $('content-body');
+  const progressBg       = $('progress-bg');
+  const autoscrollBadge  = $('autoscroll-badge');
+  const timeLeftEl       = $('time-left');
+  const btnTheme         = $('btn-theme');
+
+  // ── Theme ──
+  const html = document.documentElement;
+  const savedTheme = localStorage.getItem('reader-theme') || 'dark';
+  html.setAttribute('data-theme', savedTheme);
+
+  btnTheme.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('reader-theme', next);
+  });
+
+  // ── Auto-scroll: detect manual scroll ──
+  // `wheel` only fires on user-initiated scrolling (not programmatic)
+  contentBody.addEventListener('wheel', () => {
+    if (!state.programmaticScroll) setAutoScroll(false);
+  }, { passive: true });
+
+  // Touch drag
+  contentBody.addEventListener('touchmove', () => {
+    if (!state.programmaticScroll) setAutoScroll(false);
+  }, { passive: true });
+
+  // Keyboard page-up/down while content is focused
+  contentBody.addEventListener('keydown', e => {
+    if (e.code === 'PageUp' || e.code === 'PageDown' || e.code === 'Home' || e.code === 'End') {
+      setAutoScroll(false);
+    }
+  });
+
+  function setAutoScroll(on) {
+    state.autoScroll = on;
+    autoscrollBadge.classList.toggle('visible', !on);
+  }
+
+  // ── Speech synthesis ──
+  const synth = window.speechSynthesis;
+
+  if (!synth) {
+    setStatus('error', 'Web Speech API не підтримується у вашому браузері');
+  }
+
+  function loadVoices() {
+    const voices = synth.getVoices();
+    state.voices = voices;
+    voiceSel.innerHTML = '';
+
+    const uk    = voices.filter(v => v.lang.startsWith('uk'));
+    const other = voices.filter(v => !v.lang.startsWith('uk'));
+
+    if (uk.length === 0 && voices.length === 0) {
+      voiceSel.innerHTML = '<option value="">— голоси не знайдено —</option>';
+      return;
+    }
+
+    if (uk.length > 0) {
+      const grp = document.createElement('optgroup');
+      grp.label = '🇺🇦 Українська';
+      uk.forEach(v => {
+        const o = document.createElement('option');
+        o.value = v.name;
+        o.textContent = `${v.name} (${v.lang})`;
+        if (v.default) o.selected = true;
+        grp.appendChild(o);
+      });
+      voiceSel.appendChild(grp);
+      if (!uk.some(v => v.default)) voiceSel.querySelector('option').selected = true;
+    }
+
+    if (other.length > 0) {
+      const grp = document.createElement('optgroup');
+      grp.label = 'Інші мови';
+      other.forEach(v => {
+        const o = document.createElement('option');
+        o.value = v.name;
+        o.textContent = `${v.name} (${v.lang})`;
+        grp.appendChild(o);
+      });
+      voiceSel.appendChild(grp);
+    }
+
+    if (uk.length === 0) {
+      setStatus('error', 'Українські голоси не знайдено. Перевірте мовні пакети ОС.');
+    }
+  }
+
+  synth.addEventListener('voiceschanged', loadVoices);
+  loadVoices();
+
+  // ── Language detection ──
+  function detectLanguage(text) {
+    const sample = text.slice(0, 2000);
+
+    const ukSpecific  = (sample.match(/[іїєґІЇЄҐ]/g)  || []).length;
+    const ruSpecific  = (sample.match(/[ыэъёЫЭЪЁ]/g)  || []).length;
+    const cyrillic    = (sample.match(/[а-яА-ЯіїєґІЇЄҐёЁыЫэЭъЪ]/g) || []).length;
+    const latin       = (sample.match(/[a-zA-Z]/g)      || []).length;
+    const german      = (sample.match(/[äöüßÄÖÜ]/g)     || []).length;
+    const french      = (sample.match(/[àâéèêëîïôùûçÀÂÉÈÊËÎÏÔÙÛÇ]/g) || []).length;
+    const spanish     = (sample.match(/[ñáéíóúüÑÁÉÍÓÚÜ¿¡]/g) || []).length;
+    const polish      = (sample.match(/[ąęóśźżćńłĄĘÓŚŹŻĆŃŁ]/g) || []).length;
+
+    if (cyrillic > latin) {
+      if (ukSpecific > ruSpecific) return 'uk';
+      if (ruSpecific > ukSpecific) return 'ru';
+      return 'uk';
+    }
+
+    if (latin > 0) {
+      const scores = { de: german, fr: french, es: spanish, pl: polish };
+      const top = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+      if (top[1] > 3) return top[0];
+      return 'en';
+    }
+
+    return 'en';
+  }
+
+  function autoSelectVoice(langCode) {
+    const voices = synth.getVoices();
+    if (!voices.length) return;
+    const exact  = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
+    const prefix = voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
+    const match  = exact || prefix;
+    if (match) voiceSel.value = match.name;
+  }
+
+  // ── File loading ──
+  function handleFile(file) {
+    if (!file) return;
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!['txt', 'md'].includes(ext)) {
+      setStatus('error', 'Непідтримуваний формат. Використовуйте .txt або .md');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.rawText  = e.target.result;
+      state.fileName = file.name;
+      processText(state.rawText, ext);
+
+      fileInfo.style.display = 'block';
+      fileNameEl.textContent = file.name;
+      const kb    = (file.size / 1024).toFixed(1);
+      const words = state.rawText.trim().split(/\s+/).length;
+      fileMeta.textContent = `${kb} КБ · ${words.toLocaleString('uk')} слів · ${state.sentences.length} речень`;
+      toolbarName.textContent = file.name;
+
+      autoSelectVoice(detectLanguage(state.rawText));
+      state.totalSpokenMs = 0;
+      state.totalSpokenChars = 0;
+      state.totalMs = estimateFromIdx(0);
+      stopSpeech();
+      state.currentIdx = 0;
+      setAutoScroll(true);
+      updateProgress();
+      enableControls(true);
+      setStatus('idle', 'Готово до відтворення');
+    };
+    reader.onerror = () => setStatus('error', 'Помилка читання файлу');
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  // ── Text processing ──
+  function processText(text, ext) {
+    placeholder.style.display = 'none';
+    textDisplay.style.display = 'block';
+    textDisplay.innerHTML = '';
+
+    state.sentences = splitSentences(text);
+    progTotal.textContent = `${state.sentences.length} речень`;
+
+    if (ext === 'md') {
+      renderMarkdown(text);
+    } else {
+      renderPlain(text);
+    }
+
+    if (state.searchTerm) applySearch(state.searchTerm);
+  }
+
+  function splitSentences(text) {
+    const raw = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const parts = raw.split(/(?<=[.!?…»])\s+|(?<=\n)\n+/);
+    return parts.map(s => s.trim()).filter(s => s.length > 1);
+  }
+
+  // ── Renderers (DOM-based, no string replacement) ──
+  function renderPlain(text) {
+    textDisplay.innerHTML = '';
+    const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    let pos = 0;
+
+    state.sentences.forEach((s, i) => {
+      const found = normalized.indexOf(s, pos);
+      if (found === -1) return;
+
+      if (found > pos) {
+        textDisplay.appendChild(document.createTextNode(normalized.slice(pos, found)));
+      }
+
+      const span = document.createElement('span');
+      span.className = 'sentence';
+      span.dataset.idx = String(i);
+      span.textContent = s;
+      textDisplay.appendChild(span);
+
+      pos = found + s.length;
+    });
+
+    if (pos < normalized.length) {
+      textDisplay.appendChild(document.createTextNode(normalized.slice(pos)));
+    }
+
+    bindSentenceClicks();
+  }
+
+  function renderMarkdown(text) {
+    textDisplay.innerHTML = '';
+    const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    let pos = 0;
+
+    // Pre-compute sentence positions in the text
+    const sentencePositions = [];
+    let searchPos = 0;
+    state.sentences.forEach((s, i) => {
+      const found = normalized.indexOf(s, searchPos);
+      if (found !== -1) {
+        sentencePositions.push({ idx: i, text: s, start: found, end: found + s.length });
+        searchPos = found + s.length;
+      }
+    });
+
+    function appendInline(parent, raw) {
+      const re = /(\*\*(.+?)\*\*|\*(.+?)\*|`(.+?)`)/g;
+      let last = 0, m;
+      while ((m = re.exec(raw)) !== null) {
+        if (m.index > last) parent.appendChild(document.createTextNode(raw.slice(last, m.index)));
+        let node;
+        if      (m[0].startsWith('**')) { node = document.createElement('span'); node.className = 'md-bold';   node.textContent = m[2]; }
+        else if (m[0].startsWith('*'))  { node = document.createElement('span'); node.className = 'md-italic'; node.textContent = m[3]; }
+        else                            { node = document.createElement('span'); node.className = 'md-code';   node.textContent = m[4]; }
+        parent.appendChild(node);
+        last = re.lastIndex;
+      }
+      if (last < raw.length) parent.appendChild(document.createTextNode(raw.slice(last)));
+    }
+
+    function flushText(upTo) {
+      if (pos >= upTo) return;
+      const chunk   = normalized.slice(pos, upTo);
+      const inChunk = sentencePositions.filter(sp => sp.start >= pos && sp.end <= upTo);
+
+      let localPos = 0;
+      inChunk.forEach(sp => {
+        const relStart = sp.start - pos;
+        const relEnd   = sp.end   - pos;
+        if (relStart > localPos) {
+          appendInline(textDisplay, chunk.slice(localPos, relStart));
+        }
+        const span = document.createElement('span');
+        span.className = 'sentence';
+        span.dataset.idx = String(sp.idx);
+        appendInline(span, sp.text);
+        textDisplay.appendChild(span);
+        localPos = relEnd;
+      });
+
+      if (localPos < chunk.length) {
+        appendInline(textDisplay, chunk.slice(localPos));
+      }
+      pos = upTo;
+    }
+
+    const lines = normalized.split('\n');
+    let lineStart = 0;
+
+    lines.forEach(line => {
+      const lineEnd = lineStart + line.length + 1;
+      const t = line.trim();
+
+      let tag = null, content = '';
+      if      (!t)                       { /* blank */ }
+      else if (/^#{3}\s/.test(t))        { tag = 'md-h3'; content = t.slice(4); }
+      else if (/^#{2}\s/.test(t))        { tag = 'md-h2'; content = t.slice(3); }
+      else if (/^#\s/.test(t))           { tag = 'md-h1'; content = t.slice(2); }
+      else if (/^---+$/.test(t))         { tag = 'md-hr'; }
+      else if (/^>\s/.test(t))           { tag = 'md-blockquote'; content = t.slice(2); }
+      else if (/^[-*]\s/.test(t))        { tag = 'md-li'; content = t.slice(2); }
+      else if (/^\d+\.\s/.test(t))       { tag = 'md-li'; content = t.replace(/^\d+\.\s/, ''); }
+
+      if (tag === 'md-hr') {
+        flushText(lineStart);
+        const el = document.createElement('span');
+        el.className = 'md-hr';
+        textDisplay.appendChild(el);
+        pos = lineEnd;
+      } else if (tag) {
+        flushText(lineStart);
+        const el = document.createElement('span');
+        el.className = tag;
+        appendInline(el, content);
+        textDisplay.appendChild(el);
+        textDisplay.appendChild(document.createTextNode('\n'));
+        pos = lineEnd;
+      }
+
+      lineStart = lineEnd;
+    });
+
+    flushText(normalized.length);
+    bindSentenceClicks();
+  }
+
+  function bindSentenceClicks() {
+    textDisplay.querySelectorAll('.sentence').forEach(el => {
+      el.addEventListener('click', () => jumpTo(parseInt(el.dataset.idx, 10)));
+    });
+  }
+
+  // ── Speech playback ──
+  function formatHMS(ms) {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    const p = n => String(n).padStart(2, '0');
+    return `${p(h)}:${p(m)}:${p(s)}`;
+  }
+
+  function updateTimer() {
+    if (!state.totalMs) { timeLeftEl.textContent = ''; return; }
+    const currentElapsed = (state.speaking && !state.paused && state.sentenceStartTime)
+      ? Date.now() - state.sentenceStartTime : 0;
+    const elapsed = state.totalSpokenMs + currentElapsed;
+    timeLeftEl.textContent = `${formatHMS(elapsed)} / ${formatHMS(state.totalMs)}`;
+  }
+
+  function estimateFromIdx(fromIdx) {
+    const remaining = state.sentences.slice(fromIdx);
+    if (!remaining.length) return 0;
+    if (state.totalSpokenMs > 0 && state.totalSpokenChars > 0) {
+      const msPerChar = state.totalSpokenMs / state.totalSpokenChars;
+      return remaining.reduce((s, t) => s + stripMd(t).length, 0) * msPerChar;
+    }
+    const words = remaining.join(' ').trim().split(/\s+/).length;
+    const wpm   = 130 * parseFloat(rateSlider.value);
+    return (words / wpm) * 60000;
+  }
+
+  function stripMd(text) {
+    return text
+      .replace(/^#{1,6}\s+/gm, '')       // headings
+      .replace(/\*\*(.+?)\*\*/g, '$1')   // bold
+      .replace(/\*(.+?)\*/g, '$1')       // italic
+      .replace(/`(.+?)`/g, '$1')         // inline code
+      .replace(/^>\s+/gm, '')            // blockquote
+      .replace(/^[-*]\s+/gm, '')         // unordered list
+      .replace(/^\d+\.\s+/gm, '')        // ordered list
+      .replace(/^---+$/gm, '')           // hr
+      .trim();
+  }
+
+  function getVoice() {
+    const name = voiceSel.value;
+    return synth.getVoices().find(v => v.name === name) || null;
+  }
+
+  function speakCurrent() {
+    if (!state.sentences.length) return;
+    if (state.currentIdx >= state.sentences.length) { finishPlayback(); return; }
+
+    synth.cancel();
+
+    const utt = new SpeechSynthesisUtterance(stripMd(state.sentences[state.currentIdx]));
+    utt.voice  = getVoice();
+    utt.lang   = utt.voice ? utt.voice.lang : 'uk-UA';
+    utt.rate   = parseFloat(rateSlider.value);
+    utt.pitch  = parseFloat(pitchSlider.value);
+    utt.volume = parseFloat(volSlider.value);
+
+    utt.onstart = () => {
+      state.speaking = true;
+      state.paused   = false;
+      state.sentenceStartTime = Date.now();
+      state.totalMs = state.totalSpokenMs + estimateFromIdx(state.currentIdx);
+      setStatus('speaking', `Читання речення ${state.currentIdx + 1} / ${state.sentences.length}`);
+      highlightCurrent();
+      updateProgress();
+      setPlayingUI(true);
+      scrollToActive();
+    };
+
+    utt.onend = () => {
+      if (state.speaking) {
+        const elapsed = Date.now() - state.sentenceStartTime;
+        state.totalSpokenMs    += elapsed;
+        state.totalSpokenChars += stripMd(state.sentences[state.currentIdx]).length;
+        state.currentIdx++;
+        state.totalMs = state.totalSpokenMs + estimateFromIdx(state.currentIdx);
+        const delay = parseInt(pauseSlider.value, 10);
+        if (delay > 0) setTimeout(speakCurrent, delay);
+        else speakCurrent();
+      }
+    };
+
+    utt.onerror = e => {
+      if (e.error === 'interrupted' || e.error === 'canceled') return;
+      setStatus('error', `Помилка TTS: ${e.error}`);
+    };
+
+    state.utterance = utt;
+    synth.speak(utt);
+  }
+
+  function togglePlay() {
+    if (!state.sentences.length) return;
+
+    if (state.speaking && !state.paused) {
+      synth.pause();
+      state.paused   = true;
+      state.speaking = false;
+      setPlayingUI(false);
+      setStatus('paused', 'Пауза');
+    } else if (state.paused) {
+      synth.resume();
+      state.paused   = false;
+      state.speaking = true;
+      state.sentenceStartTime = Date.now();
+      setPlayingUI(true);
+      setStatus('speaking', `Читання речення ${state.currentIdx + 1} / ${state.sentences.length}`);
+    } else {
+      speakCurrent();
+    }
+  }
+
+  function stopSpeech() {
+    state.speaking = false;
+    state.paused   = false;
+    if (state.utterance) {
+      state.utterance.onend   = null;
+      state.utterance.onerror = null;
+    }
+    synth.cancel();
+    state.sentenceStartTime = 0;
+    setPlayingUI(false);
+    updateTimer();
+    setStatus('idle', state.sentences.length ? 'Готово до відтворення' : 'Очікування файлу…');
+    highlightCurrent();
+    updateProgress();
+  }
+
+  // jumpTo re-enables auto-scroll (per requirement)
+  function jumpTo(idx, restoreAutoScroll = true) {
+    if (idx < 0) idx = 0;
+    if (idx >= state.sentences.length) idx = state.sentences.length - 1;
+
+    const wasPlaying = state.speaking || state.paused;
+
+    state.speaking = false;
+    state.paused   = false;
+    if (state.utterance) {
+      state.utterance.onend   = null;
+      state.utterance.onerror = null;
+    }
+    synth.cancel();
+
+    state.currentIdx = idx;
+    state.totalMs = state.totalSpokenMs + estimateFromIdx(idx);
+    updateTimer();
+
+    // Calling from prev/next/sentence-click always restores auto-scroll
+    if (restoreAutoScroll) setAutoScroll(true);
+
+    highlightCurrent();
+    updateProgress();
+    scrollToActive();
+
+    if (wasPlaying) {
+      setTimeout(() => speakCurrent(), 100);
+    } else {
+      setStatus('idle', `Речення ${idx + 1} вибрано`);
+    }
+  }
+
+  function finishPlayback() {
+    state.speaking   = false;
+    state.paused     = false;
+    state.currentIdx = 0;
+    state.sentenceStartTime = 0;
+    setPlayingUI(false);
+    updateTimer();
+    setStatus('idle', 'Читання завершено');
+    highlightCurrent();
+    updateProgress();
+    scrollToActive();
+  }
+
+  // ── UI helpers ──
+  function setStatus(type, msg) {
+    statusDot.className = 'status-dot' + (type !== 'idle' ? ' ' + type : '');
+    statusText.textContent = msg;
+  }
+
+  function setPlayingUI(playing) {
+    iconPlay.style.display  = playing ? 'none' : '';
+    iconPause.style.display = playing ? '' : 'none';
+    playLabel.textContent   = playing ? 'Пауза' : 'Відтворити';
+    btnStop.disabled        = !playing && !state.paused;
+  }
+
+  function enableControls(on) {
+    btnPlay.disabled = !on;
+    btnPrev.disabled = !on;
+    btnNext.disabled = !on;
+  }
+
+  function updateProgress() {
+    const total = state.sentences.length;
+    const cur   = state.currentIdx;
+    const pct   = total ? (cur / total) * 100 : 0;
+    progFill.style.width  = pct + '%';
+    progCur.textContent   = cur;
+    progTotal.textContent = `${total} речень`;
+    btnPrev.disabled = cur <= 0 || !total;
+    btnNext.disabled = cur >= total - 1 || !total;
+  }
+
+  function highlightCurrent() {
+    textDisplay.querySelectorAll('.sentence').forEach(el => {
+      el.classList.toggle('active', parseInt(el.dataset.idx, 10) === state.currentIdx);
+    });
+  }
+
+  function scrollToActive() {
+    if (!state.autoScroll) return;
+    const active = textDisplay.querySelector('.sentence.active');
+    if (!active) return;
+
+    // Mark as programmatic so wheel handler ignores this scroll event
+    state.programmaticScroll = true;
+    active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Smooth scroll in browsers takes ~400-600ms; clear flag after
+    setTimeout(() => { state.programmaticScroll = false; }, 800);
+  }
+
+  // ── Search ──
+  let searchTimeout;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      state.searchTerm = searchInput.value.trim();
+      applySearch(state.searchTerm);
+    }, 250);
+  });
+
+  function applySearch(term) {
+    textDisplay.querySelectorAll('mark').forEach(m => { m.outerHTML = m.innerHTML; });
+    if (!term) return;
+
+    const walker = document.createTreeWalker(textDisplay, NodeFilter.SHOW_TEXT);
+    const nodes  = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    const re = new RegExp(escapeRegex(term), 'gi');
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!re.test(text)) return;
+      re.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let last = 0, m;
+      while ((m = re.exec(text)) !== null) {
+        if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        const mark = document.createElement('mark');
+        mark.textContent = m[0];
+        frag.appendChild(mark);
+        last = re.lastIndex;
+      }
+      if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // ── Progress bar click ──
+  progressBg.addEventListener('click', e => {
+    if (!state.sentences.length) return;
+    const rect = progressBg.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    const idx  = Math.round(pct * (state.sentences.length - 1));
+    jumpTo(idx); // also re-enables auto-scroll
+  });
+
+  // ── Event listeners ──
+  btnPlay.addEventListener('click', togglePlay);
+  btnStop.addEventListener('click', () => { state.currentIdx = 0; stopSpeech(); });
+  btnPrev.addEventListener('click', () => jumpTo(state.currentIdx - 1));
+  btnNext.addEventListener('click', () => jumpTo(state.currentIdx + 1));
+
+  rateSlider.addEventListener('input',  () => rateVal.textContent   = parseFloat(rateSlider.value).toFixed(2) + '×');
+  pitchSlider.addEventListener('input', () => pitchVal.textContent  = parseFloat(pitchSlider.value).toFixed(2));
+  volSlider.addEventListener('input',   () => volumeVal.textContent = Math.round(volSlider.value * 100) + '%');
+  pauseSlider.addEventListener('input', () => pauseVal.textContent  = pauseSlider.value + ' мс');
+
+  // File drop
+  fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+
+  document.body.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  document.body.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  document.body.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
+    if (e.code === 'ArrowRight') { e.preventDefault(); jumpTo(state.currentIdx + 1); }
+    if (e.code === 'ArrowLeft')  { e.preventDefault(); jumpTo(state.currentIdx - 1); }
+    if (e.code === 'Escape')     { state.currentIdx = 0; stopSpeech(); }
+  });
+
+  // Chrome pauses synth on tab switch
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && state.speaking) synth.resume();
+  });
+
+  // ── Timer tick ──
+  setInterval(() => {
+    if (state.speaking && !state.paused) updateTimer();
+  }, 500);
+
+})();
+</script>
+</body>
+</html>
