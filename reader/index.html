@@ -124,7 +124,7 @@
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow-y: auto;
       transition: background .25s, border-color .25s;
     }
 
@@ -165,6 +165,58 @@
     .drop-zone p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
     .drop-zone p strong { color: var(--text); }
     .drop-zone input[type="file"] { display: none; }
+
+    .btn-paste {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+      width: 100%;
+    }
+    .btn-paste:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+    /* Background presets */
+    .bg-presets {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .bg-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: border-color .15s, transform .1s;
+      flex-shrink: 0;
+    }
+    .bg-swatch:hover  { border-color: var(--accent); transform: scale(1.1); }
+    .bg-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+
+    .bg-color-input {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      padding: 0;
+      cursor: pointer;
+      background: none;
+      transition: border-color .15s;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .bg-color-input:hover { border-color: var(--accent); }
 
     /* Controls */
     .controls { display: flex; flex-direction: column; gap: 12px; }
@@ -370,6 +422,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       flex: 1;
+      min-width: 0;
     }
 
     .search-wrap {
@@ -377,9 +430,10 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
+      gap: 4px;
     }
 
-    .search-wrap svg {
+    .search-wrap > svg {
       position: absolute;
       left: 9px;
       opacity: .4;
@@ -394,11 +448,40 @@
       font-size: 0.8rem;
       color: var(--text);
       outline: none;
-      width: 190px;
+      width: 150px;
       transition: border-color .2s, background .25s;
     }
 
     .search-wrap input:focus { border-color: var(--accent); }
+
+    .search-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .search-nav {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--text);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .search-nav.visible { display: flex; }
+    .search-nav:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+    mark { background: rgba(249, 224, 75, 0.28); color: var(--highlight-word); border-radius: 2px; padding: 0 2px; }
+    mark.active { background: rgba(249, 224, 75, 0.7); outline: 2px solid var(--highlight-word); border-radius: 2px; }
 
     .content-body {
       flex: 1;
@@ -460,13 +543,84 @@
     #text-display .md-li { padding-left: 1.4em; position: relative; display: block; margin: .1em 0; }
     #text-display .md-li::before { content: '•'; position: absolute; left: .4em; color: var(--accent); }
 
-    /* Search highlight */
-    mark {
-      background: rgba(249, 224, 75, 0.28);
-      color: var(--highlight-word);
-      border-radius: 2px;
-      padding: 0 2px;
+
+    /* ── Reading (fullscreen) mode ── */
+    body.reading-mode header { display: none; }
+    body.reading-mode .sidebar { display: none; }
+    body.reading-mode main {
+      grid-template-columns: 1fr;
+      height: 100vh;
     }
+    body.reading-mode .content-toolbar { display: none; }
+    body.reading-mode .content-body { padding: 56px 80px; }
+    body.reading-mode #text-display { max-width: 80ch; }
+
+    /* Floating reading controls */
+    .reading-bar {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+      z-index: 200;
+      user-select: none;
+    }
+    .reading-bar.visible { opacity: 1; pointer-events: all; }
+
+    .reading-bar .rb-timer {
+      font-size: 0.72rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      padding: 0 6px;
+      min-width: 130px;
+      text-align: center;
+    }
+
+    .rb-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .rb-btn:hover { background: var(--surface2); color: var(--accent); }
+    .rb-btn.rb-play { background: var(--accent); color: #fff; width: 36px; height: 36px; }
+    .rb-btn.rb-play:hover { background: var(--accent-hover); }
+    .rb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+    /* Fullscreen toggle button in toolbar */
+    .btn-reading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--text-muted);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-reading:hover { border-color: var(--accent); color: var(--accent); }
 
     @media (max-width: 700px) {
       main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
@@ -517,12 +671,40 @@
         <p><strong>Перетягніть файл</strong><br/>або натисніть для вибору<br/><small>.txt · .md</small></p>
         <input type="file" id="file-input" accept=".txt,.md,text/plain,text/markdown" />
       </label>
+      <button class="btn-paste" id="btn-paste" title="Вставити текст з буфера обміну (Ctrl+V)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+        </svg>
+        Вставити з буфера
+      </button>
     </div>
 
     <!-- File info -->
     <div class="file-info" id="file-info" style="display:none">
       <strong id="file-name">—</strong>
       <span id="file-meta"></span>
+    </div>
+
+    <!-- Display controls -->
+    <div class="sidebar-section">
+      <h2>Відображення</h2>
+      <div class="controls">
+        <div class="control-row">
+          <label>Розмір шрифту <span class="range-val" id="fontsize-val">16px</span></label>
+          <input type="range" id="fontsize" min="12" max="50" step="1" value="16" />
+        </div>
+        <div class="control-row">
+          <label>Фон тексту</label>
+          <div class="bg-presets">
+            <button class="bg-swatch active" id="bg-default" title="За замовчуванням" style="background:var(--bg)"></button>
+            <button class="bg-swatch" id="bg-warm"    title="Тепла папера"          style="background:#faf6ee"></button>
+            <button class="bg-swatch" id="bg-white"   title="Білий"                 style="background:#ffffff"></button>
+            <button class="bg-swatch" id="bg-dark"    title="Темний синій"          style="background:#12151f"></button>
+            <input  class="bg-color-input" type="color" id="bg-custom" title="Власний колір" value="#ffffff" />
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Speech controls -->
@@ -618,7 +800,20 @@
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input type="text" id="search-input" placeholder="Пошук…" />
+        <button class="search-nav" id="search-prev" title="Попереднє (Shift+Enter)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <span class="search-count" id="search-count"></span>
+        <button class="search-nav" id="search-next" title="Наступне (Enter)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
       </div>
+      <button class="btn-reading" id="btn-reading" title="Режим читання (R)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+          <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+        </svg>
+      </button>
     </div>
 
     <div class="content-body" id="content-body">
@@ -633,6 +828,29 @@
     </div>
   </section>
 </main>
+
+<!-- Floating reading-mode controls -->
+<div class="reading-bar" id="reading-bar">
+  <button class="rb-btn" id="rb-prev" title="Попереднє">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+  </button>
+  <button class="rb-btn rb-play" id="rb-play" title="Відтворити / Пауза">
+    <svg id="rb-icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <svg id="rb-icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+  </button>
+  <button class="rb-btn" id="rb-next" title="Наступне">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 8.5-6V18z"/></svg>
+  </button>
+  <div class="rb-sep"></div>
+  <span class="rb-timer" id="rb-timer">00:00:00 / 00:00:00</span>
+  <div class="rb-sep"></div>
+  <button class="rb-btn" id="rb-exit" title="Вийти з режиму читання (Esc)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+      <line x1="10" y1="14" x2="21" y2="3"/><line x1="3" y1="21" x2="14" y2="10"/>
+    </svg>
+  </button>
+</div>
 
 <script>
 (() => {
@@ -670,6 +888,8 @@
   const volumeVal        = $('volume-val');
   const pauseSlider      = $('pause');
   const pauseVal         = $('pause-val');
+  const fontsizeSlider   = $('fontsize');
+  const fontsizeVal      = $('fontsize-val');
   const btnPlay          = $('btn-play');
   const btnStop          = $('btn-stop');
   const btnPrev          = $('btn-prev');
@@ -689,11 +909,23 @@
   const fileMeta         = $('file-meta');
   const toolbarName      = $('toolbar-name');
   const searchInput      = $('search-input');
+  const searchCount      = $('search-count');
+  const searchPrevBtn    = $('search-prev');
+  const searchNextBtn    = $('search-next');
   const contentBody      = $('content-body');
   const progressBg       = $('progress-bg');
   const autoscrollBadge  = $('autoscroll-badge');
   const timeLeftEl       = $('time-left');
   const btnTheme         = $('btn-theme');
+  const btnReading       = $('btn-reading');
+  const readingBar       = $('reading-bar');
+  const rbPrev           = $('rb-prev');
+  const rbPlay           = $('rb-play');
+  const rbNext           = $('rb-next');
+  const rbExit           = $('rb-exit');
+  const rbTimer          = $('rb-timer');
+  const rbIconPlay       = $('rb-icon-play');
+  const rbIconPause      = $('rb-icon-pause');
 
   // ── Theme ──
   const html = document.documentElement;
@@ -705,6 +937,94 @@
     html.setAttribute('data-theme', next);
     localStorage.setItem('reader-theme', next);
   });
+
+  // ── Reading mode ──
+  let readingActive = false;
+  let barHideTimer  = null;
+
+  function showBar() {
+    readingBar.classList.add('visible');
+    clearTimeout(barHideTimer);
+    barHideTimer = setTimeout(() => readingBar.classList.remove('visible'), 3000);
+  }
+
+  function syncReadingBar() {
+    const playing = state.speaking && !state.paused;
+    rbIconPlay.style.display  = playing ? 'none' : '';
+    rbIconPause.style.display = playing ? '' : 'none';
+    rbTimer.textContent = timeLeftEl.textContent || '00:00:00 / 00:00:00';
+  }
+
+  function enterReading() {
+    readingActive = true;
+    document.body.classList.add('reading-mode');
+    document.documentElement.requestFullscreen?.().catch(() => {});
+    showBar();
+    syncReadingBar();
+  }
+
+  function exitReading() {
+    readingActive = false;
+    document.body.classList.remove('reading-mode');
+    readingBar.classList.remove('visible');
+    if (document.fullscreenElement) document.exitFullscreen?.();
+  }
+
+  btnReading.addEventListener('click', enterReading);
+  rbExit.addEventListener('click', exitReading);
+  rbPrev.addEventListener('click', () => jumpTo(state.currentIdx - 1));
+  rbNext.addEventListener('click', () => jumpTo(state.currentIdx + 1));
+  rbPlay.addEventListener('click', togglePlay);
+
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && readingActive) exitReading();
+  });
+
+  document.addEventListener('mousemove', () => { if (readingActive) showBar(); });
+  document.addEventListener('touchstart', () => { if (readingActive) showBar(); }, { passive: true });
+
+  // ── Font size ──
+  const savedFontSize = parseInt(localStorage.getItem('reader-fontsize') || '16', 10);
+  fontsizeSlider.value = savedFontSize;
+  fontsizeVal.textContent = savedFontSize + 'px';
+  textDisplay.style.fontSize = savedFontSize + 'px';
+
+  fontsizeSlider.addEventListener('input', () => {
+    const px = fontsizeSlider.value + 'px';
+    textDisplay.style.fontSize = px;
+    fontsizeVal.textContent = px;
+    localStorage.setItem('reader-fontsize', fontsizeSlider.value);
+  });
+
+  // ── Text background ──
+  const BG_PRESETS = {
+    'bg-default': '',
+    'bg-warm':    '#faf6ee',
+    'bg-white':   '#ffffff',
+    'bg-dark':    '#12151f',
+  };
+
+  const bgSwatches = Object.keys(BG_PRESETS).map(id => $(id));
+  const bgCustom   = $('bg-custom');
+
+  function applyBg(color, activeId) {
+    contentBody.style.background = color;
+    bgSwatches.forEach(el => el.classList.toggle('active', el.id === activeId));
+    bgCustom.classList.toggle('active', activeId === 'bg-custom');
+    localStorage.setItem('reader-bg-color', color);
+    localStorage.setItem('reader-bg-id',    activeId);
+  }
+
+  bgSwatches.forEach(el => {
+    el.addEventListener('click', () => applyBg(BG_PRESETS[el.id], el.id));
+  });
+
+  bgCustom.addEventListener('input', () => applyBg(bgCustom.value, 'bg-custom'));
+
+  const savedBgId    = localStorage.getItem('reader-bg-id')    || 'bg-default';
+  const savedBgColor = localStorage.getItem('reader-bg-color') || '';
+  if (savedBgId === 'bg-custom' && savedBgColor) bgCustom.value = savedBgColor;
+  applyBg(savedBgColor, savedBgId);
 
   // ── Auto-scroll: detect manual scroll ──
   // `wheel` only fires on user-initiated scrolling (not programmatic)
@@ -739,6 +1059,7 @@
   function loadVoices() {
     const voices = synth.getVoices();
     state.voices = voices;
+    const previousVoice = voiceSel.value;
     voiceSel.innerHTML = '';
 
     const uk    = voices.filter(v => v.lang.startsWith('uk'));
@@ -778,6 +1099,11 @@
     if (uk.length === 0) {
       setStatus('error', 'Українські голоси не знайдено. Перевірте мовні пакети ОС.');
     }
+
+    // Restore previously selected voice if it still exists in the new list
+    if (previousVoice && Array.from(voiceSel.options).some(o => o.value === previousVoice)) {
+      voiceSel.value = previousVoice;
+    }
   }
 
   synth.addEventListener('voiceschanged', loadVoices);
@@ -815,13 +1141,40 @@
   function autoSelectVoice(langCode) {
     const voices = synth.getVoices();
     if (!voices.length) return;
-    const exact  = voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase());
-    const prefix = voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
-    const match  = exact || prefix;
+    const lc = langCode.toLowerCase();
+    const preferred = { uk: 'uk-UA', de: 'de-DE', fr: 'fr-FR', es: 'es-ES', pl: 'pl-PL', ru: 'ru-RU', en: 'en-US' };
+    const exact  = voices.find(v => v.lang.toLowerCase() === lc);
+    const std    = preferred[lc] && voices.find(v => v.lang === preferred[lc]);
+    const prefix = voices.find(v => v.lang.toLowerCase().startsWith(lc));
+    const match  = exact || std || prefix;
     if (match) voiceSel.value = match.name;
   }
 
   // ── File loading ──
+  function handleText(rawText, fileName, ext) {
+    state.rawText  = rawText;
+    state.fileName = fileName;
+    processText(rawText, ext);
+
+    const words = rawText.trim().split(/\s+/).length;
+    const kb    = (new Blob([rawText]).size / 1024).toFixed(1);
+    fileInfo.style.display  = 'block';
+    fileNameEl.textContent  = fileName;
+    fileMeta.textContent    = `${kb} КБ · ${words.toLocaleString('uk')} слів · ${state.sentences.length} речень`;
+    toolbarName.textContent = fileName;
+
+    autoSelectVoice(detectLanguage(rawText));
+    state.totalSpokenMs    = 0;
+    state.totalSpokenChars = 0;
+    state.totalMs          = estimateFromIdx(0);
+    stopSpeech();
+    state.currentIdx = 0;
+    setAutoScroll(true);
+    updateProgress();
+    enableControls(true);
+    setStatus('idle', 'Готово до відтворення');
+  }
+
   function handleFile(file) {
     if (!file) return;
     const ext = file.name.split('.').pop().toLowerCase();
@@ -829,31 +1182,8 @@
       setStatus('error', 'Непідтримуваний формат. Використовуйте .txt або .md');
       return;
     }
-
     const reader = new FileReader();
-    reader.onload = e => {
-      state.rawText  = e.target.result;
-      state.fileName = file.name;
-      processText(state.rawText, ext);
-
-      fileInfo.style.display = 'block';
-      fileNameEl.textContent = file.name;
-      const kb    = (file.size / 1024).toFixed(1);
-      const words = state.rawText.trim().split(/\s+/).length;
-      fileMeta.textContent = `${kb} КБ · ${words.toLocaleString('uk')} слів · ${state.sentences.length} речень`;
-      toolbarName.textContent = file.name;
-
-      autoSelectVoice(detectLanguage(state.rawText));
-      state.totalSpokenMs = 0;
-      state.totalSpokenChars = 0;
-      state.totalMs = estimateFromIdx(0);
-      stopSpeech();
-      state.currentIdx = 0;
-      setAutoScroll(true);
-      updateProgress();
-      enableControls(true);
-      setStatus('idle', 'Готово до відтворення');
-    };
+    reader.onload  = e => handleText(e.target.result, file.name, ext);
     reader.onerror = () => setStatus('error', 'Помилка читання файлу');
     reader.readAsText(file, 'UTF-8');
   }
@@ -1204,6 +1534,7 @@
     iconPause.style.display = playing ? '' : 'none';
     playLabel.textContent   = playing ? 'Пауза' : 'Відтворити';
     btnStop.disabled        = !playing && !state.paused;
+    syncReadingBar();
   }
 
   function enableControls(on) {
@@ -1243,6 +1574,9 @@
 
   // ── Search ──
   let searchTimeout;
+  let searchMatches   = [];
+  let searchActiveIdx = -1;
+
   searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -1251,8 +1585,20 @@
     }, 250);
   });
 
+  searchInput.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    e.shiftKey ? searchGoPrev() : searchGoNext();
+  });
+
+  searchNextBtn.addEventListener('click', searchGoNext);
+  searchPrevBtn.addEventListener('click', searchGoPrev);
+
   function applySearch(term) {
     textDisplay.querySelectorAll('mark').forEach(m => { m.outerHTML = m.innerHTML; });
+    searchMatches   = [];
+    searchActiveIdx = -1;
+    updateSearchUI();
     if (!term) return;
 
     const walker = document.createTreeWalker(textDisplay, NodeFilter.SHOW_TEXT);
@@ -1276,6 +1622,40 @@
       if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
       node.parentNode.replaceChild(frag, node);
     });
+
+    searchMatches = Array.from(textDisplay.querySelectorAll('mark'));
+    if (searchMatches.length) {
+      searchActiveIdx = 0;
+      activateMatch(0, false);
+    }
+    updateSearchUI();
+  }
+
+  function activateMatch(idx, smooth = true) {
+    searchMatches.forEach((m, i) => m.classList.toggle('active', i === idx));
+    searchMatches[idx]?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'center' });
+  }
+
+  function updateSearchUI() {
+    const total   = searchMatches.length;
+    const hasHits = total > 0;
+    searchCount.textContent = hasHits ? `${searchActiveIdx + 1} / ${total}` : (state.searchTerm ? '0' : '');
+    searchPrevBtn.classList.toggle('visible', hasHits);
+    searchNextBtn.classList.toggle('visible', hasHits);
+  }
+
+  function searchGoNext() {
+    if (!searchMatches.length) return;
+    searchActiveIdx = (searchActiveIdx + 1) % searchMatches.length;
+    activateMatch(searchActiveIdx);
+    updateSearchUI();
+  }
+
+  function searchGoPrev() {
+    if (!searchMatches.length) return;
+    searchActiveIdx = (searchActiveIdx - 1 + searchMatches.length) % searchMatches.length;
+    activateMatch(searchActiveIdx);
+    updateSearchUI();
   }
 
   function escapeRegex(s) {
@@ -1313,13 +1693,32 @@
     handleFile(e.dataTransfer.files[0]);
   });
 
+  // ── Clipboard paste ──
+  function pasteFromClipboard() {
+    navigator.clipboard.readText().then(text => {
+      if (!text.trim()) return;
+      const looksLikeMd = /^#{1,6}\s|^\*\*|^>\s|^[-*]\s|\*\*.+\*\*/m.test(text);
+      handleText(text, 'Буфер обміну', looksLikeMd ? 'md' : 'txt');
+    }).catch(() => setStatus('error', 'Немає доступу до буфера обміну'));
+  }
+
+  $('btn-paste').addEventListener('click', pasteFromClipboard);
+
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+    if (e.code === 'KeyV' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      pasteFromClipboard();
+      return;
+    }
+
     if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
     if (e.code === 'ArrowRight') { e.preventDefault(); jumpTo(state.currentIdx + 1); }
     if (e.code === 'ArrowLeft')  { e.preventDefault(); jumpTo(state.currentIdx - 1); }
-    if (e.code === 'Escape')     { state.currentIdx = 0; stopSpeech(); }
+    if (e.code === 'KeyR')       { readingActive ? exitReading() : enterReading(); }
+    if (e.code === 'Escape')     { if (readingActive) { exitReading(); } else { state.currentIdx = 0; stopSpeech(); } }
   });
 
   // Chrome pauses synth on tab switch
@@ -1329,7 +1728,10 @@
 
   // ── Timer tick ──
   setInterval(() => {
-    if (state.speaking && !state.paused) updateTimer();
+    if (state.speaking && !state.paused) {
+      updateTimer();
+      if (readingActive) rbTimer.textContent = timeLeftEl.textContent;
+    }
   }, 500);
 
 })();
