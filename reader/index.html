@@ -50,11 +50,16 @@
       --success: #16a34a;
     }
 
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       transition: background .25s, color .25s;
@@ -338,6 +343,15 @@
       min-height: 1.1em;
     }
 
+    .percent-display {
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+      min-height: 1.1em;
+    }
+
     /* Status */
     .status-bar {
       margin: 0 20px 14px;
@@ -487,6 +501,9 @@
       flex: 1;
       overflow-y: auto;
       padding: 40px 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .content-body::-webkit-scrollbar { width: 6px; }
@@ -499,7 +516,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100%;
+      flex: 1;
+      width: 100%;
       gap: 16px;
       color: var(--text-muted);
       text-align: center;
@@ -513,8 +531,7 @@
       white-space: pre-wrap;
       word-break: break-word;
       color: var(--text);
-      max-width: 72ch;
-      margin: 0 auto;
+      width: 100%;
     }
 
     /* Sentence spans */
@@ -553,7 +570,6 @@
     }
     body.reading-mode .content-toolbar { display: none; }
     body.reading-mode .content-body { padding: 56px 80px; }
-    body.reading-mode #text-display { max-width: 80ch; }
 
     /* Floating reading controls */
     .reading-bar {
@@ -668,8 +684,8 @@
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        <p><strong>Перетягніть файл</strong><br/>або натисніть для вибору<br/><small>.txt · .md</small></p>
-        <input type="file" id="file-input" accept=".txt,.md,text/plain,text/markdown" />
+        <p><strong>Перетягніть файл</strong><br/>або натисніть для вибору<br/><small>.txt · .md · .pdf · .html</small></p>
+        <input type="file" id="file-input" accept=".txt,.md,.pdf,.html,.htm,text/plain,text/markdown,application/pdf,text/html" />
       </label>
       <button class="btn-paste" id="btn-paste" title="Вставити текст з буфера обміну (Ctrl+V)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -693,6 +709,10 @@
         <div class="control-row">
           <label>Розмір шрифту <span class="range-val" id="fontsize-val">16px</span></label>
           <input type="range" id="fontsize" min="12" max="50" step="1" value="16" />
+        </div>
+        <div class="control-row">
+          <label>Ширина тексту <span class="range-val" id="textwidth-val">72 ch</span></label>
+          <input type="range" id="textwidth" min="40" max="140" step="2" value="72" />
         </div>
         <div class="control-row">
           <label>Фон тексту</label>
@@ -766,6 +786,7 @@
         <span id="prog-total">0 речень</span>
       </div>
       <div class="timer-display" id="time-left"></div>
+      <div class="percent-display" id="percent-read"></div>
     </div>
 
     <!-- Playback buttons -->
@@ -822,7 +843,7 @@
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
         </svg>
-        <p>Завантажте файл .txt або .md,<br/>щоб почати читання</p>
+        <p>Завантажте файл .txt, .md, .html або .pdf,<br/>щоб почати читання</p>
       </div>
       <div id="text-display" style="display:none"></div>
     </div>
@@ -890,6 +911,8 @@
   const pauseVal         = $('pause-val');
   const fontsizeSlider   = $('fontsize');
   const fontsizeVal      = $('fontsize-val');
+  const textwSlider      = $('textwidth');
+  const textwVal         = $('textwidth-val');
   const btnPlay          = $('btn-play');
   const btnStop          = $('btn-stop');
   const btnPrev          = $('btn-prev');
@@ -994,6 +1017,19 @@
     textDisplay.style.fontSize = px;
     fontsizeVal.textContent = px;
     localStorage.setItem('reader-fontsize', fontsizeSlider.value);
+  });
+
+  // ── Text width ──
+  const savedTextWidth = parseInt(localStorage.getItem('reader-textwidth') || '72', 10);
+  textwSlider.value = savedTextWidth;
+  textwVal.textContent = savedTextWidth + ' ch';
+  textDisplay.style.maxWidth = savedTextWidth + 'ch';
+
+  textwSlider.addEventListener('input', () => {
+    const ch = textwSlider.value + 'ch';
+    textDisplay.style.maxWidth = ch;
+    textwVal.textContent = textwSlider.value + ' ch';
+    localStorage.setItem('reader-textwidth', textwSlider.value);
   });
 
   // ── Text background ──
@@ -1178,14 +1214,88 @@
   function handleFile(file) {
     if (!file) return;
     const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'pdf') { handlePdf(file); return; }
+    if (ext === 'html' || ext === 'htm') { handleHtml(file); return; }
     if (!['txt', 'md'].includes(ext)) {
-      setStatus('error', 'Непідтримуваний формат. Використовуйте .txt або .md');
+      setStatus('error', 'Непідтримуваний формат. Використовуйте .txt, .md, .html або .pdf');
       return;
     }
     const reader = new FileReader();
     reader.onload  = e => handleText(e.target.result, file.name, ext);
     reader.onerror = () => setStatus('error', 'Помилка читання файлу');
     reader.readAsText(file, 'UTF-8');
+  }
+
+  function handleHtml(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(e.target.result, 'text/html');
+      // Remove non-content elements
+      doc.querySelectorAll('script, style, noscript, meta, link, head').forEach(el => el.remove());
+      const body = doc.body || doc.documentElement;
+      // Preserve block-level spacing for better sentence splitting
+      body.querySelectorAll('p, div, h1, h2, h3, h4, h5, h6, li, br, tr').forEach(el => {
+        el.after(doc.createTextNode('\n'));
+      });
+      const text = (body.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+      if (!text) {
+        setStatus('error', 'HTML файл не містить тексту');
+        return;
+      }
+      handleText(text, file.name, 'txt');
+    };
+    reader.onerror = () => setStatus('error', 'Помилка читання файлу');
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  async function handlePdf(file) {
+    setStatus('loading', 'Завантаження PDF.js…');
+    try {
+      // Load PDF.js from CDN
+      const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+      const WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+      const pdfjsLib = await import(PDFJS_URL);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_URL;
+
+      setStatus('loading', 'Читання PDF…');
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const totalPages = pdf.numPages;
+      const pageTexts = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        setStatus('loading', `Читання PDF, сторінка ${i} / ${totalPages}…`);
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        // Join items; insert newline when y-position changes significantly
+        let lastY = null;
+        let pageText = '';
+        let addedNewline = false;
+        for (const item of content.items) {
+          if (item.str === undefined) continue;
+          const y = item.transform ? item.transform[5] : null;
+          if (!addedNewline && lastY !== null && y !== null && Math.abs(y - lastY) > 5) {
+            pageText += '\n';
+          }
+          pageText += item.str;
+          addedNewline = false;
+          if (item.hasEOL) { pageText += '\n'; addedNewline = true; }
+          lastY = y;
+        }
+        pageTexts.push(pageText.trim());
+      }
+
+      const fullText = pageTexts.join('\n\n');
+      if (!fullText.trim()) {
+        setStatus('error', 'PDF не містить тексту (можливо, це скановане зображення)');
+        return;
+      }
+      handleText(fullText, file.name, 'txt');
+    } catch (err) {
+      console.error(err);
+      setStatus('error', 'Помилка читання PDF: ' + err.message);
+    }
   }
 
   // ── Text processing ──
@@ -1208,7 +1318,8 @@
 
   function splitSentences(text) {
     const raw = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    const parts = raw.split(/(?<=[.!?…»])\s+|(?<=\n)\n+/);
+    // Split on sentence-ending punctuation, but NOT after abbreviations (vs., dr., nr. etc.)
+    const parts = raw.split(/(?<=\w{3,}[.])\s+|(?<=\*{1,2}[.])\s+|(?<=[!?…»]\*{0,2})\s+|(?<=\n)\n+/);
     return parts.map(s => s.trim()).filter(s => s.length > 1);
   }
 
@@ -1393,13 +1504,9 @@
     return synth.getVoices().find(v => v.name === name) || null;
   }
 
-  function speakCurrent() {
-    if (!state.sentences.length) return;
-    if (state.currentIdx >= state.sentences.length) { finishPlayback(); return; }
-
-    synth.cancel();
-
-    const utt = new SpeechSynthesisUtterance(stripMd(state.sentences[state.currentIdx]));
+  function makeUtterance(idx) {
+    const text = stripMd(state.sentences[idx]);
+    const utt  = new SpeechSynthesisUtterance(text);
     utt.voice  = getVoice();
     utt.lang   = utt.voice ? utt.voice.lang : 'uk-UA';
     utt.rate   = parseFloat(rateSlider.value);
@@ -1409,9 +1516,10 @@
     utt.onstart = () => {
       state.speaking = true;
       state.paused   = false;
+      state.currentIdx = idx;
       state.sentenceStartTime = Date.now();
-      state.totalMs = state.totalSpokenMs + estimateFromIdx(state.currentIdx);
-      setStatus('speaking', `Читання речення ${state.currentIdx + 1} / ${state.sentences.length}`);
+      state.totalMs = state.totalSpokenMs + estimateFromIdx(idx);
+      setStatus('speaking', `Читання речення ${idx + 1} / ${state.sentences.length}`);
       highlightCurrent();
       updateProgress();
       setPlayingUI(true);
@@ -1419,25 +1527,43 @@
     };
 
     utt.onend = () => {
-      if (state.speaking) {
-        const elapsed = Date.now() - state.sentenceStartTime;
-        state.totalSpokenMs    += elapsed;
-        state.totalSpokenChars += stripMd(state.sentences[state.currentIdx]).length;
-        state.currentIdx++;
-        state.totalMs = state.totalSpokenMs + estimateFromIdx(state.currentIdx);
-        const delay = parseInt(pauseSlider.value, 10);
-        if (delay > 0) setTimeout(speakCurrent, delay);
-        else speakCurrent();
-      }
+      if (!state.speaking) return;
+      const elapsed = Date.now() - state.sentenceStartTime;
+      state.totalSpokenMs    += elapsed;
+      state.totalSpokenChars += text.length;
+      state.currentIdx = idx + 1;
+      state.totalMs = state.totalSpokenMs + estimateFromIdx(state.currentIdx);
+      const delay = parseInt(pauseSlider.value, 10);
+      if (delay > 0) setTimeout(speakCurrent, delay);
+      else speakCurrent();
     };
 
     utt.onerror = e => {
       if (e.error === 'interrupted' || e.error === 'canceled') return;
+      if (e.error === 'synthesis-failed') {
+        // text likely empty or unsupported — skip to next
+        state.currentIdx = idx + 1;
+        speakCurrent();
+        return;
+      }
       setStatus('error', `Помилка TTS: ${e.error}`);
     };
 
-    state.utterance = utt;
-    synth.speak(utt);
+    return utt;
+  }
+
+  function speakCurrent() {
+    if (!state.sentences.length) return;
+    if (state.currentIdx >= state.sentences.length) { finishPlayback(); return; }
+    // Skip sentences that have no speakable text after stripping markup
+    while (state.currentIdx < state.sentences.length &&
+           !stripMd(state.sentences[state.currentIdx]).trim()) {
+      state.currentIdx++;
+    }
+    if (state.currentIdx >= state.sentences.length) { finishPlayback(); return; }
+    synth.cancel();
+    state.utterance = makeUtterance(state.currentIdx);
+    synth.speak(state.utterance);
   }
 
   function togglePlay() {
@@ -1550,6 +1676,7 @@
     progFill.style.width  = pct + '%';
     progCur.textContent   = cur;
     progTotal.textContent = `${total} речень`;
+    $('percent-read').textContent = total ? `${pct.toFixed(1)}% прочитано` : '';
     btnPrev.disabled = cur <= 0 || !total;
     btnNext.disabled = cur >= total - 1 || !total;
   }
