@@ -187,21 +187,50 @@
 
     .answer-emoji { font-size: 2.2rem; width: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    .answer-input {
-      width: 120px;
+    .answer-display {
+      min-width: 120px;
       font-size: 2rem;
       font-weight: bold;
       text-align: center;
-      border: 3px solid #ddd;
+      border: 3px solid #764ba2;
       border-radius: 16px;
-      padding: 10px;
-      outline: none;
+      padding: 10px 16px;
       color: #333;
-      transition: border-color .2s;
+      background: white;
+      transition: border-color .2s, background .2s;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .answer-input:focus { border-color: #764ba2; }
-    .answer-input.correct { border-color: #4CAF50; background: #f0fff0; animation: shake-good .4s; }
-    .answer-input.wrong   { border-color: #f44336; background: #fff0f0; animation: shake .4s; }
+    .answer-display:empty::after { content: '|'; opacity: .4; animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%,100% { opacity: .4; } 50% { opacity: 0; } }
+    .answer-display.correct { border-color: #4CAF50; background: #f0fff0; animation: shake-good .4s; }
+    .answer-display.wrong   { border-color: #f44336; background: #fff0f0; animation: shake .4s; }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .numpad-btn {
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding: 14px 0;
+      border: 2px solid #ddd;
+      border-radius: 14px;
+      background: white;
+      color: #333;
+      cursor: pointer;
+      transition: background .1s, transform .1s;
+      user-select: none;
+    }
+    .numpad-btn:active { background: #ede7f6; transform: scale(.94); }
+    .numpad-btn.numpad-backspace { background: #f5f5f5; font-size: 1.4rem; }
+    .numpad-btn.numpad-clear { background: #fdecea; color: #c62828; font-size: 1.3rem; }
+    .numpad-btn:disabled { opacity: .35; cursor: default; }
+    .numpad-btn.numpad-empty { visibility: hidden; }
 
     @keyframes shake {
       0%,100% { transform: translateX(0); }
@@ -535,8 +564,22 @@
       <div class="question-text" id="questionText"></div>
       <div class="answer-row">
         <div class="answer-emoji" id="answerEmoji"></div>
-        <input type="number" class="answer-input" id="answerInput" min="0" max="999" autocomplete="off" inputmode="numeric">
+        <div class="answer-display" id="answerDisplay"></div>
         <button class="check-btn" id="checkBtn" onclick="checkAnswer()"></button>
+      </div>
+      <div class="numpad" id="numpad">
+        <button class="numpad-btn" onclick="numpadPress('1')">1</button>
+        <button class="numpad-btn" onclick="numpadPress('2')">2</button>
+        <button class="numpad-btn" onclick="numpadPress('3')">3</button>
+        <button class="numpad-btn" onclick="numpadPress('4')">4</button>
+        <button class="numpad-btn" onclick="numpadPress('5')">5</button>
+        <button class="numpad-btn" onclick="numpadPress('6')">6</button>
+        <button class="numpad-btn" onclick="numpadPress('7')">7</button>
+        <button class="numpad-btn" onclick="numpadPress('8')">8</button>
+        <button class="numpad-btn" onclick="numpadPress('9')">9</button>
+        <button class="numpad-btn numpad-clear" onclick="numpadClear()">✕</button>
+        <button class="numpad-btn" onclick="numpadPress('0')">0</button>
+        <button class="numpad-btn numpad-backspace" onclick="numpadBackspace()">⌫</button>
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
@@ -730,6 +773,7 @@
   let streak         = 0;
   let currentA       = 0, currentB = 0;
   let answered       = false;
+  let answerValue    = '';
 
   // Timer
   let timerDuration  = 5;
@@ -906,8 +950,37 @@
     loadDailyStats();
     buildTableButtons();
     renderUI();
-    document.getElementById('answerInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') checkAnswer();
+    document.addEventListener('keydown', (e) => {
+      if (answered) return;
+      if (e.key >= '0' && e.key <= '9') numpadPress(e.key);
+      else if (e.key === 'Backspace') numpadBackspace();
+      else if (e.key === 'Escape') numpadClear();
+      else if (e.key === 'Enter') checkAnswer();
+    });
+  }
+
+  function numpadPress(digit) {
+    if (answered) return;
+    if (answerValue.length >= 3) return;
+    answerValue += digit;
+    document.getElementById('answerDisplay').textContent = answerValue;
+  }
+
+  function numpadBackspace() {
+    if (answered) return;
+    answerValue = answerValue.slice(0, -1);
+    document.getElementById('answerDisplay').textContent = answerValue;
+  }
+
+  function numpadClear() {
+    if (answered) return;
+    answerValue = '';
+    document.getElementById('answerDisplay').textContent = '';
+  }
+
+  function setNumpadDisabled(disabled) {
+    document.querySelectorAll('.numpad-btn').forEach(btn => {
+      if (!btn.classList.contains('numpad-empty')) btn.disabled = disabled;
     });
   }
 
@@ -1071,8 +1144,10 @@
 
     document.getElementById('answerEmoji').textContent = '';
 
-    const input = document.getElementById('answerInput');
-    input.value = ''; input.className = 'answer-input'; input.disabled = false; input.focus();
+    answerValue = '';
+    const display = document.getElementById('answerDisplay');
+    display.textContent = ''; display.className = 'answer-display';
+    setNumpadDisabled(false);
 
     answered          = false;
     questionStartTime = performance.now();
@@ -1088,8 +1163,9 @@
   function onTimeout() {
     if (answered) return;
     answered = true;
-    const input = document.getElementById('answerInput');
-    input.disabled = true; input.className = 'answer-input wrong';
+    const display = document.getElementById('answerDisplay');
+    display.className = 'answer-display wrong';
+    setNumpadDisabled(true);
     const correct = currentA * currentB;
     document.getElementById('answerEmoji').textContent = '⏱️';
     document.getElementById('qMark').outerHTML =
@@ -1100,28 +1176,29 @@
 
   function checkAnswer() {
     if (answered) return;
-    const input = document.getElementById('answerInput');
-    const val   = input.value.trim();
-    if (val === '') { input.focus(); return; }
+    const val = answerValue.trim();
+    if (val === '') return;
     freezeTimer();
 
     const userAns      = parseInt(val, 10);
     const correct      = currentA * currentB;
     const responseTime = (performance.now() - questionStartTime) / 1000;
     const isCorrect    = userAns === correct;
+    const display      = document.getElementById('answerDisplay');
 
-    answered = true; input.disabled = true;
+    answered = true;
+    setNumpadDisabled(true);
 
     if (isCorrect) {
       sessionCorrect++;
       streak++;
-      input.className = 'answer-input correct';
+      display.className = 'answer-display correct';
       document.getElementById('answerEmoji').textContent = streak >= 5 ? '🔥' : '✅';
       recordResponse(currentA, currentB, true, responseTime);
       if (streak >= 5) spawnConfetti();
     } else {
       streak = 0;
-      input.className = 'answer-input wrong';
+      display.className = 'answer-display wrong';
       document.getElementById('answerEmoji').textContent = '❌';
       document.getElementById('qMark').outerHTML =
         `<span id="qMark" style="color:#4CAF50;font-weight:900">${correct}</span>`;
