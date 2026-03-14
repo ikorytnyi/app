@@ -527,7 +527,8 @@ const Store = {
       stats: { totalStars: 0, streakDays: 0, lastSessionDate: null,
                correctStreak: 0, totalCorrect: 0, sessions: [] },
       badges: [],
-      settings: { minWordsPerSession: 5, maxWordsPerSession: 20, sessionWords: 10, pin: '1234', ttsLang: 'de-DE', ttsVoice: '' },
+      groups: [],
+      settings: { minWordsPerSession: 5, maxWordsPerSession: 20, sessionWords: 10, pin: '1234', ttsLang: 'de-DE', ttsVoice: '', activeGroups: [] },
       initialized: false,
     };
   }
@@ -541,7 +542,7 @@ const Words = {
     return { id: Date.now() + '_' + Math.random().toString(36).slice(2),
              text: text.trim(), weight: 3, status: 'new',
              correctStreak: 0, totalCorrect: 0, totalAttempts: 0,
-             lastDate: null, lastResult: null };
+             lastDate: null, lastResult: null, groupId: null };
   },
   buildExtras(wordText) {
     const uniqueLetters = new Set(wordText.toLowerCase().split(''));
@@ -736,6 +737,8 @@ const App = {
   // ─── INIT ───────────────────────────────
   async init() {
     this.data = Store.load() || Store.defaults();
+    if (!this.data.groups) this.data.groups = [];
+    if (!this.data.settings.activeGroups) this.data.settings.activeGroups = [];
     TTS.init();
     if (!this.data.initialized) {
       await this.loadWords();
@@ -751,7 +754,9 @@ const App = {
       const r = await fetch('data/words.txt');
       if (!r.ok) return;
       const lines = (await r.text()).split('\n').map(l => l.trim()).filter(Boolean);
-      this.data.words = lines.map(t => Words.create(t));
+      const groupId = Date.now() + '_' + Math.random().toString(36).slice(2);
+      this.data.groups.push({ id: groupId, name: 'Starter', createdAt: Date.now() });
+      this.data.words = lines.map(t => { const w = Words.create(t); w.groupId = groupId; return w; });
     } catch (e) { console.warn('words.txt not loaded:', e); }
   },
 
@@ -815,6 +820,17 @@ const App = {
           <div class="section-title">Прогрес: ${mastered} з ${total} слів засвоєно</div>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
         </div>
+        ${this.data.groups.length ? `
+        <div style="margin-bottom:14px">
+          <div class="section-title" style="margin-bottom:6px">Групи для вивчення:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            ${this.data.groups.map(g => {
+              const active = this.data.settings.activeGroups.includes(g.id);
+              return `<button onclick="App.toggleGroup('${g.id}')" style="padding:5px 12px;border-radius:20px;border:2px solid var(--primary);background:${active?'var(--primary)':'transparent'};color:${active?'#fff':'var(--primary)'};font-size:13px;font-weight:600;cursor:pointer">${this.escHtml(g.name)}</button>`;
+            }).join('')}
+          </div>
+          ${this.data.settings.activeGroups.length ? `<div style="font-size:12px;color:var(--text-light);margin-top:5px">Вибрано: ${this.data.settings.activeGroups.length} з ${this.data.groups.length} груп</div>` : `<div style="font-size:12px;color:var(--text-light);margin-top:5px">Всі групи</div>`}
+        </div>` : ''}
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
           <span style="font-size:14px;color:var(--text-light);white-space:nowrap">Слів за сесію:</span>
           <input type="range" id="wps-range" min="${minWps}" max="${maxWps}" value="${wps}" style="flex:1"
@@ -836,7 +852,11 @@ const App = {
     const minWps = this.data.settings.minWordsPerSession || 5;
     const maxWps = this.data.settings.maxWordsPerSession || 20;
     const count = Math.min(maxWps, Math.max(minWps, this.data.settings.sessionWords || minWps));
-    const words = Words.selectForSession(this.data.words, count);
+    const activeGroups = this.data.settings.activeGroups || [];
+    const pool = activeGroups.length
+      ? this.data.words.filter(w => activeGroups.includes(w.groupId))
+      : this.data.words;
+    const words = Words.selectForSession(pool, count);
     if (!words.length) { alert('Немає слів!'); return; }
     const queue = [];
     for (const w of words) {
@@ -963,10 +983,10 @@ const App = {
     if (kw.selected.some(s => s.ti === ti)) return;
     const tile = kw.shuffled[ti];
     const nextPos = kw.selected.length;
-    const expected = kw.original[nextPos].l.toLowerCase();
+    const expected = kw.original[nextPos].l;
     const tileDom = document.getElementById(`ktile-${ti}`);
     const slotDom = document.getElementById(`kslot-${nextPos}`);
-    if (tile.l.toLowerCase() === expected) {
+    if (tile.l === expected) {
       tileDom.classList.add('used');
       slotDom.textContent = tile.l;
       slotDom.classList.add('filled');
@@ -1007,10 +1027,10 @@ const App = {
     if (cs.selected.some(s => s.ti === ti)) return;
     const tile = cs.shuffled[ti];
     const nextPos = cs.selected.length;
-    const expected = cs.original[nextPos].l.toLowerCase();
+    const expected = cs.original[nextPos].l;
     const tileDom = document.getElementById(`tile-${ti}`);
     const slotDom = document.getElementById(`slot-${nextPos}`);
-    if (tile.l.toLowerCase() === expected) {
+    if (tile.l === expected) {
       tileDom.classList.add('used');
       slotDom.textContent = tile.l;
       slotDom.classList.add('filled');
@@ -1075,10 +1095,10 @@ const App = {
     if (ws.selected.some(s => s.ti === ti)) return;
     const tile = ws.shuffled[ti];
     const nextPos = ws.selected.length;
-    const expected = ws.original[nextPos].l.toLowerCase();
+    const expected = ws.original[nextPos].l;
     const tileDom = document.getElementById(`wtile-${ti}`);
     const slotDom = document.getElementById(`wslot-${nextPos}`);
-    if (tile.l.toLowerCase() === expected) {
+    if (tile.l === expected) {
       tileDom.classList.add('used');
       slotDom.textContent = tile.l;
       slotDom.classList.add('filled');
@@ -1157,10 +1177,10 @@ const App = {
     if (ds.selected.some(s => s.ti === ti)) return;
     const tile = ds.shuffled[ti];
     const nextPos = ds.selected.length;
-    const expected = ds.original[nextPos].l.toLowerCase();
+    const expected = ds.original[nextPos].l;
     const tileDom = document.getElementById(`dtile-${ti}`);
     const slotDom = document.getElementById(`dslot-${nextPos}`);
-    if (tile.l.toLowerCase() === expected) {
+    if (tile.l === expected) {
       tileDom.classList.add('used');
       slotDom.textContent = tile.l;
       slotDom.classList.add('filled');
@@ -1197,9 +1217,9 @@ const App = {
     if (item.type === 'collect') {
       const cs = item._cs;
       const nextPos = cs.selected.length;
-      const expected = cs.original[nextPos]?.l.toLowerCase();
+      const expected = cs.original[nextPos]?.l;
       const ti = cs.shuffled.findIndex((t, i) =>
-        t.l.toLowerCase() === expected && !cs.selected.some(s => s.ti === i));
+        t.l === expected && !cs.selected.some(s => s.ti === i));
       if (ti >= 0) {
         const tile = document.getElementById(`tile-${ti}`);
         if (tile) {
@@ -1210,9 +1230,9 @@ const App = {
     } else if (item.type === 'write_after') {
       const ws = item._ws;
       const nextPos = ws.selected.length;
-      const expected = ws.original[nextPos]?.l.toLowerCase();
+      const expected = ws.original[nextPos]?.l;
       const ti = ws.shuffled.findIndex((t, i) =>
-        t.l.toLowerCase() === expected && !ws.selected.some(s => s.ti === i));
+        t.l === expected && !ws.selected.some(s => s.ti === i));
       if (ti >= 0) {
         const tile = document.getElementById(`wtile-${ti}`);
         if (tile) { tile.classList.add('hint-glow'); setTimeout(() => tile.classList.remove('hint-glow'), 2000); }
@@ -1220,9 +1240,9 @@ const App = {
     } else if (item.type === 'dictation') {
       const ds = item._ds;
       const nextPos = ds.selected.length;
-      const expected = ds.original[nextPos]?.l.toLowerCase();
+      const expected = ds.original[nextPos]?.l;
       const ti = ds.shuffled.findIndex((t, i) =>
-        t.l.toLowerCase() === expected && !ds.selected.some(s => s.ti === i));
+        t.l === expected && !ds.selected.some(s => s.ti === i));
       if (ti >= 0) {
         const tile = document.getElementById(`dtile-${ti}`);
         if (tile) { tile.classList.add('hint-glow'); setTimeout(() => tile.classList.remove('hint-glow'), 2000); }
@@ -1287,16 +1307,22 @@ const App = {
     const stars = session.starsEarned;
     const total = session.words.length;
     const correct = Object.values(session.wordResults).filter(r => r === 'correct').length;
-    const lv = Rewards.getLevel(this.data.stats.totalStars);
-    const starsStr = '⭐'.repeat(Math.floor(stars)) + (stars % 1 >= 0.5 ? '✨' : '');
+    const totalStars = this.data.stats.totalStars;
+    const lvIdx = LEVELS.reduce((best, l, i) => totalStars >= l.min ? i : best, 0);
+    const lv = LEVELS[lvIdx];
+    const nextLv = LEVELS[lvIdx + 1] || null;
+    const lvPct = nextLv
+      ? Math.min(100, Math.round((totalStars - lv.min) / (nextLv.min - lv.min) * 100))
+      : 100;
+    const starsToNext = nextLv ? Math.ceil(nextLv.min - totalStars) : 0;
     const wordRows = session.words.map(w => {
       const res = session.wordResults[w.id];
-      const s = session.wordStars[w.id] || 0;
+      const s = (session.wordStars[w.id] || 0).toFixed(1).replace(/\.0$/, '');
       return `
       <div class="word-list-item">
         <span class="word-status">${res === 'correct' ? '✅' : '❌'}</span>
         <span class="word-name">${this.escHtml(w.text)}</span>
-        <span style="color:var(--accent);font-weight:700">${s > 0 ? '⭐'.repeat(Math.round(s*2)/2*2>s?Math.floor(s)+'✨':Math.floor(s)) : ''}</span>
+        <span style="color:var(--accent);font-weight:700">${+s > 0 ? '⭐ ' + s : ''}</span>
       </div>`;
     }).join('');
     const badgeRows = session.newBadges.map(bid => {
@@ -1307,10 +1333,18 @@ const App = {
     <div class="card">
       <div class="text-center">
         <h2>🎉 Тренування завершено!</h2>
-        <div class="session-stars-big">${starsStr || '💪'}</div>
-        <div style="font-size:22px;font-weight:900;color:var(--primary)">+${stars.toFixed(1)} зірочок</div>
-        <div style="font-size:15px;color:var(--text-light);margin-top:4px">Правильно: ${correct} з ${total} слів</div>
-        <div style="margin-top:10px"><span class="level-badge">${lv.icon} ${lv.name}</span></div>
+        <div style="font-size:52px;font-weight:900;color:var(--primary);line-height:1.1">+${stars.toFixed(1)} ⭐</div>
+        <div style="font-size:15px;color:var(--text-light);margin-bottom:12px">зірочок за сесію · Правильно: ${correct} з ${total}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+          <span class="level-badge">${lv.icon} ${lv.name}</span>
+          ${nextLv ? `<span style="color:var(--text-light);font-size:13px">→</span><span style="font-size:13px;color:var(--text-light)">${nextLv.icon} ${nextLv.name}</span>` : ''}
+        </div>
+        <div class="progress-bar-wrap" style="margin:0 0 6px">
+          <div class="progress-bar-fill" style="width:${lvPct}%"></div>
+        </div>
+        <div style="font-size:12px;color:var(--text-light)">
+          ${nextLv ? `До рівня «${nextLv.name}»: ще ${starsToNext} ⭐ · Всього: ${totalStars.toFixed(1)}` : '🏆 Максимальний рівень!'}
+        </div>
       </div>
       ${badgeRows ? `<div class="mt-3"><h3>🏆 Нові нагороди!</h3>${badgeRows}</div>` : ''}
       <div class="mt-3"><h3>Результати:</h3><div style="max-height:280px;overflow-y:auto">${wordRows}</div></div>
@@ -1439,6 +1473,7 @@ const App = {
         <h2 style="margin:0">⚙️ Управління словами</h2>
       </div>
       <h3>Додати слова</h3>
+      <input type="text" class="settings-input" id="new-words-group" placeholder="Назва групи (необов'язково)" style="margin-bottom:8px">
       <textarea class="textarea-words" id="new-words-ta" placeholder="Кожне слово з нового рядка:&#10;Schule&#10;Freund&#10;Familie"></textarea>
       <button class="btn btn-success w-full mt-1" onclick="App.addWords()">➕ Додати слова</button>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
@@ -1486,8 +1521,62 @@ const App = {
         </div>
         <div style="max-height:380px;overflow-y:auto">${wordRows||'<p>Немає слів</p>'}</div>
       </div>
+      ${this.tplAdminGroups()}
       <button class="btn btn-ghost w-full mt-3" onclick="App.resetProgress()" style="border-color:var(--danger);color:var(--danger)">⚠️ Скинути прогрес</button>
     </div>`;
+  },
+
+  tplAdminGroups() {
+    if (!this.data.groups.length) return '';
+    const rows = this.data.groups.map(g => {
+      const gWords = this.data.words.filter(w => w.groupId === g.id);
+      const mastered = gWords.filter(w => w.status === 'mastered').length;
+      const hard = gWords.filter(w => w.weight >= 5).length;
+      const date = new Date(g.createdAt).toLocaleDateString('uk-UA');
+      const pct = gWords.length ? Math.round(mastered / gWords.length * 100) : 0;
+      return `
+      <div class="word-list-item" style="flex-direction:column;align-items:stretch;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700">${this.escHtml(g.name)}</span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="App.renameGroup('${g.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="App.deleteGroup('${g.id}')">🗑️</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-light)">${date} · ${gWords.length} слів · ✅ ${mastered} · ❌ ${hard}</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+    return `
+    <div class="mt-3">
+      <h3 style="margin-bottom:8px">Групи (${this.data.groups.length})</h3>
+      <div style="max-height:300px;overflow-y:auto">${rows}</div>
+    </div>`;
+  },
+
+  renameGroup(id) {
+    const g = this.data.groups.find(g => g.id === id);
+    if (!g) return;
+    const name = prompt('Нова назва групи:', g.name);
+    if (name && name.trim()) { g.name = name.trim(); Store.save(this.data); this.render('admin'); }
+  },
+
+  deleteGroup(id) {
+    const g = this.data.groups.find(g => g.id === id);
+    if (!g || !confirm(`Видалити групу "${g.name}"? Слова залишаться без групи.`)) return;
+    this.data.groups = this.data.groups.filter(g => g.id !== id);
+    this.data.words.forEach(w => { if (w.groupId === id) w.groupId = null; });
+    this.data.settings.activeGroups = this.data.settings.activeGroups.filter(gid => gid !== id);
+    Store.save(this.data);
+    this.render('admin');
+  },
+
+  toggleGroup(id) {
+    const ag = this.data.settings.activeGroups;
+    const idx = ag.indexOf(id);
+    if (idx >= 0) ag.splice(idx, 1); else ag.push(id);
+    Store.save(this.data);
+    this.render('home');
   },
 
   populateTtsVoices() {
@@ -1515,18 +1604,33 @@ const App = {
   addWords() {
     const ta = document.getElementById('new-words-ta');
     if (!ta) return;
-    const existing = new Set(this.data.words.map(w => w.text.toLowerCase()));
+    const groupNameEl = document.getElementById('new-words-group');
+    const groupName = groupNameEl ? groupNameEl.value.trim() : '';
+    let groupId = null;
+    if (groupName) {
+      const existing = this.data.groups.find(g => g.name.toLowerCase() === groupName.toLowerCase());
+      if (existing) {
+        groupId = existing.id;
+      } else {
+        groupId = Date.now() + '_' + Math.random().toString(36).slice(2);
+        this.data.groups.push({ id: groupId, name: groupName, createdAt: Date.now() });
+      }
+    }
+    const existingWords = new Set(this.data.words.map(w => w.text.toLowerCase()));
     const lines = ta.value.split('\n').map(l => l.trim()).filter(Boolean);
     let added = 0;
     for (const t of lines) {
-      if (!existing.has(t.toLowerCase())) {
-        this.data.words.push(Words.create(t));
-        existing.add(t.toLowerCase());
+      if (!existingWords.has(t.toLowerCase())) {
+        const w = Words.create(t);
+        w.groupId = groupId;
+        this.data.words.push(w);
+        existingWords.add(t.toLowerCase());
         added++;
       }
     }
     Store.save(this.data);
     ta.value = '';
+    if (groupNameEl) groupNameEl.value = '';
     alert(`Додано ${added} слів!`);
     this.render('admin');
   },
@@ -1655,7 +1759,7 @@ const App = {
     const rows = [...filtered].reverse().slice(0,8).map(s => `
     <div class="word-list-item">
       <span style="font-size:12px;color:var(--text-light)">${s.date}</span>
-      <span>${s.words} сл, ${s.correct||0} вірно, ${this.fmtTime(s.duration||0)}</span>
+      <span>${s.words} сл, ${this.fmtTime(s.duration||0)}</span>
       <span style="color:var(--accent)">⭐${s.stars.toFixed(1)}</span>
     </div>`).join('');
     return `
