@@ -865,7 +865,7 @@ const App = {
     }
     this.session = {
       words, queue, currentIdx: 0,
-      starsEarned: 0, hintsUsed: 0,
+      starsEarned: 0, hintsUsed: 0, wrongClicks: 0,
       wordStars: {}, wordResults: {}, wordErrors: {},
       startTime: Date.now(), newBadges: [],
     };
@@ -1043,6 +1043,7 @@ const App = {
         setTimeout(() => this.advanceExercise(item, 'correct_first'), 700);
       }
     } else {
+      session.wrongClicks++;
       tileDom.classList.add('shake');
       setTimeout(() => tileDom.classList.remove('shake'), 450);
       document.getElementById('collect-fb').innerHTML =
@@ -1111,6 +1112,7 @@ const App = {
         setTimeout(() => this.advanceExercise(item, ws.hadWrong ? 'correct_retry' : 'correct_first'), 700);
       }
     } else {
+      session.wrongClicks++;
       ws.hadWrong = true;
       tileDom.classList.add('shake');
       setTimeout(() => tileDom.classList.remove('shake'), 450);
@@ -1193,6 +1195,7 @@ const App = {
         setTimeout(() => this.advanceExercise(item, ds.hadWrong ? 'correct_retry' : 'correct_first'), 700);
       }
     } else {
+      session.wrongClicks++;
       ds.hadWrong = true;
       tileDom.classList.add('shake');
       setTimeout(() => tileDom.classList.remove('shake'), 450);
@@ -1296,6 +1299,7 @@ const App = {
       duration: Math.round((Date.now() - session.startTime) / 1000),
       correct: Object.values(session.wordResults).filter(r => r === 'correct').length,
       perfect: session.words.filter(w => !session.wordErrors[w.id]).length,
+      wrongClicks: session.wrongClicks,
     });
     session.newBadges = Rewards.checkBadges(this.data);
     Store.save(this.data);
@@ -1711,7 +1715,7 @@ const App = {
     const tw = filtered.reduce((a,s) => a+s.words, 0);
     const ts = filtered.reduce((a,s) => a+s.stars, 0);
     const tt = filtered.reduce((a,s) => a+(s.duration||0), 0);
-    const tc = filtered.reduce((a,s) => a+(s.correct||0), 0);
+    const tc = filtered.reduce((a,s) => a+(s.wrongClicks||0), 0);
     const tp = filtered.reduce((a,s) => a+(s.perfect||0), 0);
     const activeDays = new Set(filtered.map(s => s.date)).size;
 
@@ -1759,7 +1763,7 @@ const App = {
     const rows = [...filtered].reverse().slice(0,8).map(s => `
     <div class="word-list-item">
       <span style="font-size:12px;color:var(--text-light)">${s.date}</span>
-      <span>${s.words} сл, ${this.fmtTime(s.duration||0)}</span>
+      <span>${s.words} сл, ${this.fmtTime(s.duration||0)}${s.wrongClicks ? ` · ✏️${s.wrongClicks}` : ''}</span>
       <span style="color:var(--accent)">⭐${s.stars.toFixed(1)}</span>
     </div>`).join('');
     return `
@@ -1770,7 +1774,7 @@ const App = {
     </div>
     <div class="stats-row">
       <div class="stat-box"><div class="stat-icon">📝</div><div class="stat-value">${tw}</div><div class="stat-label">Слів</div></div>
-      <div class="stat-box"><div class="stat-icon">✅</div><div class="stat-value">${tc}</div><div class="stat-label">Правильно</div></div>
+      <div class="stat-box"><div class="stat-icon">✏️</div><div class="stat-value">${tc}</div><div class="stat-label">Неточностей</div></div>
       <div class="stat-box"><div class="stat-icon">🎯</div><div class="stat-value">${tw ? Math.round(tp/tw*100) : 0}%</div><div class="stat-label">Точність</div></div>
     </div>
     ${chartHtml}
