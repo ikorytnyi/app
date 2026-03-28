@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шпаргалка з німецької мови</title>
+
+<!-- PWA / Home Screen App -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Deutsch">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#312e81">
+<style>
+  :root {
+    --black: #4338ca;
+    --red: #cc0000;
+    --gold: #d4a017;
+    --light-gold: #fff8e1;
+    --light-red: #fff0f0;
+    --light-blue: #e8f4fd;
+    --light-green: #e8f8e8;
+    --mid-gray: #f5f5f5;
+    --border: #ddd;
+    --text: #222;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #f0f0f0;
+    line-height: 1.5;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  .main-header {
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, var(--red) 100%);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  .main-header h1 { font-size: 2em; letter-spacing: 1px; margin-bottom: 8px; }
+  .main-header p { opacity: 0.85; font-size: 1.05em; }
+  .flag-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 15px; }
+  .flag-bar div { flex: 1; }
+  .flag-bar .f1 { background: #000; }
+  .flag-bar .f2 { background: #dd0000; }
+  .flag-bar .f3 { background: #ffcc00; }
+
+  /* TOC */
+  .toc {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .toc h2 { color: var(--red); margin-bottom: 12px; font-size: 1.1em; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
+  .toc a {
+    color: var(--black);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--mid-gray);
+    display: block;
+    font-size: 0.88em;
+    transition: background 0.2s;
+  }
+  .toc a:hover { background: var(--light-gold); color: var(--red); }
+
+  /* Parts */
+  .part-header {
+    background: var(--black);
+    color: #fde047;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: 30px 0 15px;
+    font-size: 1.15em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  /* Sections */
+  .section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--gold);
+  }
+  .section h2 {
+    color: var(--red);
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h2 .num {
+    background: var(--red);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
+  .section h3 {
+    color: var(--black);
+    font-size: 0.95em;
+    margin: 14px 0 8px;
+    padding: 4px 10px;
+    background: var(--mid-gray);
+    border-radius: 4px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.88em;
+  }
+  th {
+    background: var(--black);
+    color: #fef9c3;
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--mid-gray); }
+  tr:hover td { background: var(--light-gold); }
+  .tbl-head { background: #444 !important; color: #fff !important; font-style: italic; font-size: 0.85em; }
+
+  /* Special cells */
+  .de { font-weight: 600; color: #1a1a7a; }
+  .ua { color: #555; font-style: italic; }
+  .form { font-weight: bold; color: var(--red); }
+  .note { color: #777; font-size: 0.85em; font-style: italic; }
+
+  /* Boxes */
+  .rule-box {
+    background: var(--light-gold);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.9em;
+  }
+  .rule-box strong { color: var(--red); }
+  .example-box {
+    background: var(--light-blue);
+    border-left: 3px solid #2196F3;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    margin: 6px 0;
+    font-size: 0.88em;
+  }
+  .example-box .de { display: block; font-weight: 600; color: #1a1a7a; }
+  .example-box .ua { display: block; color: #555; font-style: italic; font-size: 0.9em; }
+  .warn-box {
+    background: var(--light-red);
+    border: 1px solid #ffaaaa;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.88em;
+  }
+  .green-box {
+    background: var(--light-green);
+    border: 1px solid #88cc88;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.88em;
+  }
+  .formula {
+    background: var(--black);
+    color: #fde047;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 1em;
+    margin: 8px 0;
+    letter-spacing: 0.5px;
+  }
+
+  /* Two columns */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.78em;
+    font-weight: bold;
+    margin-right: 4px;
+  }
+  .tag-m { background: #cce5ff; color: #004085; }
+  .tag-f { background: #fce8f1; color: #7a0040; }
+  .tag-n { background: #d4edda; color: #155724; }
+  .tag-pl { background: #fff3cd; color: #856404; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-size: 0.85em;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .toc-grid { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: white; }
+    .container { padding: 10px; }
+    .section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="main-header">
+  <h1>🇩🇪 Шпаргалка з Німецької Мови</h1>
+  <p>Повний довідник граматики</p>
+  <div class="flag-bar"><div class="f1"></div><div class="f2"></div><div class="f3"></div></div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>📋 Зміст</h2>
+  <div class="toc-grid">
+    <a href="#prasens">2.1 Теперішній час (Präsens)</a>
+    <a href="#modal">2.2 Модальні дієслова</a>
+    <a href="#trennbar">2.3 Дієслова з префіксами</a>
+    <a href="#wortfolge">2.4 Порядок слів</a>
+    <a href="#fragen">2.5 Питальні речення</a>
+    <a href="#negation">2.6 Заперечення</a>
+    <a href="#imperativ">2.7 Наказовий спосіб</a>
+    <a href="#reflexiv">2.8 Зворотні дієслова</a>
+    <a href="#perfekt">2.9 Perfekt (мин. час)</a>
+    <a href="#partizip2">2.10 Partizip II</a>
+    <a href="#haben-sein">2.11 haben vs sein</a>
+    <a href="#prateritum">2.13 Präteritum</a>
+    <a href="#futur">2.14 Майбутній час</a>
+    <a href="#konjunktiv">2.15 Konjunktiv II</a>
+    <a href="#passiv">2.16 Пасивний стан</a>
+    <a href="#nebensatz">2.17 Підрядні речення</a>
+    <a href="#infinitiv">2.18 Інфінітивні конструкції</a>
+    <a href="#kasus">3.1 Відмінки</a>
+    <a href="#nominativ">3.3 Nominativ</a>
+    <a href="#akkusativ">3.4 Akkusativ</a>
+    <a href="#dativ">3.5 Dativ</a>
+    <a href="#genitiv">3.6 Genitiv</a>
+    <a href="#steigerung">3.8 Ступені порівняння</a>
+    <a href="#relativ">3.9 Відносні речення</a>
+    <a href="#rektion">3.10 Управління дієсловом</a>
+    <a href="#zahlen">4.1 Числівники</a>
+    <a href="#unregel">4.3 Неправильні дієслова</a>
+    <a href="#verbrektion">4.4 Дієслова з прийм.</a>
+    <a href="#adjprap">4.5–4.6 Прикм./Імен. з прийм.</a>
+  </div>
+</div>
+
+<!-- ===================== PART 2 ===================== -->
+<div class="part-header">📘 ЧАСТИНА 2 — КАРКАС РЕЧЕННЯ (дієслівні конструкції)</div>
+
+<!-- 2.1 PRÄSENS -->
+<div class="section" id="prasens">
+  <h2><span class="num">2.1</span> Теперішній час — Präsens</h2>
+  <p>Präsens = теперішній час. Утворюється: <span class="formula">основа дієслова + особове закінчення</span></p>
+  <div class="two-col">
+    <table>
+      <tr><th>Особа</th><th>Закінчення</th><th>machen (робити)</th></tr>
+      <tr><td>ich (я)</td><td class="form">-e</td><td>mach<strong>e</strong></td></tr>
+      <tr><td>du (ти)</td><td class="form">-st</td><td>mach<strong>st</strong></td></tr>
+      <tr><td>er/sie/es (він/вона/воно)</td><td class="form">-t</td><td>mach<strong>t</strong></td></tr>
+      <tr><td>wir (ми)</td><td class="form">-en</td><td>mach<strong>en</strong></td></tr>
+      <tr><td>ihr (ви, група)</td><td class="form">-t</td><td>mach<strong>t</strong></td></tr>
+      <tr><td>sie/Sie (вони/Ви)</td><td class="form">-en</td><td>mach<strong>en</strong></td></tr>
+    </table>
+    <div>
+      <div class="rule-box">
+        <strong>Важливі неправильні дієслова:</strong><br>
+        <b>sein</b> (бути): bin, bist, ist, sind, seid, sind<br>
+        <b>haben</b> (мати): habe, hast, hat, haben, habt, haben<br>
+        <b>werden</b> (ставати): werde, wirst, wird, werden, werdet, werden
+      </div>
+      <div class="rule-box">
+        <strong>Зміна кореневого голосного (сильні дієслова):</strong><br>
+        e → i/ie: geben → er <b>gibt</b>, lesen → er <b>liest</b><br>
+        a → ä: fahren → er <b>fährt</b>, schlafen → er <b>schläft</b>
+      </div>
+      <div class="warn-box">
+        <strong>Якщо основа закінчується на -t, -d, -n:</strong><br>
+        додається -е- перед закінченням: arbeiten → du arbeit<b>e</b>st
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2.2 MODAL VERBS -->
+<div class="section" id="modal">
+  <h2><span class="num">2.2</span> Модальні дієслова — Modalverben</h2>
+  <div class="formula">Модальне дієслово (2 місце) + … + Infinitiv (кінець)</div>
+  <table>
+    <tr><th>Дієслово</th><th>Значення</th><th>ich / er,sie,es</th><th>du</th><th>wir/sie/Sie</th><th>ihr</th></tr>
+    <tr><td class="de">können</td><td>могти, вміти</td><td class="form">kann</td><td>kannst</td><td>können</td><td>könnt</td></tr>
+    <tr><td class="de">müssen</td><td>мусити, бути зобов'язаним</td><td class="form">muss</td><td>musst</td><td>müssen</td><td>müsst</td></tr>
+    <tr><td class="de">wollen</td><td>хотіти</td><td class="form">will</td><td>willst</td><td>wollen</td><td>wollt</td></tr>
+    <tr><td class="de">sollen</td><td>повинен (за дорученням)</td><td class="form">soll</td><td>sollst</td><td>sollen</td><td>sollt</td></tr>
+    <tr><td class="de">dürfen</td><td>мати дозвіл, можна</td><td class="form">darf</td><td>darfst</td><td>dürfen</td><td>dürft</td></tr>
+    <tr><td class="de">mögen / möchten</td><td>подобатися / хотіти (ввічливо)</td><td class="form">mag / möchte</td><td>magst / möchtest</td><td>mögen / möchten</td><td>mögt / möchtet</td></tr>
+  </table>
+  <div class="example-box">
+    <span class="de">Ich <b>kann</b> gut Deutsch <b>sprechen</b>.</span>
+    <span class="ua">Я добре вмію розмовляти по-німецьки.</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Du <b>musst</b> heute früh <b>aufstehen</b>.</span>
+    <span class="ua">Тобі треба сьогодні рано встати.</span>
+  </div>
+  <div class="rule-box"><strong>Запам'ятай:</strong> ich та er/sie/es мають однакову форму (без закінчення).</div>
+</div>
+
+<!-- 2.3 TRENNBARE VERBEN -->
+<div class="section" id="trennbar">
+  <h2><span class="num">2.3</span> Дієслова з префіксами — Trennbare / Untrennbare Verben</h2>
+  <div class="two-col">
+    <div>
+      <h3>Відокремлювані префікси (іде в кінець)</h3>
+      <div class="rule-box">
+        ab-, an-, auf-, aus-, ein-, mit-, nach-, vor-, zu-, zurück-, weg-, los-
+      </div>
+      <div class="example-box">
+        <span class="de"><b>aufmachen</b> → Ich <b>mache</b> die Tür <b>auf</b>.</span>
+        <span class="ua">Я відчиняю двері.</span>
+      </div>
+      <div class="example-box">
+        <span class="de"><b>anrufen</b> → Er <b>ruft</b> mich <b>an</b>.</span>
+        <span class="ua">Він мені дзвонить.</span>
+      </div>
+    </div>
+    <div>
+      <h3>Невідокремлювані префікси (залишаються)</h3>
+      <div class="rule-box">
+        be-, er-, ge-, ver-, zer-, ent-, emp-, miss-
+      </div>
+      <div class="example-box">
+        <span class="de"><b>verstehen</b> → Ich <b>verstehe</b> das.</span>
+        <span class="ua">Я це розумію.</span>
+      </div>
+      <div class="example-box">
+        <span class="de"><b>bezahlen</b> → Er <b>bezahlt</b> die Rechnung.</span>
+        <span class="ua">Він оплачує рахунок.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2.4 WORD ORDER -->
+<div class="section" id="wortfolge">
+  <h2><span class="num">2.4</span> Порядок слів — Wortfolge</h2>
+  <div class="rule-box">
+    <strong>Головне правило:</strong> Дієслово завжди стоїть на <strong>2-му місці</strong> у розповідному реченні.
+  </div>
+  <table>
+    <tr><th>Місце 1</th><th>Місце 2 (дієслово)</th><th>Решта речення</th><th>Кінець</th></tr>
+    <tr><td>Ich</td><td class="form">gehe</td><td>heute in die Schule</td><td>—</td></tr>
+    <tr><td>Heute</td><td class="form">gehe</td><td>ich in die Schule</td><td>—</td></tr>
+    <tr><td>Ich</td><td class="form">kann</td><td>heute in die Schule</td><td class="form">gehen</td></tr>
+    <tr><td>Er</td><td class="form">hat</td><td>gestern die Aufgabe</td><td class="form">gemacht</td></tr>
+  </table>
+  <div class="rule-box">
+    <strong>TEKAMOLO</strong> — порядок обставин: <b>Te</b>mporale (коли?) → <b>Ka</b>usale (чому?) → <b>Mo</b>dale (як?) → <b>Lo</b>kale (де?)<br>
+    <em>Ich fahre <b>morgen</b> (коли) <b>wegen der Arbeit</b> (чому) <b>mit dem Bus</b> (як) <b>in die Stadt</b> (куди).</em>
+  </div>
+</div>
+
+<!-- 2.5 QUESTIONS -->
+<div class="section" id="fragen">
+  <h2><span class="num">2.5</span> Питальні речення — Fragen</h2>
+  <div class="two-col">
+    <div>
+      <h3>Загальні питання (Ja/Nein)</h3>
+      <div class="rule-box">Дієслово стоїть на <strong>1-му місці</strong></div>
+      <div class="example-box">
+        <span class="de"><b>Kommst</b> du heute?</span><span class="ua">Ти сьогодні прийдеш?</span>
+      </div>
+      <div class="example-box">
+        <span class="de"><b>Hast</b> du Zeit?</span><span class="ua">У тебе є час?</span>
+      </div>
+    </div>
+    <div>
+      <h3>Спеціальні питання (W-Fragen)</h3>
+      <table>
+        <tr><th>Слово</th><th>Переклад</th></tr>
+        <tr><td class="de">wer?</td><td>хто?</td></tr>
+        <tr><td class="de">was?</td><td>що?</td></tr>
+        <tr><td class="de">wo?</td><td>де?</td></tr>
+        <tr><td class="de">woher?</td><td>звідки?</td></tr>
+        <tr><td class="de">wohin?</td><td>куди?</td></tr>
+        <tr><td class="de">wann?</td><td>коли?</td></tr>
+        <tr><td class="de">wie?</td><td>як?</td></tr>
+        <tr><td class="de">wie viel(e)?</td><td>скільки?</td></tr>
+        <tr><td class="de">warum?</td><td>чому?</td></tr>
+        <tr><td class="de">wem?</td><td>кому?</td></tr>
+        <tr><td class="de">wen?</td><td>кого?</td></tr>
+        <tr><td class="de">welch-?</td><td>який?</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 2.6 NEGATION -->
+<div class="section" id="negation">
+  <h2><span class="num">2.6</span> Заперечення — Negation</h2>
+  <div class="two-col">
+    <div>
+      <h3>nicht — заперечує дієслово / прикметник</h3>
+      <div class="example-box">
+        <span class="de">Ich arbeite <b>nicht</b>.</span><span class="ua">Я не працюю.</span>
+      </div>
+      <div class="example-box">
+        <span class="de">Er ist <b>nicht</b> müde.</span><span class="ua">Він не втомлений.</span>
+      </div>
+    </div>
+    <div>
+      <h3>kein — заперечує іменник</h3>
+      <div class="rule-box">Використовується замість <b>ein / неозначений артикль</b></div>
+      <div class="example-box">
+        <span class="de">Ich habe <b>kein</b> Auto.</span><span class="ua">У мене немає машини.</span>
+      </div>
+      <div class="example-box">
+        <span class="de">Er hat <b>keine</b> Zeit.</span><span class="ua">У нього немає часу.</span>
+      </div>
+    </div>
+  </div>
+  <table>
+    <tr><th></th><th>м.р. (der)</th><th>ж.р. (die)</th><th>с.р. (das)</th><th>мн.ч. (die)</th></tr>
+    <tr><td>Nom.</td><td>kein</td><td>keine</td><td>kein</td><td>keine</td></tr>
+    <tr><td>Akk.</td><td>keinen</td><td>keine</td><td>kein</td><td>keine</td></tr>
+    <tr><td>Dat.</td><td>keinem</td><td>keiner</td><td>keinem</td><td>keinen</td></tr>
+  </table>
+</div>
+
+<!-- 2.7 IMPERATIV -->
+<div class="section" id="imperativ">
+  <h2><span class="num">2.7</span> Наказовий спосіб — Imperativ</h2>
+  <table>
+    <tr><th>Форма</th><th>Утворення</th><th>machen</th><th>kommen</th><th>sein</th></tr>
+    <tr><td><b>du</b> (ти)</td><td>основа (без -st)</td><td class="form">Mach!</td><td class="form">Komm!</td><td class="form">Sei!</td></tr>
+    <tr><td><b>ihr</b> (ви, група)</td><td>як у Präsens</td><td class="form">Macht!</td><td class="form">Kommt!</td><td class="form">Seid!</td></tr>
+    <tr><td><b>Sie</b> (Ви, ввічл.)</td><td>інфінітив + Sie</td><td class="form">Machen Sie!</td><td class="form">Kommen Sie!</td><td class="form">Seien Sie!</td></tr>
+  </table>
+  <div class="rule-box">
+    <strong>Сильні дієслова зі зміною e→i:</strong> зміна зберігається: lesen → <b>Lies!</b>, geben → <b>Gib!</b><br>
+    <strong>Дієслова на -t/-d:</strong> du-форма отримує -е: arbeiten → <b>Arbeite!</b>
+  </div>
+</div>
+
+<!-- 2.8 REFLEXIV -->
+<div class="section" id="reflexiv">
+  <h2><span class="num">2.8</span> Зворотні дієслова — Reflexive Verben</h2>
+  <div class="formula">sich + дієслово (займенник змінюється за особами)</div>
+  <table>
+    <tr><th>Особа</th><th>Займенник (Akk.)</th><th>Займенник (Dat.)</th></tr>
+    <tr><td>ich</td><td class="form">mich</td><td class="form">mir</td></tr>
+    <tr><td>du</td><td class="form">dich</td><td class="form">dir</td></tr>
+    <tr><td>er/sie/es</td><td class="form">sich</td><td class="form">sich</td></tr>
+    <tr><td>wir</td><td class="form">uns</td><td class="form">uns</td></tr>
+    <tr><td>ihr</td><td class="form">euch</td><td class="form">euch</td></tr>
+    <tr><td>sie/Sie</td><td class="form">sich</td><td class="form">sich</td></tr>
+  </table>
+  <div class="example-box">
+    <span class="de">Ich <b>freue mich</b> auf die Party.</span><span class="ua">Я радію майбутній вечірці.</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Er <b>wäscht sich</b> die Hände.</span><span class="ua">Він миє руки (собі).</span>
+  </div>
+  <div class="rule-box"><strong>Популярні зворотні дієслова:</strong> sich freuen auf (радіти), sich erinnern an (пам'ятати), sich interessieren für (цікавитися), sich treffen (зустрічатися), sich beschäftigen mit (займатися), sich vorbereiten auf (готуватися)</div>
+</div>
+
+<!-- 2.9 PERFEKT -->
+<div class="section" id="perfekt">
+  <h2><span class="num">2.9</span> Минулий час Perfekt</h2>
+  <p>Perfekt — основний минулий час у <strong>розмовній</strong> мові.</p>
+  <div class="formula">haben/sein (2 місце) + … + Partizip II (кінець)</div>
+  <div class="example-box">
+    <span class="de">Ich <b>habe</b> gestern einen Film <b>gesehen</b>.</span><span class="ua">Я вчора дивився фільм.</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Er <b>ist</b> nach Berlin <b>gefahren</b>.</span><span class="ua">Він поїхав до Берліна.</span>
+  </div>
+</div>
+
+<!-- 2.10 PARTIZIP II -->
+<div class="section" id="partizip2">
+  <h2><span class="num">2.10</span> Partizip II — Друга форма дієслова</h2>
+  <div class="two-col">
+    <div>
+      <h3>Слабкі дієслова (правильні)</h3>
+      <div class="formula">ge- + основа + -(e)t</div>
+      <table>
+        <tr><th>Інфінітив</th><th>Partizip II</th><th>Переклад</th></tr>
+        <tr><td>machen</td><td class="form">ge<b>mach</b>t</td><td>зробити</td></tr>
+        <tr><td>kaufen</td><td class="form">ge<b>kauf</b>t</td><td>купити</td></tr>
+        <tr><td>arbeiten</td><td class="form">ge<b>arbeit</b>et</td><td>працювати</td></tr>
+      </table>
+      <div class="warn-box"><strong>Дієслова з невідокремлюваним префіксом (be-, er-, ver-…):</strong> ge- НЕ додається: verstehen → <b>verstanden</b>, bezahlen → <b>bezahlt</b></div>
+      <div class="warn-box"><strong>Дієслова на -ieren:</strong> ge- НЕ додається: studieren → <b>studiert</b></div>
+    </div>
+    <div>
+      <h3>Сильні дієслова (неправильні)</h3>
+      <div class="formula">ge- + (змінена) основа + -en</div>
+      <table>
+        <tr><th>Інфінітив</th><th>Partizip II</th><th>Переклад</th></tr>
+        <tr><td>schreiben</td><td class="form">ge<b>schrieben</b></td><td>писати</td></tr>
+        <tr><td>lesen</td><td class="form">ge<b>lesen</b></td><td>читати</td></tr>
+        <tr><td>fahren</td><td class="form">ge<b>fahren</b></td><td>їхати</td></tr>
+        <tr><td>gehen</td><td class="form">ge<b>gangen</b></td><td>йти</td></tr>
+        <tr><td>kommen</td><td class="form">ge<b>kommen</b></td><td>приходити</td></tr>
+      </table>
+      <div class="rule-box"><strong>Відокремлювані префікси:</strong> ge- ставиться між префіксом і основою: aufmachen → <b>aufgemacht</b>, anrufen → <b>angerufen</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2.11 HABEN VS SEIN -->
+<div class="section" id="haben-sein">
+  <h2><span class="num">2.11</span> Вибір допоміжного дієслова: haben чи sein?</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="background:#d4edda; border-radius:4px; padding:6px 10px;">З <b>haben</b> — більшість дієслів</h3>
+      <ul style="padding-left:18px; font-size:0.9em; line-height:1.9;">
+        <li>Перехідні дієслова (є об'єкт): <em>kaufen, sehen, essen</em></li>
+        <li>Дієслова стану: <em>schlafen, stehen, liegen, sitzen</em></li>
+        <li>Модальні дієслова</li>
+        <li>haben, denken, wissen</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="background:#cce5ff; border-radius:4px; padding:6px 10px;">З <b>sein</b> — спеціальні групи</h3>
+      <ul style="padding-left:18px; font-size:0.9em; line-height:1.9;">
+        <li>Переміщення в просторі: <em>gehen, kommen, fahren, fliegen, laufen</em></li>
+        <li>Зміна стану: <em>aufstehen, einschlafen, wachsen, sterben</em></li>
+        <li>Винятки: <em>sein, bleiben, werden, passieren, geschehen, gelingen</em></li>
+      </ul>
+    </div>
+  </div>
+  <div class="example-box">
+    <span class="de">Ich <b>habe</b> das Buch ge<b>lesen</b>. / Er <b>ist</b> nach Hause ge<b>gangen</b>.</span>
+    <span class="ua">Я прочитав книгу. / Він пішов додому.</span>
+  </div>
+</div>
+
+<!-- 2.13 PRÄTERITUM -->
+<div class="section" id="prateritum">
+  <h2><span class="num">2.13</span> Минулий час Präteritum</h2>
+  <p>Präteritum — минулий час переважно у <strong>письмовій</strong> мові (книги, газети, офіційні тексти).</p>
+  <div class="two-col">
+    <div>
+      <h3>Правильні (слабкі) дієслова</h3>
+      <div class="formula">основа + -t + особове закінчення</div>
+      <table>
+        <tr><th>Особа</th><th>sagen (говорити)</th></tr>
+        <tr><td>ich / er,sie,es</td><td class="form">sag<b>te</b></td></tr>
+        <tr><td>du</td><td class="form">sag<b>test</b></td></tr>
+        <tr><td>wir / sie/Sie</td><td class="form">sag<b>ten</b></td></tr>
+        <tr><td>ihr</td><td class="form">sag<b>tet</b></td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Неправильні (сильні) дієслова</h3>
+      <div class="rule-box">Основа береться з таблиці неправильних дієслів (2-а колонка). Форми ich та er/sie/es збігаються.</div>
+      <table>
+        <tr><th>Особа</th><th>kommen (kam)</th></tr>
+        <tr><td>ich / er,sie,es</td><td class="form">kam</td></tr>
+        <tr><td>du</td><td class="form">kamst</td></tr>
+        <tr><td>wir / sie/Sie</td><td class="form">kamen</td></tr>
+        <tr><td>ihr</td><td class="form">kamt</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="rule-box">
+    <strong>Відокремлюваний префікс</strong> іде в кінець речення:<br>
+    abfahren → gab ab: Der Zug <b>fuhr</b> um 13:15 Uhr ab.
+  </div>
+  <div class="rule-box">
+    <strong>Невідокремлюваний префікс</strong> залишається при дієслові:<br>
+    stehen → stand / verstehen → verstand
+  </div>
+</div>
+
+<!-- 2.14 FUTUR -->
+<div class="section" id="futur">
+  <h2><span class="num">2.14</span> Майбутній час — Futur 1</h2>
+  <div class="two-col">
+    <div>
+      <h3>Спосіб 1: Präsens + часовий маркер</h3>
+      <div class="rule-box">Найпростіший спосіб! Просто додаємо слово «коли»</div>
+      <div class="example-box">
+        <span class="de">Der Bus fährt <b>gleich</b> ab.</span><span class="ua">Автобус відправиться зараз.</span>
+      </div>
+      <div class="example-box">
+        <span class="de">Der Zug fährt <b>in 5 Minuten</b> ab.</span><span class="ua">Поїзд відправиться через 5 хвилин.</span>
+      </div>
+    </div>
+    <div>
+      <h3>Спосіб 2: werden + Infinitiv (Futur 1)</h3>
+      <div class="formula">werden (2 місце) + … + Infinitiv (кінець)</div>
+      <table>
+        <tr><th>Особа</th><th>werden</th></tr>
+        <tr><td>ich</td><td class="form">werde</td></tr>
+        <tr><td>du</td><td class="form">wirst</td></tr>
+        <tr><td>er/sie/es</td><td class="form">wird</td></tr>
+        <tr><td>wir</td><td class="form">werden</td></tr>
+        <tr><td>ihr</td><td class="form">werdet</td></tr>
+        <tr><td>sie/Sie</td><td class="form">werden</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="example-box">
+    <span class="de">Er <b>wird</b> einen langen Brief <b>schreiben</b>.</span><span class="ua">Він буде писати (напише) довгого листа.</span>
+  </div>
+  <div class="warn-box"><strong>werden</strong> також означає «ставати»: Ich <b>werde</b> Arzt. — Я стану лікарем.</div>
+</div>
+
+<!-- 2.15 KONJUNKTIV II -->
+<div class="section" id="konjunktiv">
+  <h2><span class="num">2.15</span> Умовний спосіб — Konjunktiv II</h2>
+  <p>Використовується для ввічливих прохань, бажань, умовних речень («якби…»).</p>
+  <div class="two-col">
+    <div>
+      <h3>Сильні дієслова</h3>
+      <div class="rule-box">
+        Беремо форму Präteritum → змінюємо голосну a/o/u на умлаут ä/ö/ü → додаємо закінчення
+      </div>
+      <table>
+        <tr><th>Особа</th><th>kommen → käme</th></tr>
+        <tr><td>ich / er,sie,es</td><td class="form">käme</td></tr>
+        <tr><td>du</td><td class="form">kämest</td></tr>
+        <tr><td>wir / sie/Sie</td><td class="form">kämen</td></tr>
+        <tr><td>ihr</td><td class="form">kämet</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Слабкі дієслова (та розмовна мова)</h3>
+      <div class="formula">würde + Infinitiv</div>
+      <table>
+        <tr><th>Особа</th><th>würde</th></tr>
+        <tr><td>ich</td><td class="form">würde</td></tr>
+        <tr><td>du</td><td class="form">würdest</td></tr>
+        <tr><td>er/sie/es</td><td class="form">würde</td></tr>
+        <tr><td>wir / sie/Sie</td><td class="form">würden</td></tr>
+        <tr><td>ihr</td><td class="form">würdet</td></tr>
+      </table>
+    </div>
+  </div>
+  <h3>Важливі форми Konjunktiv II</h3>
+  <table>
+    <tr><th>Інфінітив</th><th>Präteritum</th><th>Konjunktiv II</th><th>Значення</th></tr>
+    <tr><td>sein</td><td>war</td><td class="form">wäre</td><td>був би</td></tr>
+    <tr><td>haben</td><td>hatte</td><td class="form">hätte</td><td>мав би</td></tr>
+    <tr><td>werden</td><td>wurde</td><td class="form">würde</td><td>став би</td></tr>
+    <tr><td>können</td><td>konnte</td><td class="form">könnte</td><td>міг би</td></tr>
+    <tr><td>müssen</td><td>musste</td><td class="form">müsste</td><td>мусив би</td></tr>
+    <tr><td>dürfen</td><td>durfte</td><td class="form">dürfte</td><td>міг би (дозвіл)</td></tr>
+  </table>
+  <div class="example-box">
+    <span class="de"><b>Könnten</b> Sie bitte langsamer sprechen?</span><span class="ua">Чи не могли б Ви говорити повільніше? (ввічливо)</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Ich <b>würde</b> dich besuchen, wenn ich Zeit <b>hätte</b>.</span><span class="ua">Я б тебе відвідав, якби у мене був час.</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Er <b>wäre</b> gestern <b>gekommen</b>, aber er hatte viel Arbeit.</span><span class="ua">Він прийшов би вчора, але у нього було багато роботи. (Konjunktiv II у минулому)</span>
+  </div>
+  <div class="rule-box"><strong>Konjunktiv II у минулому:</strong> hätte/wäre + Partizip II → "я б зробив" (якби раніше)</div>
+</div>
+
+<!-- 2.16 PASSIV -->
+<div class="section" id="passiv">
+  <h2><span class="num">2.16</span> Пасивний стан — Passiv</h2>
+  <p>Пасив використовується, коли важливо <strong>що відбувається</strong>, а не хто це робить.</p>
+  <div class="formula">werden + Partizip II</div>
+  <table>
+    <tr><th>Час</th><th>Конструкція</th><th>Приклад</th><th>Переклад</th></tr>
+    <tr><td>Präsens</td><td>wird + Part.II</td><td class="de">Das Buch <b>wird gelesen</b>.</td><td>Книгу читають.</td></tr>
+    <tr><td>Präteritum</td><td>wurde + Part.II</td><td class="de">Das Buch <b>wurde gelesen</b>.</td><td>Книгу читали.</td></tr>
+    <tr><td>Perfekt</td><td>ist … worden</td><td class="de">Das Buch <b>ist gelesen worden</b>.</td><td>Книгу прочитали.</td></tr>
+    <tr><td>Futur</td><td>wird … werden</td><td class="de">Das Buch <b>wird gelesen werden</b>.</td><td>Книгу будуть читати.</td></tr>
+  </table>
+  <div class="rule-box">Якщо потрібно вказати виконавця, використовується <strong>von + Dativ</strong>:<br>
+  Das Buch <b>wird von</b> dem Studenten gelesen. — Книгу читає студент.</div>
+</div>
+
+<!-- 2.17 NEBENSATZ -->
+<div class="section" id="nebensatz">
+  <h2><span class="num">2.17</span> Підрядні речення — Nebensätze</h2>
+  <div class="rule-box"><strong>Головне правило підрядного речення:</strong> дієслово йде в <strong>самий кінець</strong> підрядного речення, перед крапкою.</div>
+  <table>
+    <tr><th>Сполучник</th><th>Значення</th><th>Приклад</th><th>Переклад</th></tr>
+    <tr><td class="form">dass</td><td>що</td><td>Ich weiß, <b>dass</b> er kommt.</td><td>Я знаю, що він прийде.</td></tr>
+    <tr><td class="form">weil</td><td>тому що</td><td>Ich kann nicht, <b>weil</b> ich arbeiten muss.</td><td>Я не можу, тому що мушу працювати.</td></tr>
+    <tr><td class="form">wenn</td><td>якщо / коли</td><td>Ich komme, <b>wenn</b> ich Zeit habe.</td><td>Я прийду, якщо матиму час.</td></tr>
+    <tr><td class="form">ob</td><td>чи</td><td>Ich weiß nicht, <b>ob</b> er kommt.</td><td>Я не знаю, чи він прийде.</td></tr>
+    <tr><td class="form">damit</td><td>щоб (різні підмети)</td><td>Ich rufe an, <b>damit</b> du weißt.</td><td>Я дзвоню, щоб ти знав.</td></tr>
+    <tr><td class="form">bis</td><td>поки</td><td>Warte, <b>bis</b> er kommt.</td><td>Зачекай, поки він прийде.</td></tr>
+    <tr><td class="form">bevor</td><td>перш ніж</td><td><b>Bevor</b> wir gehen, essen wir.</td><td>Перш ніж іти, ми їмо.</td></tr>
+    <tr><td class="form">als</td><td>коли (одноразово в минулому)</td><td><b>Als</b> ich jung war, spielte ich.</td><td>Коли я був молодим, я грався.</td></tr>
+    <tr><td class="form">obwohl</td><td>хоча</td><td><b>Obwohl</b> es regnet, gehe ich.</td><td>Хоча іде дощ, я йду.</td></tr>
+    <tr><td class="form">nachdem</td><td>після того як</td><td><b>Nachdem</b> er gegessen hatte, schlief er.</td><td>Після того як поїв, він заснув.</td></tr>
+    <tr><td class="form">was / wo</td><td>що / де (відносні)</td><td>Das ist, <b>was</b> ich will.</td><td>Це те, що я хочу.</td></tr>
+  </table>
+  <div class="example-box">
+    <span class="de">Ich denke, <b>dass</b> wir früher ins Bett gehen <b>müssen</b>.</span>
+    <span class="ua">Я думаю, що нам треба лягти спати раніше.</span>
+  </div>
+  <div class="rule-box"><strong>Якщо підрядне речення стоїть ПЕРШИМ</strong> — у головному реченні дієслово одразу після коми (1-е місце зайняте підрядним, дієслово на 2-му): <em>Wenn das Wetter schlecht ist, <b>bleibe</b> ich zu Hause.</em></div>
+</div>
+
+<!-- 2.18 INFINITIV -->
+<div class="section" id="infinitiv">
+  <h2><span class="num">2.18</span> Інфінітивні конструкції</h2>
+  <div class="three-col">
+    <div>
+      <h3>um…zu + Infinitiv</h3>
+      <div class="rule-box">«для того щоб», «щоб»<br>Підмети в обох частинах збігаються!</div>
+      <div class="example-box">
+        <span class="de">Ich lerne, <b>um</b> die Prüfung <b>zu bestehen</b>.</span>
+        <span class="ua">Я навчаюся, щоб скласти іспит.</span>
+      </div>
+    </div>
+    <div>
+      <h3>(an)statt…zu + Infinitiv</h3>
+      <div class="rule-box">«замість того щоб»</div>
+      <div class="example-box">
+        <span class="de">Sie sieht fern, <b>statt</b> zu <b>lernen</b>.</span>
+        <span class="ua">Вона дивиться телевізор замість того щоб вчитися.</span>
+      </div>
+    </div>
+    <div>
+      <h3>ohne…zu + Infinitiv</h3>
+      <div class="rule-box">«не зробивши», «не…»</div>
+      <div class="example-box">
+        <span class="de">Sie ging, <b>ohne</b> ein Wort <b>zu sagen</b>.</span>
+        <span class="ua">Вона пішла, не сказавши ні слова.</span>
+      </div>
+    </div>
+  </div>
+  <h3>zu + Infinitiv (після певних дієслів)</h3>
+  <div class="rule-box">
+    Після: <b>versprechen</b> (обіцяти), <b>versuchen</b> (намагатися), <b>beginnen/anfangen</b> (починати), <b>aufhören</b> (закінчувати), <b>bitten</b> (просити), <b>brauchen</b> (потребувати), <b>vorhaben</b> (планувати), <b>vorschlagen</b> (пропонувати)…<br>
+    <em>Ich <b>versuche</b>, das Problem zu <b>lösen</b>.</em> — Я намагаюся вирішити проблему.
+  </div>
+  <div class="warn-box"><strong>З відокремлюваним префіксом</strong> частка <b>zu</b> ставиться між префіксом і дієсловом: aufmachen → <b>aufzumachen</b></div>
+</div>
+
+<!-- ===================== PART 3 ===================== -->
+<div class="part-header">📗 ЧАСТИНА 3 — НАПОВНЕННЯ РЕЧЕННЯ (іменники, артиклі, відмінки)</div>
+
+<!-- 3.1 KASUS -->
+<div class="section" id="kasus">
+  <h2><span class="num">3.1</span> Відмінки — Kasus</h2>
+  <table>
+    <tr><th>Відмінок</th><th>Питання</th><th>Прийменники</th><th>Роль у реченні</th></tr>
+    <tr><td class="form">Nominativ</td><td>wer? was? (хто? що?)</td><td>—</td><td>підмет</td></tr>
+    <tr><td class="form">Genitiv</td><td>wessen? (чий? чия?)</td><td>wegen, außerhalb, innerhalb, während, trotz</td><td>присвійний</td></tr>
+    <tr><td class="form">Dativ</td><td>wem? wo? wann? (кому? де? коли?)</td><td>mit, nach, aus, zu, von, bei, seit, gegenüber</td><td>непрямий додаток</td></tr>
+    <tr><td class="form">Akkusativ</td><td>wen? was? wohin? (кого? що? куди?)</td><td>um, gegen, für, ohne, durch, bis, entlang</td><td>прямий додаток</td></tr>
+  </table>
+  <div class="rule-box"><strong>Двозначні прийменники (Wechselpräpositionen)</strong> — Dativ (де? стан) або Akkusativ (куди? рух):<br>
+  an, auf, hinter, in, neben, über, unter, vor, zwischen<br>
+  <em>Ich sitze <b>in der</b> Küche (Dat. — де?) / Ich gehe <b>in die</b> Küche (Akk. — куди?)</em></div>
+</div>
+
+<!-- DECLENSION TABLE -->
+<div class="section" id="nominativ">
+  <h2><span class="num">3.2</span> Зведена таблиця відмінювання артиклів</h2>
+  <h3>Означений артикль (der/die/das)</h3>
+  <table>
+    <tr><th>Відмінок</th><th><span class="tag tag-m">м.р.</span> der</th><th><span class="tag tag-f">ж.р.</span> die</th><th><span class="tag tag-n">с.р.</span> das</th><th><span class="tag tag-pl">мн.ч.</span> die</th></tr>
+    <tr><td>Nominativ</td><td class="form">der</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+    <tr><td>Genitiv</td><td class="form">des (-s)</td><td class="form">der</td><td class="form">des (-s)</td><td class="form">der</td></tr>
+    <tr><td>Dativ</td><td class="form">dem</td><td class="form">der</td><td class="form">dem</td><td class="form">den (-n)</td></tr>
+    <tr><td>Akkusativ</td><td class="form">den</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+  </table>
+  <h3>Неозначений артикль (ein/eine/ein)</h3>
+  <table>
+    <tr><th>Відмінок</th><th><span class="tag tag-m">м.р.</span></th><th><span class="tag tag-f">ж.р.</span></th><th><span class="tag tag-n">с.р.</span></th><th><span class="tag tag-pl">мн.ч.</span></th></tr>
+    <tr><td>Nominativ</td><td class="form">ein</td><td class="form">eine</td><td class="form">ein</td><td class="form">—</td></tr>
+    <tr><td>Genitiv</td><td class="form">eines (-s)</td><td class="form">einer</td><td class="form">eines (-s)</td><td class="form">—</td></tr>
+    <tr><td>Dativ</td><td class="form">einem</td><td class="form">einer</td><td class="form">einem</td><td class="form">—</td></tr>
+    <tr><td>Akkusativ</td><td class="form">einen</td><td class="form">eine</td><td class="form">ein</td><td class="form">—</td></tr>
+  </table>
+  <h3>Особові займенники по відмінках</h3>
+  <table>
+    <tr><th>Особа</th><th>Nominativ</th><th>Akkusativ</th><th>Dativ</th></tr>
+    <tr><td>я</td><td>ich</td><td class="form">mich</td><td class="form">mir</td></tr>
+    <tr><td>ти</td><td>du</td><td class="form">dich</td><td class="form">dir</td></tr>
+    <tr><td>він</td><td>er</td><td class="form">ihn</td><td class="form">ihm</td></tr>
+    <tr><td>вона</td><td>sie</td><td class="form">sie</td><td class="form">ihr</td></tr>
+    <tr><td>воно</td><td>es</td><td class="form">es</td><td class="form">ihm</td></tr>
+    <tr><td>ми</td><td>wir</td><td class="form">uns</td><td class="form">uns</td></tr>
+    <tr><td>ви (група)</td><td>ihr</td><td class="form">euch</td><td class="form">euch</td></tr>
+    <tr><td>вони / Ви</td><td>sie / Sie</td><td class="form">sie / Sie</td><td class="form">ihnen / Ihnen</td></tr>
+  </table>
+</div>
+
+<!-- 3.3 NOMINATIV -->
+<div class="section">
+  <h2><span class="num">3.3</span> Nominativ — Називний відмінок</h2>
+  <p>Відповідає на питання <strong>хто? що?</strong> — це підмет речення.</p>
+  <div class="example-box">
+    <span class="de"><b>Der Mann</b> arbeitet. <b>Die Frau</b> schläft. <b>Das Kind</b> spielt.</span>
+    <span class="ua">Чоловік працює. Жінка спить. Дитина грається.</span>
+  </div>
+  <div class="rule-box"><strong>Прикметники після означеного артикля (Nom.):</strong><br>
+  der klung<b>e</b> Mann / die schön<b>e</b> Frau / das süß<b>e</b> Kind / die freundlich<b>en</b> Leute</div>
+</div>
+
+<!-- 3.4 AKKUSATIV -->
+<div class="section" id="akkusativ">
+  <h2><span class="num">3.4</span> Akkusativ — Знахідний відмінок</h2>
+  <p>Відповідає на питання <strong>кого? що? куди?</strong> — прямий об'єкт.</p>
+  <div class="rule-box"><strong>Змінюється тільки м.р.:</strong> der → <b>den</b>, ein → <b>einen</b></div>
+  <div class="example-box">
+    <span class="de">Ich sehe <b>den</b> Mann / <b>die</b> Frau / <b>das</b> Kind.</span>
+    <span class="ua">Я бачу чоловіка / жінку / дитину.</span>
+  </div>
+  <h3>Прийменники Akkusativ</h3>
+  <table>
+    <tr><th>Прийменник</th><th>Значення</th><th>Приклад</th></tr>
+    <tr><td class="form">für</td><td>для</td><td>Das ist <b>für dich</b>. — Це для тебе.</td></tr>
+    <tr><td class="form">gegen</td><td>проти / близько (часу)</td><td>Ich bin <b>gegen</b> deinen Vorschlag. / <b>gegen</b> 17 Uhr</td></tr>
+    <tr><td class="form">ohne</td><td>без</td><td>Ich gehe <b>ohne dich</b>. — Я іду без тебе.</td></tr>
+    <tr><td class="form">durch</td><td>через, по</td><td>Er fährt <b>durch</b> den Wald. — Він їде через ліс.</td></tr>
+    <tr><td class="form">um</td><td>навколо / о (час)</td><td>Der Film beginnt <b>um</b> 19 Uhr.</td></tr>
+    <tr><td class="form">bis</td><td>до (часу/місця)</td><td>Warte <b>bis</b> morgen.</td></tr>
+  </table>
+</div>
+
+<!-- 3.5 DATIV -->
+<div class="section" id="dativ">
+  <h2><span class="num">3.5</span> Dativ — Давальний відмінок</h2>
+  <p>Відповідає на питання <strong>кому? чому? де? коли?</strong></p>
+  <div class="rule-box"><strong>Характерні закінчення:</strong> м.р./с.р. → <b>-em</b>, ж.р. → <b>-er</b>, мн.ч. → <b>-en</b> (артикль) + <b>-n</b> (іменник)</div>
+  <table>
+    <tr><th></th><th>м.р. (dem)</th><th>ж.р. (der)</th><th>с.р. (dem)</th><th>мн.ч. (den+n)</th></tr>
+    <tr><td>означений</td><td class="form">dem</td><td class="form">der</td><td class="form">dem</td><td class="form">den … -n</td></tr>
+    <tr><td>неозначений</td><td class="form">einem</td><td class="form">einer</td><td class="form">einem</td><td class="form">—</td></tr>
+  </table>
+  <h3>Прийменники Dativ</h3>
+  <table>
+    <tr><th>Прийм.</th><th>Значення</th><th>Приклад</th></tr>
+    <tr><td class="form">mit</td><td>з (кимось / чимось)</td><td><b>mit dem</b> Bus / <b>mit</b> meiner Mutter</td></tr>
+    <tr><td class="form">nach</td><td>після / до (місто, країна)</td><td><b>nach</b> der Arbeit / <b>nach</b> Berlin</td></tr>
+    <tr><td class="form">aus</td><td>з (звідкись назовні)</td><td>Er kommt <b>aus</b> der Schule.</td></tr>
+    <tr><td class="form">zu</td><td>до (когось/чогось)</td><td>Ich gehe <b>zu</b> meiner Mutter. (<b>zum</b> = zu+dem, <b>zur</b> = zu+der)</td></tr>
+    <tr><td class="form">von</td><td>від / про</td><td>ein Geschenk <b>von</b> meinem Freund</td></tr>
+    <tr><td class="form">bei</td><td>у (когось), біля</td><td>Ich wohne <b>bei</b> meinen Eltern.</td></tr>
+    <tr><td class="form">seit</td><td>з (часу — і досі)</td><td>Ich lerne Deutsch <b>seit</b> 2 Jahren.</td></tr>
+    <tr><td class="form">gegenüber</td><td>навпроти</td><td>Das Hotel liegt <b>gegenüber</b> dem Bahnhof.</td></tr>
+  </table>
+</div>
+
+<!-- 3.6 GENITIV -->
+<div class="section" id="genitiv">
+  <h2><span class="num">3.6</span> Genitiv — Родовий відмінок</h2>
+  <p>Відповідає на питання <strong>чий? чия? чиє?</strong> Типовий для <em>письмової</em> мови.</p>
+  <table>
+    <tr><th></th><th>м.р. (des +s)</th><th>ж.р. (der)</th><th>с.р. (des +s)</th><th>мн.ч. (der)</th></tr>
+    <tr><td>означений</td><td class="form">des Vaters</td><td class="form">der Mutter</td><td class="form">des Kindes</td><td class="form">der Kinder</td></tr>
+    <tr><td>неозначений</td><td class="form">eines Vaters</td><td class="form">einer Mutter</td><td class="form">eines Kindes</td><td class="form">—</td></tr>
+  </table>
+  <div class="rule-box">М.р. та с.р. іменники додають закінчення <b>-s</b> або <b>-es</b>: das Haus → des Hause<b>s</b></div>
+  <div class="example-box">
+    <span class="de">Das ist das Auto <b>meines Bruders</b>.</span><span class="ua">Це машина мого брата.</span>
+  </div>
+  <div class="rule-box"><strong>Розмовна заміна:</strong> von + Dativ: Das ist das Auto <b>von</b> meinem Bruder.</div>
+</div>
+
+<!-- 3.8 STEIGERUNG -->
+<div class="section" id="steigerung">
+  <h2><span class="num">3.8</span> Ступені порівняння прикметників — Adjektiv Steigerung</h2>
+  <div class="three-col">
+    <div>
+      <h3>Positiv (вихідна)</h3>
+      <div class="formula">klein, groß, gut</div>
+    </div>
+    <div>
+      <h3>Komparativ (вищий)</h3>
+      <div class="formula">+ -er</div>
+      <div class="rule-box">Порівняння з чимось: <b>als</b><br>Er ist <b>größer als</b> ich.</div>
+    </div>
+    <div>
+      <h3>Superlativ (найвищий)</h3>
+      <div class="formula">am …-(e)sten</div>
+      <div class="rule-box">або: der/die/das + …-ste<br>Er ist <b>am größten</b>.</div>
+    </div>
+  </div>
+  <table>
+    <tr><th>Positiv</th><th>Значення</th><th>Komparativ</th><th>Superlativ</th></tr>
+    <tr><td>alt</td><td>старий</td><td class="form">älter</td><td class="form">am ältesten</td></tr>
+    <tr><td>groß</td><td>великий</td><td class="form">größer</td><td class="form">am größten</td></tr>
+    <tr><td>jung</td><td>молодий</td><td class="form">jünger</td><td class="form">am jüngsten</td></tr>
+    <tr><td>kalt</td><td>холодний</td><td class="form">kälter</td><td class="form">am kältesten</td></tr>
+    <tr><td>lang</td><td>довгий</td><td class="form">länger</td><td class="form">am längsten</td></tr>
+    <tr><td>kurz</td><td>короткий</td><td class="form">kürzer</td><td class="form">am kürzesten</td></tr>
+    <tr class="tbl-head"><td colspan="4">Неправильні форми</td></tr>
+    <tr><td>gut</td><td>добрий</td><td class="form">besser</td><td class="form">am besten</td></tr>
+    <tr><td>viel</td><td>багато</td><td class="form">mehr</td><td class="form">am meisten</td></tr>
+    <tr><td>gern</td><td>охоче</td><td class="form">lieber</td><td class="form">am liebsten</td></tr>
+    <tr><td>hoch</td><td>високий</td><td class="form">höher</td><td class="form">am höchsten</td></tr>
+  </table>
+</div>
+
+<!-- 3.9 RELATIVSATZ -->
+<div class="section" id="relativ">
+  <h2><span class="num">3.9</span> Відносні підрядні речення — Relativsätze</h2>
+  <p>Відносний займенник = артикль відповідного іменника (у потрібному відмінку). Дієслово — в кінці підрядного речення.</p>
+  <table>
+    <tr><th>Відмінок</th><th><span class="tag tag-m">м.р.</span></th><th><span class="tag tag-f">ж.р.</span></th><th><span class="tag tag-n">с.р.</span></th><th><span class="tag tag-pl">мн.ч.</span></th></tr>
+    <tr><td>Nominativ</td><td class="form">der</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+    <tr><td>Akkusativ</td><td class="form">den</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+    <tr><td>Dativ</td><td class="form">dem</td><td class="form">der</td><td class="form">dem</td><td class="form">denen</td></tr>
+  </table>
+  <div class="example-box">
+    <span class="de">Der Computer, <b>der</b> mir gefällt, kostet viel Geld.</span>
+    <span class="ua">Комп'ютер, який мені подобається, коштує багато грошей. (м.р., Nom.)</span>
+  </div>
+  <div class="example-box">
+    <span class="de">Mein Chef, <b>dem</b> ich danke, verlässt die Firma.</span>
+    <span class="ua">Мій шеф, якому я вдячний, покидає фірму. (м.р., Dat. — бо danken + Dativ)</span>
+  </div>
+  <div class="rule-box"><strong>З прийменником:</strong> Der Bus, <b>auf den</b> ich warte, kommt immer mit Verspätung.<br>
+  (warten auf + Akk. → відносний займенник у Akk.)</div>
+</div>
+
+<!-- 3.10 REKTION -->
+<div class="section" id="rektion">
+  <h2><span class="num">3.10</span> Управління дієсловом — Verberektion</h2>
+  <p>Деякі дієслова вимагають певний відмінок або прийменник. Треба вчити разом з дієсловом.</p>
+  <div class="rule-box">
+    <strong>Питання про неживі предмети:</strong> wo(r)- + прийменник: <em>Wofür? Worüber? Woran? Worauf?</em><br>
+    <strong>Питання про людей:</strong> прийменник + wen (Akk.) або wem (Dat.): <em>Mit wem? In wen? Von wem?</em><br>
+    <strong>Відповідь про предмет:</strong> da(r)- + прийменник: <em>dafür, darüber, daran, darauf</em>
+  </div>
+  <div class="example-box">
+    <span class="de"><b>Wofür</b> gibst du dein Geld aus? — Ich gebe es <b>dafür</b> aus.</span>
+    <span class="ua">На що ти витрачаєш гроші? — Я витрачаю їх на це.</span>
+  </div>
+</div>
+
+<!-- ===================== PART 4 ===================== -->
+<div class="part-header">📙 ЧАСТИНА 4 — ДОВІДКОВІ МАТЕРІАЛИ</div>
+
+<!-- NUMBERS -->
+<div class="section" id="zahlen">
+  <h2><span class="num">4.1</span> Числівники — Zahlen</h2>
+  <div class="two-col">
+    <table>
+      <tr><th>Число</th><th>Написання</th><th>Число</th><th>Написання</th></tr>
+      <tr><td>0</td><td>null</td><td>11</td><td>elf</td></tr>
+      <tr><td>1</td><td>eins</td><td>12</td><td>zwölf</td></tr>
+      <tr><td>2</td><td>zwei</td><td>13</td><td>dreizehn</td></tr>
+      <tr><td>3</td><td>drei</td><td>14</td><td>vierzehn</td></tr>
+      <tr><td>4</td><td>vier</td><td>20</td><td>zwanzig</td></tr>
+      <tr><td>5</td><td>fünf</td><td>30</td><td>dreißig</td></tr>
+      <tr><td>6</td><td>sechs</td><td>40</td><td>vierzig</td></tr>
+      <tr><td>7</td><td>sieben</td><td>50</td><td>fünfzig</td></tr>
+      <tr><td>8</td><td>acht</td><td>60</td><td>sechzig</td></tr>
+      <tr><td>9</td><td>neun</td><td>70</td><td>siebzig</td></tr>
+      <tr><td>10</td><td>zehn</td><td>100</td><td>hundert</td></tr>
+    </table>
+    <div>
+      <div class="rule-box">
+        <strong>13–19:</strong> [цифра] + zehn (3+10, 4+10…)<br>
+        <strong>21–99:</strong> [одиниці] und [десятки]: 21 = einundzwanzig, 35 = fünfunddreißig<br>
+        <strong>100+:</strong> hundert, zweihundert…<br>
+        <strong>1000:</strong> tausend
+      </div>
+      <h3>Порядкові числівники</h3>
+      <div class="rule-box">
+        <b>1–19:</b> + -t- + закінчення прикметника<br>
+        der <b>achte</b> Stock (8-й поверх)<br>
+        die <b>vierzehnte</b> Wohnung (14-а квартира)<br><br>
+        <b>20+:</b> + -st- + закінчення<br>
+        der <b>zwanzigste</b> Mai (20-е травня)<br><br>
+        <b>Винятки:</b> erst- (1-й), zweit- (2-й), dritt- (3-й), siebt- (7-й), acht- (8-й)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IRREGULAR VERBS -->
+<div class="section" id="unregel">
+  <h2><span class="num">4.3</span> Неправильні дієслова — Unregelmäßige Verben</h2>
+  <div class="two-col">
+    <table>
+      <tr><th>Infinitiv</th><th>Переклад</th><th>Präteritum</th><th>Partizip II</th></tr>
+      <tr class="tbl-head"><td colspan="4">Кореневий голосний: a (зміна на i/ie/u)</td></tr>
+      <tr><td>nehmen</td><td>брати</td><td>nahm</td><td>genommen</td></tr>
+      <tr><td>geben</td><td>давати</td><td>gab</td><td>gegeben</td></tr>
+      <tr><td>lesen</td><td>читати</td><td>las</td><td>gelesen</td></tr>
+      <tr><td>kommen</td><td>приходити</td><td>kam</td><td>gekommen</td></tr>
+      <tr><td>treffen</td><td>зустрічати</td><td>traf</td><td>getroffen</td></tr>
+      <tr><td>helfen</td><td>допомагати</td><td>half</td><td>geholfen</td></tr>
+      <tr><td>trinken</td><td>пити</td><td>trank</td><td>getrunken</td></tr>
+      <tr><td>stehen</td><td>стояти</td><td>stand</td><td>gestanden</td></tr>
+      <tr><td>verstehen</td><td>розуміти</td><td>verstand</td><td>verstanden</td></tr>
+      <tr><td>sitzen</td><td>сидіти</td><td>saß</td><td>gesessen</td></tr>
+      <tr><td>essen</td><td>їсти</td><td>aß</td><td>gegessen</td></tr>
+      <tr><td>sprechen</td><td>говорити</td><td>sprach</td><td>gesprochen</td></tr>
+      <tr><td>sehen</td><td>бачити</td><td>sah</td><td>gesehen</td></tr>
+      <tr><td>beginnen</td><td>починати</td><td>begann</td><td>begonnen</td></tr>
+      <tr><td>schwimmen</td><td>плавати</td><td>schwamm</td><td>geschwommen</td></tr>
+      <tr><td>finden</td><td>знаходити</td><td>fand</td><td>gefunden</td></tr>
+      <tr><td>bitten</td><td>просити</td><td>bat</td><td>gebeten</td></tr>
+    </table>
+    <table>
+      <tr><th>Infinitiv</th><th>Переклад</th><th>Präteritum</th><th>Partizip II</th></tr>
+      <tr class="tbl-head"><td colspan="4">Кореневий голосний: u</td></tr>
+      <tr><td>fahren</td><td>їхати</td><td>fuhr</td><td>gefahren</td></tr>
+      <tr><td>tragen</td><td>нести</td><td>trug</td><td>getragen</td></tr>
+      <tr><td>waschen</td><td>мити</td><td>wusch</td><td>gewaschen</td></tr>
+      <tr><td>einladen</td><td>запрошувати</td><td>lud ein</td><td>eingeladen</td></tr>
+      <tr class="tbl-head"><td colspan="4">Кореневий голосний: ie/i</td></tr>
+      <tr><td>schreiben</td><td>писати</td><td>schrieb</td><td>geschrieben</td></tr>
+      <tr><td>schlafen</td><td>спати</td><td>schlief</td><td>geschlafen</td></tr>
+      <tr><td>laufen</td><td>бігти</td><td>lief</td><td>gelaufen</td></tr>
+      <tr><td>lassen</td><td>залишати, дозволяти</td><td>ließ</td><td>gelassen</td></tr>
+      <tr><td>bleiben</td><td>залишатися</td><td>blieb</td><td>geblieben</td></tr>
+      <tr><td>fallen</td><td>падати</td><td>fiel</td><td>gefallen</td></tr>
+      <tr><td>gehen</td><td>іти</td><td>ging</td><td>gegangen</td></tr>
+      <tr class="tbl-head"><td colspan="4">Кореневий голосний: o</td></tr>
+      <tr><td>fliegen</td><td>летіти</td><td>flog</td><td>geflogen</td></tr>
+      <tr><td>ziehen</td><td>тягнути</td><td>zog</td><td>gezogen</td></tr>
+      <tr class="tbl-head"><td colspan="4">Допоміжні дієслова</td></tr>
+      <tr><td>haben</td><td>мати</td><td>hatte</td><td>gehabt</td></tr>
+      <tr><td>sein</td><td>бути</td><td>war</td><td>gewesen</td></tr>
+      <tr><td>werden</td><td>ставати</td><td>wurde</td><td>geworden</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- VERB REKTION -->
+<div class="section" id="verbrektion">
+  <h2><span class="num">4.4</span> Управління дієсловами — Verben mit Präpositionen</h2>
+  <div class="two-col">
+    <div>
+      <h3>Дієслова + Akkusativ</h3>
+      <table>
+        <tr><th>Дієслово + прийм.</th><th>Переклад</th></tr>
+        <tr><td>achten <b>auf</b> + Akk</td><td>звертати увагу на</td></tr>
+        <tr><td>antworten <b>auf</b> + Akk</td><td>відповідати на</td></tr>
+        <tr><td>sich ärgern <b>über</b> + Akk</td><td>злитися на</td></tr>
+        <tr><td>sich beschweren <b>über</b> + Akk</td><td>скаржитися на</td></tr>
+        <tr><td>bitten <b>um</b> + Akk</td><td>просити про</td></tr>
+        <tr><td>bezahlen <b>für</b> + Akk</td><td>платити за</td></tr>
+        <tr><td>diskutieren <b>über</b> + Akk</td><td>дискутувати про</td></tr>
+        <tr><td>denken <b>an</b> + Akk</td><td>думати про</td></tr>
+        <tr><td>hoffen <b>auf</b> + Akk</td><td>сподіватися на</td></tr>
+        <tr><td>sich interessieren <b>für</b> + Akk</td><td>цікавитися</td></tr>
+        <tr><td>sich kümmern <b>um</b> + Akk</td><td>піклуватися про</td></tr>
+        <tr><td>nachdenken <b>über</b> + Akk</td><td>роздумувати над</td></tr>
+        <tr><td>sich verlieben <b>in</b> + Akk</td><td>закохатися в</td></tr>
+        <tr><td>sprechen <b>über</b> + Akk</td><td>говорити про</td></tr>
+        <tr><td>warten <b>auf</b> + Akk</td><td>чекати на</td></tr>
+        <tr><td>sich freuen <b>auf</b> + Akk</td><td>радіти (чомусь майбутньому)</td></tr>
+        <tr><td>sich freuen <b>über</b> + Akk</td><td>радіти (тому, що сталось)</td></tr>
+        <tr><td>glauben <b>an</b> + Akk</td><td>вірити в</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Дієслова + Dativ</h3>
+      <table>
+        <tr><th>Дієслово + прийм.</th><th>Переклад</th></tr>
+        <tr><td>träumen <b>von</b> + Dat</td><td>мріяти про</td></tr>
+        <tr><td>gehören <b>zu</b> + Dat</td><td>належати до</td></tr>
+        <tr><td>arbeiten <b>an</b> + Dat</td><td>працювати над</td></tr>
+        <tr><td>sich beschäftigen <b>mit</b> + Dat</td><td>займатися</td></tr>
+        <tr><td>teilnehmen <b>an</b> + Dat</td><td>брати участь у</td></tr>
+        <tr><td>sich bedanken <b>bei</b> + Dat</td><td>дякувати</td></tr>
+        <tr><td>einladen <b>zu</b> + Dat</td><td>запрошувати на</td></tr>
+        <tr><td>erzählen <b>von</b> + Dat</td><td>розповідати про</td></tr>
+        <tr><td>fragen <b>nach</b> + Dat</td><td>питати про</td></tr>
+        <tr><td>gratulieren <b>zu</b> + Dat</td><td>вітати з</td></tr>
+        <tr><td>hören <b>von</b> + Dat</td><td>чути про</td></tr>
+        <tr><td>kommen <b>aus</b> + Dat</td><td>бути родом з</td></tr>
+        <tr><td>sprechen <b>von</b> + Dat</td><td>говорити про</td></tr>
+        <tr><td>telefonieren <b>mit</b> + Dat</td><td>розмовляти по телефону з</td></tr>
+        <tr><td>sich entschuldigen <b>bei</b> + Dat</td><td>вибачатися перед</td></tr>
+        <tr><td>passen <b>zu</b> + Dat</td><td>підходити до</td></tr>
+        <tr><td>sich vorbereiten <b>auf</b> + Akk</td><td>готуватися до</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADJEKTIVE + PRÄP + NOMEN + PRÄP -->
+<div class="section" id="adjprap">
+  <h2><span class="num">4.5–4.6</span> Прикметники та іменники з прийменниками</h2>
+  <div class="two-col">
+    <div>
+      <h3>Прикметники з прийменниками</h3>
+      <table>
+        <tr><th>Вираз</th><th>Переклад</th></tr>
+        <tr><td>böse sein <b>auf</b> + Akk</td><td>злитися на</td></tr>
+        <tr><td>enttäuscht sein <b>von</b> + Dat</td><td>бути розчарованим</td></tr>
+        <tr><td>fertig sein <b>mit</b> + Dat</td><td>бути готовим з</td></tr>
+        <tr><td>glücklich sein <b>über</b> + Akk</td><td>бути щасливим через</td></tr>
+        <tr><td>stolz sein <b>auf</b> + Akk</td><td>пишатися</td></tr>
+        <tr><td>überrascht sein <b>von</b> + Dat</td><td>бути здивованим</td></tr>
+        <tr><td>zufrieden sein <b>mit</b> + Dat</td><td>бути задоволеним</td></tr>
+        <tr><td>traurig sein <b>über</b> + Akk</td><td>сумувати через</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Іменники з прийменниками</h3>
+      <table>
+        <tr><th>Вираз</th><th>Переклад</th></tr>
+        <tr><td>Angst haben <b>vor</b> + Dat</td><td>боятися</td></tr>
+        <tr><td>Appetit haben <b>auf</b> + Akk</td><td>мати апетит до</td></tr>
+        <tr><td>Freude haben <b>an</b> + Dat</td><td>радіти від</td></tr>
+        <tr><td>Hoffnung haben <b>auf</b> + Akk</td><td>сподіватися на</td></tr>
+        <tr><td>Interesse haben <b>an</b> + Dat</td><td>мати інтерес до</td></tr>
+        <tr><td>Lust haben <b>auf</b> + Akk</td><td>мати бажання</td></tr>
+        <tr><td>Spaß haben <b>an</b> + Dat</td><td>отримувати задоволення від</td></tr>
+        <tr><td>Probleme haben <b>mit</b> + Dat</td><td>мати проблеми з</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE CARD -->
+<div class="section" style="border-left-color: var(--red); background: #fffaf0;">
+  <h2 style="color: var(--black);">⚡ Швидка шпаргалка — найважливіші правила</h2>
+  <div class="three-col">
+    <div class="green-box">
+      <strong>Порядок слів:</strong><br>
+      Дієслово = 2-е місце<br>
+      Інфінітив/Partizip II = в кінець<br>
+      Підрядне: дієслово в самий кінець
+    </div>
+    <div class="green-box">
+      <strong>Минулий час:</strong><br>
+      Розмова → Perfekt<br>
+      Письмо → Präteritum<br>
+      haben/sein + Partizip II
+    </div>
+    <div class="green-box">
+      <strong>Artiklі:</strong><br>
+      Nom.: der/die/das/die<br>
+      Akk.: den/die/das/die (зм. м.р.!)<br>
+      Dat.: dem/der/dem/den+n
+    </div>
+    <div class="green-box">
+      <strong>Sein у Perfekt:</strong><br>
+      Рух: gehen, fahren, kommen…<br>
+      Зміна стану: aufstehen, sterben…<br>
+      + sein, bleiben, werden
+    </div>
+    <div class="green-box">
+      <strong>Konjunktiv II:</strong><br>
+      würde + Infinitiv (слабкі)<br>
+      käme/ginge… (сильні)<br>
+      hätte/wäre/würde (основні)
+    </div>
+    <div class="green-box">
+      <strong>Підрядні сполучники:</strong><br>
+      dass, weil, wenn, ob, damit<br>
+      als, obwohl, bevor, bis<br>
+      → дієслово В КІНЕЦЬ!
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// Generate app icon via Canvas and inject manifest — single-file PWA setup
+(function () {
+  var canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 180;
+  var ctx = canvas.getContext('2d');
+
+  // Rounded background
+  var r = 24;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(180 - r, 0);
+  ctx.quadraticCurveTo(180, 0, 180, r);
+  ctx.lineTo(180, 180 - r);
+  ctx.quadraticCurveTo(180, 180, 180 - r, 180);
+  ctx.lineTo(r, 180);
+  ctx.quadraticCurveTo(0, 180, 0, 180 - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  var grad = ctx.createLinearGradient(0, 0, 180, 180);
+  grad.addColorStop(0, '#312e81');
+  grad.addColorStop(1, '#4338ca');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // German flag stripes at bottom
+  ctx.save();
+  ctx.clip(); // clip to rounded rect
+  ctx.fillStyle = '#111'; ctx.fillRect(0, 130, 180, 17);
+  ctx.fillStyle = '#cc0000'; ctx.fillRect(0, 147, 180, 16);
+  ctx.fillStyle = '#ffcc00'; ctx.fillRect(0, 163, 180, 17);
+  ctx.restore();
+
+  // "DE" text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 70px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('DE', 90, 72);
+
+  var iconDataUrl = canvas.toDataURL('image/png');
+
+  // Inject apple-touch-icon
+  var iconLink = document.createElement('link');
+  iconLink.rel = 'apple-touch-icon';
+  iconLink.href = iconDataUrl;
+  document.head.appendChild(iconLink);
+
+  // Inject Web App Manifest
+  var manifest = {
+    name: 'Шпаргалка з німецької',
+    short_name: 'Deutsch',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#312e81',
+    theme_color: '#312e81',
+    start_url: '.',
+    icons: [{ src: iconDataUrl, sizes: '180x180', type: 'image/png' }]
+  };
+  var manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+  document.head.appendChild(manifestLink);
+})();
+</script>
+</body>
+</html>
