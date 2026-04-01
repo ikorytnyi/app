@@ -406,8 +406,12 @@
       align-items: center;
       gap: 6px;
     }
-    .autoscroll-badge.visible { display: flex; }
+    .autoscroll-badge.visible { display: flex; cursor: pointer; }
+    .autoscroll-badge.visible:hover { background: rgba(245, 158, 11, 0.22); border-color: rgba(245, 158, 11, 0.5); }
     .autoscroll-badge svg { flex-shrink: 0; }
+    .autoscroll-text-hover { display: none; }
+    .autoscroll-badge.visible:hover .autoscroll-text-default { display: none; }
+    .autoscroll-badge.visible:hover .autoscroll-text-hover { display: inline; }
 
     /* ── Content panel ── */
     .content-panel {
@@ -619,6 +623,8 @@
     .rb-btn:hover { background: var(--surface2); color: var(--accent); }
     .rb-btn.rb-play { background: var(--accent); color: #fff; width: 36px; height: 36px; }
     .rb-btn.rb-play:hover { background: var(--accent-hover); }
+    .rb-btn.rb-autoscroll { display: none; color: #f59e0b; }
+    .rb-btn.rb-autoscroll.visible { display: flex; }
     .rb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
 
     /* Fullscreen toggle button in toolbar */
@@ -773,7 +779,8 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
       </svg>
-      Авто-прокрутку призупинено
+      <span class="autoscroll-text-default">Авто-прокрутку призупинено</span>
+      <span class="autoscroll-text-hover">Натисніть щоб відновити</span>
     </div>
 
     <!-- Progress -->
@@ -864,6 +871,11 @@
   </button>
   <div class="rb-sep"></div>
   <span class="rb-timer" id="rb-timer">00:00:00 / 00:00:00</span>
+  <button class="rb-btn rb-autoscroll" id="rb-autoscroll" title="Відновити авто-прокрутку">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </button>
   <div class="rb-sep"></div>
   <button class="rb-btn" id="rb-exit" title="Вийти з режиму читання (Esc)">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -946,6 +958,7 @@
   const rbPlay           = $('rb-play');
   const rbNext           = $('rb-next');
   const rbExit           = $('rb-exit');
+  const rbAutoscroll     = $('rb-autoscroll');
   const rbTimer          = $('rb-timer');
   const rbIconPlay       = $('rb-icon-play');
   const rbIconPause      = $('rb-icon-pause');
@@ -1083,7 +1096,18 @@
   function setAutoScroll(on) {
     state.autoScroll = on;
     autoscrollBadge.classList.toggle('visible', !on);
+    rbAutoscroll.classList.toggle('visible', !on);
   }
+
+  autoscrollBadge.addEventListener('click', () => {
+    setAutoScroll(true);
+    scrollToActive();
+  });
+
+  rbAutoscroll.addEventListener('click', () => {
+    setAutoScroll(true);
+    scrollToActive();
+  });
 
   // ── Speech synthesis ──
   const synth = window.speechSynthesis;
