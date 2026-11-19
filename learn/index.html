@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гід: шлях після 10 класу Realschule (Кельн)</title>
+<style>
+  :root{
+    --ink:#1b2430; --mut:#5b6675; --line:#dfe4ea; --bg2:#f5f7fa;
+    --blue:#2563eb; --blue-l:#dbe7ff; --green:#16a34a; --green-l:#dcf5e5;
+    --orange:#ea7a0c; --orange-l:#ffecd5; --red:#dc2626; --red-l:#fde2e2;
+    --purple:#7c3aed; --purple-l:#ece4ff; --gray:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  html{background:#fff}
+  body{margin:0;background:#fff;color:var(--ink);font:16px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1020px;margin:0 auto;padding:24px 16px 80px}
+  h1{font-size:2rem;line-height:1.2;margin:.2em 0 .3em}
+  h2{font-size:1.5rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--ink)}
+  h3{font-size:1.15rem;margin:1.6em 0 .4em}
+  h4{font-size:1rem;margin:1.2em 0 .3em;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+  p{margin:.5em 0}
+  a{color:var(--blue)}
+  .sub{color:var(--mut);margin:0 0 1em}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+  .chip{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.85rem;color:var(--mut)}
+  nav.toc{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:20px 0}
+  nav.toc ol{margin:.3em 0;padding-left:1.3em;columns:2;column-gap:30px}
+  nav.toc li{margin:.15em 0}
+  .box{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;margin:14px 0;background:#fff}
+  .box.info{border-left-color:var(--blue);background:#f4f8ff}
+  .box.ok{border-left-color:var(--green);background:#f3fbf6}
+  .box.warn{border-left-color:var(--orange);background:#fff8ee}
+  .box.bad{border-left-color:var(--red);background:#fff4f4}
+  .box.pdf{border-left-color:var(--purple);background:#f8f5ff}
+  .box b.t{display:block;margin-bottom:2px}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:6px;margin-right:6px;vertical-align:1px}
+  .tag.pdf{background:var(--purple-l);color:var(--purple)}
+  .tag.web{background:var(--blue-l);color:var(--blue)}
+  .tag.chk{background:var(--orange-l);color:#b45309}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.93rem}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--bg2)}
+  .tw{overflow-x:auto}
+  ol.steps{list-style:none;counter-reset:s;padding:0;margin:10px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:8px 12px 8px 52px;margin:8px 0;border:1px solid var(--line);border-radius:10px}
+  ol.steps>li::before{content:counter(s);position:absolute;left:12px;top:8px;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.steps>li b.d{display:inline-block;margin-right:6px;font-size:.8rem;background:var(--orange-l);color:#9a4a00;border-radius:6px;padding:0 7px}
+  ul{margin:.3em 0;padding-left:1.25em}
+  li{margin:.15em 0}
+  /* flow map */
+  .flow{display:grid;grid-template-columns:1fr 28px 1.25fr 28px 1fr 28px 1fr;gap:6px;align-items:stretch;margin:16px 0;font-size:.88rem}
+  .col{display:flex;flex-direction:column;gap:8px;justify-content:center}
+  .arr{display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:1.6rem}
+  .n{border-radius:10px;padding:8px 10px;border:2px solid;font-weight:600;line-height:1.3}
+  .n small{display:block;font-weight:400;color:var(--mut)}
+  .n.b{border-color:var(--blue);background:var(--blue-l)}
+  .n.g{border-color:var(--green);background:var(--green-l)}
+  .n.o{border-color:var(--orange);background:var(--orange-l)}
+  .n.p{border-color:var(--purple);background:var(--purple-l)}
+  .n.s{border-color:var(--ink);background:#fff}
+  @media(max-width:820px){.flow{grid-template-columns:1fr}.arr{transform:rotate(90deg);height:24px}nav.toc ol{columns:1}}
+  /* gantt */
+  .gantt{margin:14px 0}
+  .grow{display:grid;grid-template-columns:210px 1fr;gap:10px;align-items:center;margin:7px 0}
+  .glab{font-size:.85rem;line-height:1.25}
+  .gbar{display:flex;height:30px;border-radius:6px;overflow:hidden;background:repeating-linear-gradient(90deg,#fff 0,#fff calc(100%/9 - 1px),var(--line) calc(100%/9 - 1px),var(--line) calc(100%/9))}
+  .seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:600;white-space:nowrap;overflow:hidden}
+  .seg.b{background:var(--blue)} .seg.g{background:var(--green)} .seg.o{background:var(--orange)} .seg.p{background:var(--purple)} .seg.x{background:repeating-linear-gradient(45deg,#cbd5e1,#cbd5e1 6px,#e2e8f0 6px,#e2e8f0 12px);color:#334155} .seg.k{background:#0f766e}
+  .gaxis{display:grid;grid-template-columns:210px 1fr;gap:10px;font-size:.75rem;color:var(--mut)}
+  .gaxis div.t{display:grid;grid-template-columns:repeat(9,1fr)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;margin:6px 0 0}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  @media(max-width:700px){.grow,.gaxis{grid-template-columns:1fr}.seg{font-size:.6rem}}
+  /* calendar */
+  .cal{position:relative;margin:20px 0 10px;padding-top:6px}
+  .cmonths{display:grid;grid-template-columns:repeat(11,1fr);font-size:.72rem;color:var(--mut);border-bottom:2px solid var(--ink)}
+  .cmonths div{padding:2px 0;border-left:1px solid var(--line);text-align:center}
+  .crow{position:relative;height:34px;margin-top:8px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/11 - 1px),var(--line) calc(100%/11 - 1px),var(--line) calc(100%/11))}
+  .cb{position:absolute;top:3px;height:28px;border-radius:6px;color:#fff;font-size:.72rem;font-weight:600;display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden}
+  .cm{position:absolute;top:0;width:3px;height:34px;background:var(--red)}
+  .cml{position:absolute;top:36px;font-size:.68rem;color:var(--red);font-weight:700;white-space:nowrap;transform:translateX(-4px)}
+  .clab{font-size:.78rem;font-weight:700;margin-top:14px;color:var(--mut)}
+  @media(max-width:700px){.cb{font-size:.58rem;padding:0 3px}}
+  /* salary */
+  .sal{margin:12px 0}
+  .srow{display:grid;grid-template-columns:230px 1fr;gap:10px;align-items:center;margin:6px 0;font-size:.85rem}
+  .strack{position:relative;height:26px;background:var(--bg2);border-radius:6px}
+  .sbar{position:absolute;top:3px;height:20px;border-radius:5px;color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+  .sax{display:grid;grid-template-columns:230px 1fr;gap:10px;font-size:.72rem;color:var(--mut)}
+  .sax div.t{display:flex;justify-content:space-between}
+  @media(max-width:700px){.srow,.sax{grid-template-columns:1fr}}
+  .prof{border:2px solid var(--ink);border-radius:14px;padding:4px 18px 16px;margin:26px 0}
+  .prof>h2{border:0;margin-top:.6em}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff}
+  .card h4{margin-top:.2em}
+  .chk li{list-style:none;margin-left:-1.1em}
+  .chk li::before{content:"☐ ";color:var(--mut)}
+  footer{margin-top:40px;color:var(--mut);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}
+  @media print{.prof,.box,.card,table,ol.steps>li{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>🎓 Гід після 10 класу Realschule (Köln)</h1>
+<p class="sub">Maschinenbauingenieur · Mechatroniker · Elektroingenieur · Elektroniker — шляхи, терміни, школи, гроші та один універсальний план</p>
+<div class="meta">
+  <span class="chip">Складено: 19.11.2026</span>
+  <span class="chip">Початок наступного етапу: літо / серпень 2027</span>
+  <span class="chip">Школа: Henry-Ford-Realschule</span>
+  <span class="chip">Регіон: Köln та околиці</span>
+</div>
+
+<div class="box info" style="margin-top:18px">
+  <b class="t">Як читати гід — позначки джерел</b>
+  <span class="tag pdf">PDF</span> дані з ваших файлів (презентація «Berufsorientierung» 18.11.2026 і брошура «Weiterführende Schulen in Köln 2027/2028», з номерами сторінок брошури).<br>
+  <span class="tag web">WEB</span> дані з інтернету (список джерел у кінці).<br>
+  <span class="tag chk">ПЕРЕВІРИТИ</span> орієнтовні або суперечливі дані — перед рішенням звірити з офіційним сайтом.
+</div>
+
+<nav class="toc">
+  <b>Зміст</b>
+  <ol>
+    <li><a href="#tldr">Коротко: головне і що робити цього тижня</a></li>
+    <li><a href="#profile">Профіль сина і статус §24: що змінюють відповіді</a></li>
+    <li><a href="#map">Карта шляхів після 10 класу</a></li>
+    <li><a href="#cal">Календар: листопад 2026 → серпень 2027</a></li>
+    <li><a href="#univ">★ Універсальний план (найефективніший)</a></li>
+    <li><a href="#p1">Профіль 1: Mechatroniker</a></li>
+    <li><a href="#p2">Профіль 2: Elektroniker</a></li>
+    <li><a href="#p3">Профіль 3: Maschinenbauingenieur</a></li>
+    <li><a href="#p4">Профіль 4: Elektroingenieur</a></li>
+    <li><a href="#cmp">Порівняння: тривалість, гроші, вимоги</a></li>
+    <li><a href="#check">Чекліст по місяцях</a></li>
+    <li><a href="#q">Відповіді та відкриті питання</a></li>
+    <li><a href="#src">Джерела та застереження</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1 TLDR ============ -->
+<h2 id="tldr">1. Коротко: головне і що робити цього тижня</h2>
+
+<div class="box ok">
+  <b class="t">Головна думка (оновлено за вашими відповідями, 19.11.2026)</b>
+  Сильні сторони сина: <b>Mathe, Physik, Englisch — gut</b> і <b>Schwerpunktfach Technik (7–10 кл.) — gut</b>. Слабкі місця: <b>Deutsch — ausreichend</b>, нижче 3 також Erdkunde і Politik/Wirtschaft, немає 2-ї іноземної мови, технічних захоплень поза школою немає. З цього випливає: <b>найреалістичніший і найгнучкіший маршрут — технічна Ausbildung + Fachhochschulreife</b> (Doppelqualifikation або FOS 11+12), а <b>Berufliches Gymnasium / Abitur зараз — запасний варіант</b>, бо для нього потрібні Q-Vermerk (а з Deutsch 4 його не буде, поки оцінка не зросте до 3) і знання 2-ї іноземної мови. Першочергові завдання: <b>підтягнути Deutsch до «befriedigend»</b> і <b>реально спробувати техніку</b> (2–3 Schnupperpraktika) до подачі заявок. <b>Уточнення:</b> синові в Technik найбільше подобається <b>конструювання</b>. Найближчі до цього — Maschinenbau (Konstruktion) та механічні професії (Technischer Produktdesigner, Konstruktionsmechaniker, Industriemechaniker, Mechatroniker); Elektro-напрямки підходять слабше (див. розділ про конструювання).
+</div>
+
+<div class="two">
+  <div class="card">
+    <h4>Ключові дати <span class="tag pdf">PDF</span></h4>
+    <ul>
+      <li><b>25–26.11.2026</b> — Messe der Kölner Berufskollegs, MediaPark 6 (25.11: 9–16, 26.11: 9–15:30)</li>
+      <li><b>25.11.2026, 18–20 год</b> — вечір для батьків «Berufskollegs im Überblick» (там же)</li>
+      <li><b>12.02.2027</b> — видача Halbjahreszeugnis; з цієї дати відкривається подача на <i>schulbewerbung.de</i> (вікно уточнити)</li>
+      <li><b>літо 2027</b> — початок Ausbildung або нової школи</li>
+      <li><b>≈ 6 тижнів після початку 2027/28</b> — якщо немає ні місця в школі, ні Ausbildung, школа зобов'язана повідомити Schulamt</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Що зробити цього тижня</h4>
+    <ul class="chk">
+      <li>Піти з сином на <b>Messe 25.11 або 26.11</b> (MediaPark 6) і на батьківську доповідь 25.11 о 18:00</li>
+      <li>Домовитись з Klassenlehrer про <b>план підняття Deutsch до 3</b> (і дізнатись точні умови Q-Vermerk)</li>
+      <li>Знайти 2–3 <b>Schnupperpraktika</b> у техніці (Köln: фірми, Berufskollegs у Deutz) на грудень–лютий</li>
+      <li>Ще до підписання договору про Ausbildung — з'ясувати у <b>Ausländerbehörde</b> терміни дії §24 і перехід на Ausbildung (розділ 3a)</li>
+      <li>Відкрити карʼєрні сторінки роботодавців (Ford, RheinEnergie, Deutsche Bahn, Bayer…) і зберегти терміни подачі</li>
+      <li>Записатися на консультацію до Berufsberatung (Agentur für Arbeit) — безкоштовно</li>
+      <li>Відповісти на <a href="#q">питання в кінці</a> — тоді план можна уточнити</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box pdf">
+  <b class="t"><span class="tag pdf">PDF</span> Що сказала школа на батьківських зборах 18.11.2026</b>
+  Після 10 класу є <b>4 варіанти</b>: Ausbildung · Schule · Freiwilligendienst · Ausbildungsvorbereitung. Школа просить «<i>Denken Sie alle Wege mit</i>»: багато учнів ідуть «просто в школу заради Abitur» і втрачають місяці/роки, якщо цей шлях їм не підходить; ринок праці змінюється (AI, робототехніка), а <b>Ausbildung — повноцінний шлях</b> з практикою з першого дня та з можливістю отримати вищі шкільні кваліфікації й право на навчання у ВНЗ. Школа також стежить за Schulpflicht до 18 років.
+</div>
+
+<!-- ============ PROFILE ============ -->
+<h2 id="profile">Профіль сина і статус §24: що змінюють відповіді</h2>
+<div class="tw"><table>
+  <tr><th>Відповідь</th><th>Що це означає для вибору</th></tr>
+  <tr><td><b>Mathe, Physik, Englisch — gut</b></td><td>Сильна база для техніки: вступні тести фірм, Fachtheorie в Berufsschule, перші семестри Studium. Це головний козир.</td></tr>
+  <tr><td><b>Deutsch — ausreichend</b></td><td>
+    <b>1) Q-Vermerk.</b> За Bildungsportal NRW кваліфікацію до Oberstufe отримують, якщо в 10 класі <b>з усіх предметів мінімум «befriedigend»</b>; у Englisch і Mathe допускається на ступінь нижче (VV до §40 APO-S I). За свідоцтвом за 9 клас нижче «befriedigend» три предмети: <b>Deutsch, Erdkunde, Politik/Wirtschaft</b>. Тобто Q-Vermerk за цими оцінками <b>зараз не виходить</b>. Але рахуються оцінки 10 класу: щоб його отримати, усі три треба підняти до 3 до підсумкового Zeugnis (червень 2027), а Mathe/Physik/Englisch уже вищі за мінімум. Точні умови — §43 APO-S I; <span class="tag chk">ПЕРЕВІРИТИ</span> у Klassenlehrer.<br>
+    <b>2) Німецька — «наскрізний» предмет:</b> Doppelqualifikation додає Deutsch/Kommunikation, а в Berufsschule/на тестах/у звітах потрібен письмовий німецький. Підтягування — пріоритет №1.</td></tr>
+  <tr><td><b>2-ї іноземної мови немає</b></td><td>
+    • <b>Berufliches Gymnasium/Oberstufe:</b> за чинним APO-BK при вході в Qualifikationsphase потрібні знання 2-ї мови не нижче обсягу Einführungsphase, тобто її треба починати вчити в кл. 11. Чи можливий «новий старт» у конкретній школі і чи змінює це нова APO-GOSt з 01.08.2027, — <span class="tag chk">ПЕРЕВІРИТИ</span> у школі.<br>
+    • <b>Українська як 2-га мова</b> (син приїхав у 03.2022, ≈6,5 років навчання в українській школі: безперервне навчання в країні походження є однією з умов зарахування Herkunftssprache за Rundverfügung NRW, але правило сформульоване для нещодавно прибулих, тож чи діє воно через 4+ роки — питати школу/Bezirksregierung): у NRW можна підтвердити рідну (Herkunfts-)мову через <b>Sprachfeststellungsprüfung</b> (Bezirksregierung Köln; сторінка «Sprachprüfung/Feststellungsprüfung» і зразок екзамену з української у Schulministerium). Це <b>не автоматично</b>: потрібен іспит, заявку подає школа. Вікно подачі зазвичай до 15 вересня, іспити Sek I — березень; для навчального року 2026/27 термін, імовірно, вже минув. Для «чистого» Abitur в Oberstufe джерела розходяться (одне джерело каже, що заміна виключена), тому питання треба ставити школі й Bezirksregierung Köln. <span class="tag chk">ПЕРЕВІРИТИ</span><br>
+    • <b>FHR → FH:</b> 2-га мова <b>не потрібна</b>. FOS 13 без неї дає «fachgebundene Hochschulreife» — для технічних спеціальностей це, як правило, достатньо (перевіряти по конкретному вишу). <span class="tag pdf">PDF</span> с. 36, 60.</td></tr>
+  <tr><td><b>Schwerpunktfach Technik — gut</b></td><td>Хороший сигнал: технічний предмет у школі вдається. Разом з Mathe/Physik це підтримує вибір технічного напрямку. Але це шкільний предмет, а не доказ, що подобатиметься щоденна робота.</td></tr>
+  <tr><td><b>Практика в магазині; технічного хобі немає; Minecraft</b></td><td>Це не «заборона», але вибір між чотирма професіями поки не перевірений. Minecraft (redstone, будівництво, логіка) може показувати тягу до конструювання, але не замінює справжню спробу. Не підписувати Ausbildung «наосліп».</td></tr>
+  <tr><td><b>Techniker чи Ing. — ще не знає</b></td><td>Ідеально сходиться з маршрутом <b>Ausbildung + FHR</b>: рішення «Techniker / FH-Studium / FOS 13» ухвалюється аж через ≈3 роки, нічого не закривається.</td></tr>
+  <tr><td><b>Кельн краще, але готовий їздити</b></td><td>Основний кластер у Deutz: HBBK, WvS, NAOB (Eitorfer Str. 16–18). Роботодавці: Ford, RheinEnergie, DB, KVB; запасні — Leverkusen/Dormagen/Bonn.</td></tr>
+  <tr><td><b>Сертифіката C1 немає</b></td><td>Ford у FAQ вимагає C1 з підтвердженням. Спитати кожну фірму: чи достатньо Abschlusszeugnis німецької школи. Опційно — Goethe/telc C1 після підтягування Deutsch. <span class="tag chk">ПЕРЕВІРИТИ</span></td></tr>
+  <tr><td><b>17 років, §24</b></td><td>Див. блок 3a нижче: термін дії дозволу, перехід на Ausbildung, договір підписують батьки, Schulpflicht.</td></tr>
+</table></div>
+
+<h3>Уточнення: синові подобається «конструювання»</h3>
+<div class="tw"><table>
+  <tr><th>Мета</th><th>Наскільки відповідає «конструюванню»</th><th>Чому</th></tr>
+  <tr><td><b>Maschinenbauingenieur</b></td><td><b>Найкраще</b></td><td>Конструкторська робота (CAD, розрахунки, проєктування деталей і вузлів) — центральна частина спеціальності.</td></tr>
+  <tr><td><b>Mechatroniker</b></td><td><b>Добре</b> (механічна частина)</td><td>Збірка, налаштування, механіка + керування; конструювання скоріше «на практиці», а не за кресленням.</td></tr>
+  <tr><td><b>Elektroingenieur</b></td><td>Середньо/слабше</td><td>Проєктування схем і систем — це інше «конструювання», більше про схеми, мікроелектроніку й енергетику.</td></tr>
+  <tr><td><b>Elektroniker</b></td><td>Слабше</td><td>Монтаж, налагодження, автоматизація — менше проєктування деталей.</td></tr>
+</table></div>
+<p>Це моя оцінка за описом професій, а не доведений факт. Перевірити її можна лише практично (Schnupperpraktikum, CAD-проба).</p>
+
+<h4>Професії Ausbildung ближчі до конструювання (Köln) <span class="tag pdf">PDF</span></h4>
+<div class="tw"><table>
+  <tr><th>Професія</th><th>Berufsschule (Köln)</th><th>Примітка</th></tr>
+  <tr><td><b>Technische*r Produktdesigner*in</b></td><td>Hans-Böckler-Berufskolleg, Deutz (с. 90)</td><td>3D-CAD, креслення, конструювання деталей і вузлів. Мало місць — запитувати фірми й колеж.</td></tr>
+  <tr><td><b>Konstruktionsmechaniker*in</b></td><td>Berufskolleg Köln-Porz (с. 37, 78)</td><td>Металеві конструкції (зварювання, збірка).</td></tr>
+  <tr><td><b>Industriemechaniker*in</b></td><td>Hans-Böckler-BK (с. 90)</td><td>Виготовлення й ремонт машин; добра база для Maschinenbau.</td></tr>
+  <tr><td><b>Mechatroniker*in</b></td><td>Hans-Böckler-BK (с. 90)</td><td>Механіка + електрика + керування.</td></tr>
+  <tr><td><b>Technische*r Systemplaner*in</b></td><td>Berufskolleg Köln-Porz (с. 37)</td><td>Проєктування (Versorgungs- und Ausrüstungstechnik).</td></tr>
+  <tr><td><b>Школа: Höhere BFS Metalltechnik, 3 р.</b></td><td>Hans-Böckler-BK (с. 91)</td><td>«Maschinenbautechnische*r Assistent*in» + повна FHR; без оплати, але з системною підготовкою.</td></tr>
+</table></div>
+
+<div class="box info"><b class="t">Креслення є, 3D-CAD немає — це нормально</b> Технічне креслення (проєкції, розміри, читання креслень) — основа для Technischer Produktdesigner і Maschinenbau. CAD (3D-моделювання) викладають в Ausbildung і на початку Studium, тож його відсутність зараз не проблема. Важливіше, чи є у сина <b>просторове мислення</b> і чи подобається йому працювати з комп'ютерною моделлю. Це найпростіше перевірити CAD-пробою вдома (кілька годин у Tinkercad) і на Schnupperpraktikum.</div>
+
+<h4>Як перевірити «конструювання» до лютого 2027</h4>
+<ul>
+  <li><b>CAD-проба вдома (безкоштовно):</b> Tinkercad (у браузері), FreeCAD, Onshape/Fusion — наприклад, спроєктувати й роздрукувати/зібрати просту деталь. Якщо вдома є 3D-принтер або у школі є Technik-AG, використати їх.</li>
+  <li><b>Schnupperpraktika:</b> 1) відділ конструювання/CAD, 2) механічна майстерня (Industriemechaniker/Konstruktionsmechaniker), 3) Mechatroniker. Elektro — лише одна коротка проба для порівняння.</li>
+  <li><b>Спитати вчителя Technik:</b> що саме в конструюванні виходить краще (ескізи, 3D-моделювання, розрахунки, збірка).</li>
+</ul>
+<div class="box ok"><b class="t">Висновок</b> Для Maschinenbau найкраще підходить маршрут Ausbildung + FHR у механічній професії (Technischer Produktdesigner, Industriemechaniker, Konstruktionsmechaniker або Mechatroniker) → FH-Studium Maschinenbau (Konstruktion) або Techniker. Шкільні запасні варіанти: Höhere BFS Metalltechnik (HBBK) або FOS 11+12 Metalltechnik (NAOB).</div>
+
+<h3>Нова «програма-мінімум» до лютого 2027</h3>
+<ol class="steps">
+  <li><b class="d">зараз</b> <b>Deutsch, Erdkunde, Politik/Wirtschaft — до «3».</b> Розмова з вчителем про конкретні кроки (Aufsatz, Grammatik, читання), регулярна практика 20–30 хв/день, за потреби Nachhilfe / безкоштовна допомога (Bildungspaket, <span class="tag pdf">PDF</span> с. 130).</li>
+  <li><b class="d">грудень–лютий</b> <b>3 Schnupperpraktika</b>: конструкторський відділ/CAD (Technischer Produktdesigner), механічна майстерня (Industriemechaniker/Konstruktionsmechaniker), Mechatroniker; Elektro — одна коротка проба для порівняння. Після кожного — 5 питань: що сподобалось/ні, чи було цікаво вчитись, чи втомлююсь, чи хочу це 8 годин на день.</li>
+  <li><b class="d">грудень</b> <b>Check-U</b> (безкоштовний тест Agentur für Arbeit, check-u.de) + Berufsberatung з огляду на Deutsch і §24. <span class="tag chk">ПЕРЕВІРИТИ</span></li>
+  <li><b class="d">з 12.02.2027</b> Після Halbjahreszeugnis — остаточні пріоритети шкіл і подачі.</li>
+</ol>
+
+<h3 id="s24">3a. Статус §24 AufenthG, вік 17 років і Ausbildung <span class="tag web">WEB</span></h3>
+<div class="box warn">
+  <b class="t">Це інформаційний огляд, не юридична консультація</b>
+  <ul>
+    <li><b>Термін дії:</b> за вашою інформацією дозвіл діє <b>до 03.2028</b>, далі можливе подовження (це відповідає повідомленням про подовження захисту до 04.03.2028; офіційного німецького підтвердження в пошуку я не знайшла). Ausbildung триватиме до ≈початку 2031, тому в Ausländerbehörde Köln заздалегідь уточніть: як буде після 03.2028 і чи потрібен перехід на титул §16a. <span class="tag chk">ПЕРЕВІРИТИ</span></li>
+    <li><b>Робота/Ausbildung:</b> разом із дозволом діє «Erwerbstätigkeit erlaubt» — Ausbildung у фірмі на цій підставі можлива.</li>
+    <li><b>Перехід на Ausbildung-титул:</b> з §24 можливий Zweckwechsel на <b>§16a</b> (Ausbildungsplatz у визнаній професії ≥2 років + забезпечене утримання). Одночасно §24 і новий титул не діють; BMI радить починати рано. Деякі зміни — на розсуд Ausländerbehörde.</li>
+    <li><b>BAföG / BAB:</b> для §24 BAföG можливий за загальними умовами (інформація для студентів). Для школяра в Berufskolleg і для Berufsausbildungsbeihilfe (BAB) відповіді в пошуку не було — уточнити в BAföG-Amt та Agentur für Arbeit. <span class="tag chk">ПЕРЕВІРИТИ</span></li>
+    <li><b>Вік:</b> дата народження 03.09.2009 → 18 років виповниться <b>03.09.2027</b>. Тобто на старті Ausbildung (16.08–01.09.2027) син ще неповнолітній: договір підписують батьки, діє Jugendarbeitsschutz. Schulpflicht у Sek II триває до кінця навчального року, у якому виповнюється 18 (тобто до літа 2028); навчання в Berufsschule її виконує. <span class="tag pdf">PDF</span> с. 41, 141</li>
+    <li><b>Хто допоможе безкоштовно:</b> Jugendmigrationsdienst (JMD), Kommunales Integrationszentrum Köln (<span class="tag pdf">PDF</span> с. 125), Bildungsberatung міста Köln.</li>
+  </ul>
+</div>
+
+<!-- ============ 2 MAP ============ -->
+<h2 id="map">2. Карта шляхів після 10 класу</h2>
+<p>Схема зведена з брошури міста Кельн (с. 14–61) та презентації Agentur für Arbeit. Кольори: <span style="color:var(--orange)"><b>помаранчевий</b></span> — Ausbildung, <span style="color:var(--blue)"><b>синій</b></span> — школа, <span style="color:var(--green)"><b>зелений</b></span> — ВНЗ, <span style="color:var(--purple)"><b>фіолетовий</b></span> — підвищення кваліфікації без ВНЗ.</p>
+
+<div class="flow">
+  <div class="col">
+    <div class="n s">Realschule, 10 клас<small>FOR (Mittlerer Schulabschluss)<br>з Q-Vermerk — ще й доступ до Oberstufe</small></div>
+  </div>
+  <div class="arr">→</div>
+  <div class="col">
+    <div class="n o">Duale Ausbildung<small>2–3½ роки, фірма + Berufsschule, зарплата</small></div>
+    <div class="n o">+ Doppelqualifikation<small>Ausbildung ≥3 роки + FHR (+≈6 год/тиж. школи)</small></div>
+    <div class="n b">Berufliches Gymnasium (3 р.)<small>потрібен Q-Vermerk → Abitur</small></div>
+    <div class="n b">Gymnasium / Gesamtschule, Oberstufe<small>потрібен Q-Vermerk → Abitur</small></div>
+    <div class="n b">Höhere Berufsfachschule 2 / 3 р.<small>FHR (шкільна частина / повна)</small></div>
+    <div class="n b">Fachoberschule 11+12 (2 р.)<small>практика 3–4 дні/тиж. у кл. 11 → FHR</small></div>
+  </div>
+  <div class="arr">→</div>
+  <div class="col">
+    <div class="n o">Фахівець (Facharbeiter)<small>Mechatroniker, Elektroniker, Industriemechaniker…</small></div>
+    <div class="n b">FOS 13 (1 рік, після Ausbildung + FHR)<small>→ Abitur (за наявності 2-ї ін. мови) або fachgebunden</small></div>
+    <div class="n p">Fachschule für Technik (1–2 р.)<small>Staatl. gepr. Techniker = «Bachelor Professional»</small></div>
+  </div>
+  <div class="arr">→</div>
+  <div class="col">
+    <div class="n g">Fachhochschule (FH/TH)<small>B.Eng., достатньо FHR</small></div>
+    <div class="n g">Universität (RWTH тощо)<small>потрібне Abitur (або fachgebunden для певних спеціальностей)</small></div>
+    <div class="n g">Master<small>+1,5–2 роки, опційно</small></div>
+  </div>
+</div>
+
+<div class="box pdf">
+  <b class="t"><span class="tag pdf">PDF</span> Ключові правила (брошура с. 15–17, 34–36, 47–61)</b>
+  <ul>
+    <li><b>Oberstufe / Berufliches Gymnasium</b> потребують «Berechtigung zum Besuch der gymnasialen Oberstufe» (на Realschule — FOR з Qualifikationsvermerk). EF (кл. 11) + 2 роки Qualifikationsphase = 3 роки.</li>
+    <li><b>Höhere Berufsfachschule</b> (2 р.) дає лише шкільну частину FHR; повна FHR — після <b>6 місяців відповідної практики</b> або <b>2-річної Ausbildung</b>. 3-річна — одразу повна FHR + Berufsabschluss (напр. «Maschinenbautechnische/ Elektrotechnische Assistent*in»).</li>
+    <li><b>FOS 11+12</b>: кл. 11 — практика 3–4 дні/тиж. + 12 год. школи; кл. 12 — повний день. Потрібен <b>договір на річну практику</b> (можна донести до 1 червня).</li>
+    <li><b>Doppelqualifikation</b>: FOR + договір Ausbildung ≥3 роки + згода фірми; додатково ≈6 год./тиж. (Deutsch, Englisch, Mathe, природнича дисципліна).</li>
+    <li><b>FOS 13</b>: FHR + завершена Ausbildung → за 1 рік Abitur (без 2-ї ін. мови — лише fachgebundene Hochschulreife).</li>
+    <li><b>Oberstufenreform NRW</b>: нові правила діють для тих, хто піде в EF у 2027/28 (Abitur 2030) — зокрема 5-й екзаменаційний предмет.</li>
+  </ul>
+</div>
+
+<!-- ============ 3 CALENDAR ============ -->
+<h2 id="cal">3. Календар: листопад 2026 → серпень 2027</h2>
+<div class="cal">
+  <div class="cmonths">
+    <div>Лис 26</div><div>Гру</div><div>Січ 27</div><div>Лют</div><div>Бер</div><div>Кві</div><div>Тра</div><div>Чер</div><div>Лип</div><div>Сер</div><div>Вер</div>
+  </div>
+
+  <div class="clab">Ausbildung (фірми)</div>
+  <div class="crow">
+    <div class="cb" style="left:0;width:54.5%;background:var(--orange)">Активна подача заявок; тести, співбесіди</div>
+    <div class="cb" style="left:54.5%;width:36.4%;background:#f6b26b;color:#5b3200">Запасні варіанти, «Nachrücker»</div>
+    <div class="cm" style="left:90.9%"></div><div class="cml" style="left:90.9%">16.08–01.09 старт</div>
+  </div>
+
+  <div class="clab">Школа (schulbewerbung.de)</div>
+  <div class="crow">
+    <div class="cb" style="left:0;width:30%;background:var(--blue)">Messe, Beratung, вибір</div>
+    <div class="cm" style="left:30.9%"></div><div class="cml" style="left:30.9%">12.02 Zeugnis + портал</div>
+    <div class="cb" style="left:33%;width:30%;background:#6f9bf0">Подача (до 3 шкіл у пріоритеті)</div>
+    <div class="cb" style="left:70%;width:19%;background:var(--green)">Q-Vermerk, Abschluss</div>
+  </div>
+
+  <div class="clab">Орієнтація</div>
+  <div class="crow">
+    <div class="cm" style="left:3.6%"></div><div class="cml" style="left:3.6%">25–26.11 Messe</div>
+    <div class="cb" style="left:9%;width:36%;background:var(--purple)">Praktikum / Schnuppertage / Berufsberatung</div>
+    <div class="cm" style="left:63.6%"></div><div class="cml" style="left:63.6%">01.06 FOS: доказ практики</div>
+  </div>
+</div>
+<div style="height:30px"></div>
+
+<div class="tw"><table>
+  <tr><th>Дата</th><th>Подія</th><th>Дія</th></tr>
+  <tr><td>25–26.11.2026</td><td>Messe der Kölner Berufskollegs, MediaPark 6 <span class="tag pdf">PDF</span></td><td>Поговорити зі школами HBBK, WvS, NAOB, Porz, GSO; зібрати флаєри; на 25.11 о 18:00 — вечір для батьків</td></tr>
+  <tr><td>Листопад 2026 – лютий 2027</td><td>Основне вікно подачі на Ausbildung у великих фірмах <span class="tag chk">ПЕРЕВІРИТИ</span></td><td>Типово великі підприємства набирають за 9–12 місяців до старту. Оголошення на 2027 вже опубліковано (RheinEnergie — старт 30.08.2027; Deutsche Bahn Köln — 16.08. або 01.09.2027). Ford: терміни на сайті не знайшла — дивитися карʼєрний портал.</td></tr>
+  <tr><td>12.02.2027</td><td>Halbjahreszeugnis; відкривається вікно schulbewerbung.de <span class="tag pdf">PDF</span></td><td>Реєстрація через Startcode від школи (відбувається на уроці), e-mail дитини, актуальні дані батьків; до 3 шкіл за пріоритетом; завантажити документи</td></tr>
+  <tr><td>до 01.06.2027</td><td>FOS кл. 11: доказ практики <span class="tag pdf">PDF</span></td><td>Договір про річну практику, якщо обрано FOS</td></tr>
+  <tr><td>Червень–липень 2027</td><td>Підсумковий Zeugnis (FOR / FOR-Q)</td><td>Передати копію у фірму/Berufskolleg</td></tr>
+  <tr><td>16.08 – 01.09.2027</td><td>Типовий старт Ausbildung <span class="tag web">WEB</span></td><td>Перший день у фірмі + реєстрація в Berufsschule</td></tr>
+  <tr><td>≈6 тижнів після початку 2027/28</td><td>Контроль Schulpflicht <span class="tag pdf">PDF</span></td><td>Якщо немає місця — школа передає дані в Schulamt. Гарантуйте, що «план Б» є.</td></tr>
+</table></div>
+
+<!-- ============ 4 UNIVERSAL ============ -->
+<h2 id="univ">4. ★ Універсальний план (найефективніший)</h2>
+
+<div class="box ok">
+  <b class="t">Ідея плану</b>
+  Скласти маршрут так, щоб <b>без додаткових втрат часу</b> залишалися відкритими всі чотири цілі: Mechatroniker, Elektroniker, Maschinenbau-Ingenieur, Elektro-Ingenieur. Мінімізуємо ризик: подаємося <b>одночасно</b> на Ausbildung (фірми) та в школи (3 пріоритети), а рішення ухвалюємо за результатами співбесід і оцінок.
+</div>
+
+<h3>Крок 0. Реалістична самооцінка (Realitätscheck) <span class="tag pdf">PDF</span></h3>
+<p>Презентація Agentur für Arbeit пропонує чотири блоки питань. Обговоріть з сином разом:</p>
+<div class="tw"><table>
+  <tr><th>Школа</th><th>Сильні сторони</th><th>Інтереси</th><th>Цілі</th></tr>
+  <tr>
+    <td>Чи ходжу охоче в школу? Чи легко вчусь? Чи вчусь самостійно? Які оцінки?</td>
+    <td>Що вмію добре? Що менше виходить? У чому хочу покращитись?</td>
+    <td>Що цікавить (ремонти, схеми, програмування, 3D-друк)? Що ні?</td>
+    <td>Чого хочу досягти? Що для мене важливо? Як до цього дійти?</td>
+  </tr>
+</table></div>
+
+<h3>Крок 1. Дерево рішень (з урахуванням ваших відповідей)</h3>
+<div class="tw"><table>
+  <tr><th>Сценарій</th><th>Основний маршрут</th><th>Запасний</th></tr>
+  <tr>
+    <td><b>Основний сценарій: Mathe/Physik/Englisch gut, Deutsch 3–4, 2-ї мови немає, інтерес до техніки ще перевіряється</b></td>
+    <td><b>Б. Ausbildung (Technischer Produktdesigner / Mechatroniker / Industriemechaniker / Konstruktionsmechaniker; Elektroniker — якщо практика сподобається) + Doppelqualifikation (FHR)</b> → через ≈3,5 року: FH-Studium, Techniker або FOS 13 («fachgebunden») — вибір відкладений на потім</td>
+    <td>FOS 11+12 Metalltechnik/Fahrzeugtechnik (NAOB) → FHR за 2 роки; або 3-річна Höhere BFS «Technik» (Assistent + FHR)</td>
+  </tr>
+  <tr>
+    <td><b>Deutsch піднявся до 3, є Q-Vermerk, готовий вчити 2-гу мову з кл. 11, тягне до теорії</b></td>
+    <td><b>A. Berufliches Gymnasium «Technik»</b> (WvS: Elektrotechnik + Abitur) або Gymnasium/Gesamtschule → Abitur 2030</td>
+    <td>Ausbildung + FHR</td>
+  </tr>
+  <tr>
+    <td><b>Після Schnupperpraktika виявилось, що практика/«руками» не подобається</b> (до IT син інтересу не виявив)</td>
+    <td>Обговорити з Berufsberatung суміжні варіанти: Fahrzeugtechnik (Kfz-Mechatroniker, NAOB), Technischer Systemplaner/Produktdesigner, Anlagenmechaniker, або школа (Höhere BFS)</td>
+    <td>Ausbildungsvorbereitung — лише як крайній варіант</td>
+  </tr>
+</table></div>
+
+<h3>Чому «Ausbildung Mechatroniker + Doppelqualifikation» — універсальний «безпечна база»</h3>
+<ul>
+  <li>Mechatroniker поєднує <b>механіку + електрику + керування (PLC)</b> — відкриває і до Maschinenbau, і до Elektrotechnik, і до Mechatronik-Studium.</li>
+  <li>Дохід з першого дня і <b>практика</b>, яку цінують на вступі та в роботі; ризик «втратити роки» нижчий (саме про це попереджала школа).</li>
+  <li>Через Doppelqualifikation — Berufsabschluss + FHR за <b>3–3½ роки</b>, далі: FH-Studium, <b>або</b> FOS 13 → Abitur за 1 рік (<span class="tag pdf">PDF</span> с. 35–36), <b>або</b> Techniker.</li>
+  <li>Кожен варіант «додатково» — не замість: можна подаватися у фірми <i>і</i> в школи; остаточний вибір — навесні 2027.</li>
+</ul>
+<div class="box warn">
+  <b class="t">Обмеження, про які треба знати</b>
+  <ul>
+    <li>Doppelqualifikation <b>залежить від фірми</b> (її згода) і від кількості записаних у конкретному Berufskolleg — може змінюватися щороку. Питайте на співбесіді: «Чи підтримуєте Doppelqualifikation?» <span class="tag pdf">PDF</span></li>
+    <li>Навантаження: ≈6 год./тиж. додатково. Для дисциплінованого учня — посильно; для когось — забагато.</li>
+    <li>Ford у Кельні оголосив масштабні скорочення (за заголовком новин) — не покладайтеся на одного роботодавця; подавайтеся у 5–10 фірм. <span class="tag chk">ПЕРЕВІРИТИ</span></li>
+    <li>Ford у FAQ вимагає німецьку C1 з підтвердженням; сертифіката немає — запитати, чи приймається шкільний Zeugnis. З Deutsch «ausreichend» це додатковий ризик, тому розглядайте й інших роботодавців. <span class="tag chk">ПЕРЕВІРИТИ</span></li>
+  </ul>
+</div>
+
+<h3>Крок 2–10. Покрокова інструкція</h3>
+<ol class="steps">
+  <li><b class="d">листопад 2026</b> <b>Deutsch + Technik-Probe.</b> Домовитись з Klassenlehrer про підтягування Deutsch; запланувати 2–3 Schnupperpraktika (див. «Нова програма-мінімум»).</li>
+  <li><b class="d">листопад 2026</b> <b>Орієнтація.</b> Messe 25–26.11; поспілкуватися зі школами Deutz (HBBK, WvS, NAOB) і з фірмами; зафіксувати питання про Doppelqualifikation, мови, практику.</li>
+  <li><b class="d">листопад–грудень 2026</b> <b>Список цілей.</b> 8–12 фірм Köln/Leverkusen/Bonn: Ford, Bayer/Currenta/Lanxess, RheinEnergie, Deutsche Bahn, KVB, Deutz AG, TÜV Rheinland, Telekom, Siemens, середні фірми Maschinenbau. По кожній: професії, термін подачі, тест, вимога до мов. Також Handwerk (Elektrobetrieb) як запасний.</li>
+  <li><b class="d">грудень 2026</b> <b>Документи.</b> Резюме (Lebenslauf) 1 стор., Anschreiben, Zeugnis кл. 9 і 10 (Halbjahr), Praktikumsbescheinigung, сертифікати (мова, Informatik, Technik-AG), фото. Попросити вчителя/Praktikum-керівника про відгук.</li>
+  <li><b class="d">грудень 2026 – лютий 2027</b> <b>Подачі на Ausbildung</b> (Mechatroniker, Elektroniker f. Automatisierungs- und Systemtechnik / Betriebstechnik, Industriemechaniker). Підготовка до онлайн-тесту (Mathe, Physik, логіка, німецька).</li>
+  <li><b class="d">12.02.2027</b> <b>schulbewerbung.de.</b> Реєстрація (Startcode від школи); пріоритети, напр.: 1) WvS Berufl. Gymnasium Technik, 2) HBBK Höhere BFS Metalltechnik, 3) NAOB FOS Fahrzeugtechnik. Завантажити Zeugnis і документи.</li>
+  <li><b class="d">до підписання договору</b> <b>Статус.</b> Ausländerbehörde Köln: термін дії §24, §16a, які документи для фірми (блок 3a).</li>
+  <li><b class="d">березень–травень 2027</b> <b>Рішення.</b> Порівняти пропозиції: договір Ausbildung (3 роки+, Doppelqualifikation, оплата) vs шкільне місце. Не підписувати договір, не уточнивши Berufsschule (в NRW вільний вибір Berufsschule <span class="tag pdf">PDF</span> с. 36).</li>
+  <li><b class="d">червень 2027</b> <b>Завершення 10 класу.</b> Мінімізувати «просідання» оцінок — вони впливають на Q-Vermerk і на запасний варіант.</li>
+  <li><b class="d">серпень 2027</b> <b>Старт.</b> Ausbildung — реєстрація в Berufsschule (через schulbewerbung.de), заява на Doppelqualifikation.</li>
+  <li><b class="d">2028–2031</b> <b>Ausbildung + FHR.</b> Під кінець Ausbildung обрати: FH-Studium (WS 2031/32), FOS 13 → Abitur, Techniker, або <i>duales Studium/Aufstieg у фірмі</i>.</li>
+</ol>
+
+<h3>Горизонт: що буде наприкінці</h3>
+<p>Типові «виходи» плану Б: <b>Facharbeiter (≈3,5 р.) → Techniker / FH-Bachelor / Abitur</b>. Типові «виходи» плану A: <b>Abitur 2030 → FH, Uni, дуальний вступ</b>. Жоден із виходів не закриває Maschinenbau/Elektro-Studium.</p>
+
+<!-- ============ 5 PROFILES ============ -->
+
+<div class="prof" id="p1">
+<h2>5.1 Mechatroniker (Fachkraft) <small style="font-weight:400;color:var(--mut)">— Ausbildung</small></h2>
+<p><b>Що це:</b> монтаж, налаштування, діагностика та ремонт машин з механікою + електрикою + керуванням. Тривалість навчання ≈3,5 року (за різними джерелами 2,5–3,5) <span class="tag web">WEB</span>. Спеціалізація: Industrie (Ford, Bayer, DB), Kfz-Mechatroniker — інша Ausbildung (NAOB).</p>
+
+<div class="two">
+  <div class="card">
+    <h4>Шлях 1 · Ausbildung (рекомендований)</h4>
+    <ol>
+      <li>Заявки у фірми (Industrie) на Mechatroniker/in, Start 2027.</li>
+      <li>Berufsschule: <b>Hans-Böckler-Berufskolleg</b> (Köln-Deutz) — у списку Mechatroniker/in <span class="tag pdf">PDF</span> с. 90.</li>
+      <li>Doppelqualifikation → FHR: у брошурі (с. 37–38) серед колежів із DQ названі Porz, NAOB, GSO, WvS — <b>HBBK у цьому списку немає</b>, тож для Mechatroniker обовʼязково уточнити в HBBK/фірми, чи пропонується DQ (брошура: пропозиція змінюється щороку).</li>
+      <li>Після Ausbildung: робота; FH-Studium (Mechatronik/Maschinenbau/Elektrotechnik), FOS 13, Techniker, Industriemeister.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h4>Шлях 2 · Школа → Studium (Mechatronik)</h4>
+    <ul>
+      <li>FOS 11+12 «Metalltechnik» (Fahrzeugtechnik) у NAOB → FHR за 2 р.</li>
+      <li>3-річна Höhere BFS «Metalltechnik» (HBBK) → «Maschinenbautechnische Assistent*in» + FHR (с. 91).</li>
+      <li>Berufliches Gymnasium «Technik» (WvS) → Abitur + «Elektrotechnische Assistent*in».</li>
+      <li>FH: TH Köln, Hochschule Bonn-Rhein-Sieg, FH Aachen; Uni: RWTH Aachen. <span class="tag chk">ПЕРЕВІРИТИ</span> назви програм (Mechatronik / Maschinenbau / Elektrotechnik з профілем automation).</li>
+    </ul>
+  </div>
+</div>
+<div class="box warn"><b class="t">Реальність</b> Ford у Köln: за FAQ — 8 технічних Ausbildungsberufe і 3 dual-Studien; повідомлялося про масштабні скорочення персоналу — не ставити «усе на одну карту». <span class="tag chk">ПЕРЕВІРИТИ</span></div>
+</div>
+
+<div class="prof" id="p2">
+<h2>5.2 Elektroniker (Fachkraft) <small style="font-weight:400;color:var(--mut)">— Ausbildung</small></h2>
+<p><b>Що це:</b> електроустановки, автоматизація, привод, будівельна електрика. Актуальні назви: <i>Elektroniker/in für Automatisierungs- und Systemtechnik</i> (з 2021 замінила Automatisierungstechnik), <i>für Betriebstechnik</i>, <i>Energie- und Gebäudetechnik</i> (Handwerk), <i>Gebäude- und Infrastruktursysteme</i>, <i>Maschinen- und Antriebstechnik</i> <span class="tag web">WEB</span>.</p>
+<div class="two">
+  <div class="card">
+    <h4>Шлях 1 · Ausbildung</h4>
+    <ol>
+      <li>Industrie: Ford, RheinEnergie, Deutsche Bahn (Köln), Bayer, Currenta. Handwerk — менші електрофірми.</li>
+      <li>Berufsschule: <b>Werner-von-Siemens-Schule</b>, Eitorfer Str. 18, Köln-Deutz — Elektroniker за п’ятьма спеціалізаціями <span class="tag pdf">PDF</span> с. 38, 94.</li>
+      <li>Doppelqualifikation → FHR (Elektroniker — у брошурі є в переліку WvS).</li>
+      <li>Далі: FOS 12 B (1 р. після Ausbildung) → FHR; FOS 13 → Abitur; Fachschule für Technik (Elektrotechnik / Gebäudesystemtechnik) → Techniker.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h4>Приклади 2027 у Köln <span class="tag web">WEB</span></h4>
+    <ul>
+      <li>RheinEnergie: Industrieelektriker/in (старт 30.08.2027; оплата 1.368–1.418 € брутто/міс. за роками).</li>
+      <li>DB Bahnbau: Industrieelektriker/in (16.08.2027).</li>
+      <li>DB Energie: Elektroniker für Betriebstechnik (01.09.2027).</li>
+    </ul>
+    <p style="font-size:.85rem;color:var(--mut)">Кінцевих термінів подачі в результатах пошуку немає — дивитися сторінку кожної вакансії.</p>
+  </div>
+</div>
+<div class="box info"><b class="t">Особливість Elektrotechnik у Кельні <span class="tag pdf">PDF</span></b> У брошурі FOS 11+12 перелічена для Metalltechnik/Fahrzeugtechnik та Informatik, а для Elektrotechnik — FOS <b>12 B</b> і <b>13</b> (після Ausbildung). Тобто «швидкий» шлях до FHR через FOS 11+12 для електрики не показаний — тут сильніші Ausbildung + Doppelqualifikation або 2/3-річна Höhere BFS «Technik».</div>
+</div>
+
+<div class="prof" id="p3">
+<h2>5.3 Maschinenbauingenieur <small style="font-weight:400;color:var(--mut)">— Studium</small></h2>
+<p><b>Що це:</b> проєктування, розрахунки, виробництво, випробування машин (CAD, FEM, термодинаміка, матеріали). Ступінь: B.Eng./B.Sc. (3–3,5 роки), далі Master (1,5–2 роки). <span class="tag web">WEB</span></p>
+
+<h4>Три «дверей» до Studium</h4>
+<div class="tw"><table>
+  <tr><th>Маршрут</th><th>Шкільна частина</th><th>Куди далі</th><th>Роки до Bachelor</th></tr>
+  <tr><td><b>FH-швидкий</b></td><td>FOS 11+12 Metalltechnik (NAOB) <span class="tag pdf">PDF</span> с. 93<br>або 3-річна Höhere BFS Metalltechnik (HBBK) с. 91</td><td>FH (TH Köln Maschinenbau, Campus Deutz; H-BRS; FH Aachen)</td><td>5,5–6,5</td></tr>
+  <tr><td><b>Abitur</b></td><td>Berufliches Gymnasium Maschinenbautechnik (NAOB, ще очікує затвердження Bezirksregierung) / Ingenieurwissenschaften (Rheinische Akademie, платно, очікує затвердження) / Gymnasium</td><td>Uni (RWTH Aachen, Uni Duisburg-Essen…) або FH</td><td>6,5</td></tr>
+  <tr><td><b>Ausbildung → Studium</b></td><td>Industriemechaniker / Zerspanungsmechaniker / Werkzeugmechaniker / Technischer Produktdesigner / Mechatroniker (Berufsschule HBBK) або Konstruktionsmechaniker (Porz) + Doppelqualifikation, де пропонується</td><td>FH; або FOS 13 → Abitur → Uni; дуальні програми (Bayer — Maschinenbau; H-BRS «Maschinenbau kooperativ» з партнером Ford)</td><td>7–8</td></tr>
+</table></div>
+<div class="box info">
+  <b class="t">Практика перед навчанням</b> TH Köln: в одному зі студ. посібників згадано 12-тижневий Grundpraktikum; у деяких регламентах — інші терміни. <span class="tag chk">ПЕРЕВІРИТИ</span> актуальну Studienordnung Maschinenbau (TH Köln, Fakultät 09). Ausbildung зазвичай зараховується.
+</div>
+<div class="box warn"><b class="t">Ризик</b> Показники відсіву в технічних спеціальностях за різними джерелами — від ≈1/3 до ≈ половини студентів (залежить від року й типу вишу; комерційні сайти). <span class="tag chk">ПЕРЕВІРИТИ</span> Ausbildung + Techniker як альтернативу тримайте в голові. Математика і фізика — головний тест.</div>
+<h4>Типові кроки</h4>
+<ol class="steps">
+  <li>Визначити шлях (таблиця вище) до лютого 2027.</li>
+  <li>Підсилити математику/фізику (Nachhilfe, Khan Academy / Brückenkurs) із 2027.</li>
+  <li>За рік до вступу: заявка в вуз (для FH типово до 15.07; конкретику дивитися на сайті), Vorpraktikum.</li>
+</ol>
+</div>
+
+<div class="prof" id="p4">
+<h2>5.4 Elektroingenieur <small style="font-weight:400;color:var(--mut)">— Studium</small></h2>
+<p><b>Що це:</b> енергетика, силова/мікро-електроніка, автоматизація, зв'язок. Studium «Elektrotechnik / Elektrotechnik und Informationstechnik» (B.Eng./B.Sc.). Відсів — найвищий серед інженерних (до 40–45% на Uni за комерційним джерелом). <span class="tag chk">ПЕРЕВІРИТИ</span></p>
+<div class="tw"><table>
+  <tr><th>Маршрут</th><th>Шкільна частина (Köln)</th><th>Ціль</th></tr>
+  <tr><td><b>Abitur + фахова кваліфікація</b></td><td><b>WvS-Berufskolleg</b>: 3-річний Berufliches Gymnasium für Technik → «Elektrotechnische*r Assistent*in (Schwerpunkt Automatisierungstechnik)» + <b>Abitur</b> (с. 95)</td><td>Uni/FH, Elektrotechnik</td></tr>
+  <tr><td><b>FHR + Assistent</b></td><td>WvS: 3-річна Höhere BFS für Technik → «Elektrotechnische*r Assistent*in» + повна FHR (с. 95)<br>2-річна Höhere BFS (Energie- und Automatisierungstechnik) — шкільна частина FHR</td><td>FH (TH Köln, H-BRS)</td></tr>
+  <tr><td><b>Ausbildung → Studium</b></td><td>Elektroniker + Doppelqualifikation → FH; або FOS 12B → FHR, FOS 13 → Abitur (WvS)</td><td>FH / Uni; дуальні програми (напр. Bayer Elektrotechnik, Leverkusen/Dormagen, старт 1 вересня; H-BRS kooperativ)</td></tr>
+  <tr><td><b>Без Studium</b></td><td>Fachschule für Technik (Elektrotechnik, Gebäudesystemtechnik) → Techniker (Bachelor Professional)</td><td>Інженерні задачі без Bachelor</td></tr>
+</table></div>
+<div class="box ok"><b class="t">Чому 3-річний Berufliches Gymnasium у WvS — сильний варіант для цього профілю</b> Abitur + професійна кваліфікація + тематичні Leistungskurse; Studium відкрите у всіх напрямках. Потрібні Q-Vermerk (з Deutsch 4 зараз недосяжний), знання 2-ї іноземної мови для Qualifikationsphase і сильні Mathe/Physik (ці вже gut). Тож для вашого сина це <b>варіант №2</b>, якщо Deutsch буде 3 і 2-гу мову він готовий вчити. <span class="tag pdf">PDF</span> с. 53, 94–95</div>
+</div>
+
+<!-- ============ 6 COMPARE ============ -->
+<h2 id="cmp">6. Порівняння: тривалість, гроші, вимоги</h2>
+
+<h3>Тривалість маршрутів (до Bachelor/Techniker), роки від серпня 2027</h3>
+<div class="gantt">
+  <div class="gaxis"><div></div><div class="t"><span>2027</span><span>2028</span><span>2029</span><span>2030</span><span>2031</span><span>2032</span><span>2033</span><span>2034</span><span>2035</span></div></div>
+
+  <div class="grow"><div class="glab"><b>FOS 11+12 → FH-Bachelor</b><br><small>Metalltechnik, Informatik</small></div>
+    <div class="gbar"><div class="seg b" style="width:22.2%">FOS 2 р.</div><div class="seg g" style="width:38.9%">FH-Bachelor 3,5 р.</div></div></div>
+  <div class="grow"><div class="glab"><b>Berufl. Gymnasium → Bachelor</b><br><small>потрібні FOR-Q + 2-га мова; + Master</small></div>
+    <div class="gbar"><div class="seg b" style="width:33.3%">Abitur 3 р.</div><div class="seg g" style="width:38.9%">Bachelor 3,5 р.</div><div class="seg x" style="width:16.7%">Master (опц.)</div></div></div>
+  <div class="grow"><div class="glab"><b>3-річна Höhere BFS → FH</b><br><small>Assistent + FHR</small></div>
+    <div class="gbar"><div class="seg b" style="width:33.3%">Höhere BFS 3 р.</div><div class="seg g" style="width:38.9%">FH-Bachelor 3,5 р.</div></div></div>
+  <div class="grow"><div class="glab"><b>Ausbildung + FHR → FH</b><br><small>Doppelqualifikation; з доходом</small></div>
+    <div class="gbar"><div class="seg o" style="width:38.9%">Ausbildung + FHR 3,5 р.</div><div class="seg g" style="width:38.9%">FH-Bachelor 3,5 р.</div></div></div>
+  <div class="grow"><div class="glab"><b>Ausbildung → FOS 13 → Uni</b><br><small>Abitur через Berufskolleg</small></div>
+    <div class="gbar"><div class="seg o" style="width:38.9%">Ausbildung 3,5 р.</div><div class="seg p" style="width:11.1%">FOS 13</div><div class="seg g" style="width:38.9%">Bachelor 3,5 р.</div></div></div>
+  <div class="grow"><div class="glab"><b>Ausbildung → Techniker</b><br><small>Fachschule (2 р. у Vollzeit)</small></div>
+    <div class="gbar"><div class="seg o" style="width:38.9%">Ausbildung 3,5 р.</div><div class="seg k" style="width:11.1%">Praxis ≥1 р.</div><div class="seg p" style="width:22.2%">Techniker 2 р.</div></div></div>
+  <div class="legend">
+    <span><i style="background:var(--orange)"></i>Ausbildung (з оплатою)</span>
+    <span><i style="background:var(--blue)"></i>Школа</span>
+    <span><i style="background:var(--purple)"></i>Додаткова школа / Fachschule</span>
+    <span><i style="background:var(--green)"></i>Studium</span>
+    <span><i style="background:#0f766e"></i>Робота</span>
+  </div>
+  <p style="font-size:.85rem;color:var(--mut)">Тривалість студій округлена (6–7 семестрів). Master не включено до «базових» смуг. Перші чотири смуги — орієнтовні; точні вимоги вишу — на його сайті.</p>
+</div>
+
+<h3>Орієнтовний дохід (брутто, €/міс.) <span class="tag chk">ПЕРЕВІРИТИ</span></h3>
+<div class="sal">
+  <div class="sax"><div></div><div class="t"><span>1 000</span><span>2 000</span><span>3 000</span><span>4 000</span><span>5 000</span></div></div>
+  <div class="srow"><div>Azubi (Metall/Elektro NRW, 1–4 р.)</div><div class="strack"><div class="sbar" style="left:20%;width:5.5%;background:var(--orange)">1,2–1,45 тис.</div></div></div>
+  <div class="srow"><div>Facharbeiter, Mechatroniker/Elektroniker</div><div class="strack"><div class="sbar" style="left:45%;width:25%;background:var(--orange)">2,8–3,9 тис.</div></div></div>
+  <div class="srow"><div>Techniker (Mechatronik/Elektro)</div><div class="strack"><div class="sbar" style="left:70%;width:7%;background:var(--purple)">≈4,2 тис.</div></div></div>
+  <div class="srow"><div>Ingenieur B.Eng./B.Sc., початок (≈47–56 тис./рік)</div><div class="strack"><div class="sbar" style="left:72%;width:20%;background:var(--green)">≈3,9–4,7 тис.</div></div></div>
+  <p style="font-size:.85rem;color:var(--mut);margin-top:10px">Джерела: <a href="https://www.ausbildung.de/berufe/industriemechaniker/gehalt/">ausbildung.de</a> (1-й рік M+E NRW: 1.242 € з 01.04.2026), <a href="https://www.ihk.de/aachen/bildung/ausbildung/verguetungen-fuer-auszubildende-604598">IHK Aachen</a> (з 01/2025: 1.205–1.441 €), <a href="https://karrierebibel.de/mechatroniker/">Karrierebibel</a>, <a href="https://studyflix.de/ausbildung/berufe-ausbildung/mechatroniker-mechatronikerin-3348/gehalt">Studyflix</a>, <a href="https://www.jobvector.de/gehalt/maschinenbauingenieur/">Jobvector</a>, <a href="https://www.stepstone.de/gehalt/Ingenieur-in-Maschinenbau.html">StepStone</a>. Різні портали дають різні цифри — це лише порядок величин; точні тарифи брати з IG Metall / фірми.</p>
+</div>
+
+<h3>Зведена таблиця</h3>
+<div class="tw"><table>
+  <tr><th>Маршрут</th><th>Вхідна умова</th><th>Результат</th><th>Плюси</th><th>Мінуси</th></tr>
+  <tr><td><b>Ausbildung + Doppelqualifikation</b></td><td>FOR; контракт ≥3 р.; згода фірми</td><td>Фахівець + FHR</td><td>Гроші, практика, запасний вихід</td><td>Залежить від фірми; +6 год./тиж. школи</td></tr>
+  <tr><td><b>Berufliches Gymnasium Technik</b></td><td>FOR-Q (Berechtigung Oberstufe) + 2-га мова з кл. 11</td><td>Abitur (+ Assistent)</td><td>Усі спеціальності Uni; Assistent-диплом</td><td>3 р. без доходу; навантаження</td></tr>
+  <tr><td><b>Gymnasium/Gesamtschule Oberstufe</b></td><td>FOR-Q</td><td>Abitur</td><td>Широкий вибір LK</td><td>Менше профілю; нові правила 2027/28</td></tr>
+  <tr><td><b>Höhere BFS 3 р.</b></td><td>FOR</td><td>Assistent + FHR</td><td>Диплом + FH</td><td>Без оплати</td></tr>
+  <tr><td><b>FOS 11+12</b></td><td>FOR; річна практика</td><td>FHR</td><td>Найшвидше до FH</td><td>Потрібне місце практики; Elektro — немає у Köln у цій формі</td></tr>
+</table></div>
+
+<h3>Плюси/мінуси чотирьох цілей</h3>
+<div class="tw"><table>
+  <tr><th></th><th>Mechatroniker</th><th>Elektroniker</th><th>Maschinenbau-Ing.</th><th>Elektro-Ing.</th></tr>
+  <tr><td><b>Шлях</b></td><td>Ausbildung (3,5 р.)</td><td>Ausbildung (3,5 р.)</td><td>Studium (+ Abitur/FHR)</td><td>Studium (+ Abitur/FHR)</td></tr>
+  <tr><td><b>Профіль</b></td><td>Універсал: мех.+ел.+IT</td><td>Електро, автоматизація</td><td>Конструкції, виробництво</td><td>Енергетика, електроніка, керування</td></tr>
+  <tr><td><b>Ключові школи Köln</b></td><td>HBBK (Deutz)</td><td>WvS (Deutz)</td><td>HBBK, NAOB, Porz</td><td>WvS</td></tr>
+  <tr><td><b>Складність Studium</b></td><td>—</td><td>—</td><td>Висока (Mathe/Physik)</td><td>Дуже висока</td></tr>
+  <tr><td><b>Попит на ринку</b></td><td>Високий (дефіцит кадрів) <span class="tag web">WEB</span></td><td>Високий, особливо Automatisierung <span class="tag web">WEB</span></td><td>Стабільний</td><td>Стабільний, зростає (енергетика)</td></tr>
+</table></div>
+
+<h3>Фінансова підтримка <span class="tag pdf">PDF</span></h3>
+<p>Брошура міста (с. 130–140) містить розділи: Bildungspaket, фінансова допомога Auszubildende, BAföG, AsA flex, Schülerfahrkosten, Lernmittelfreiheit. Для навчання в Berufskolleg у Vollzeit та для Techniker (Aufstiegs-BAföG, <span class="tag web">WEB</span>) умови варто уточнити в Bildungsberatung (Amt für Schulentwicklung): bildungsberatung@stadt-koeln.de.</p>
+
+<!-- ============ 7 CHECKLIST ============ -->
+<h2 id="check">7. Чекліст по місяцях</h2>
+<div class="two">
+  <div class="card"><h4>Листопад 2026</h4><ul class="chk"><li>Messe 25–26.11 (+ батьки 25.11 о 18:00)</li><li>Обговорити Realitätscheck</li><li>Записатися на Berufsberatung</li></ul></div>
+  <div class="card"><h4>Грудень 2026</h4><ul class="chk"><li>Резюме + Anschreiben</li><li>Список з 8–12 фірм і школи</li><li>Практичний день / Praktikum на канікулах</li></ul></div>
+  <div class="card"><h4>Січень 2027</h4><ul class="chk"><li>Подачі на Ausbildung (3–5 фірм щотижня)</li><li>Підготовка до тесту (Mathe, Physik, логіка)</li><li>Співбесіди; питати про Doppelqualifikation</li></ul></div>
+  <div class="card"><h4>Лютий 2027</h4><ul class="chk"><li>12.02 Halbjahreszeugnis</li><li>Реєстрація schulbewerbung.de (Startcode)</li><li>До 3 пріоритетних шкіл</li></ul></div>
+  <div class="card"><h4>Березень–травень 2027</h4><ul class="chk"><li>Рішення по пропозиціях</li><li>Підписати Ausbildungsvertrag</li><li>Для FOS: договір практики до 01.06</li></ul></div>
+  <div class="card"><h4>Червень–серпень 2027</h4><ul class="chk"><li>Zeugnis; передати копії</li><li>Реєстрація Berufsschule</li><li>Старт 16.08–01.09</li></ul></div>
+</div>
+
+<!-- ============ 8 QUESTIONS ============ -->
+<h2 id="q">8. Відповіді та відкриті питання</h2>
+<div class="box ok"><b class="t">Отримано (19.11.2026)</b>
+Оцінки — з підсумкового свідоцтва за 9 клас: Mathe/Physik/Englisch — gut; <b>Schwerpunktfach Technik (7–10 кл.) — gut</b>; Deutsch — ausreichend; нижче «befriedigend» також Erdkunde і Politik/Wirtschaft. 2-ї мови немає; Betriebspraktikum у продуктовому магазині; технічного хобі немає (Minecraft); Techniker/Ing. — ще не знає; Кельн краще, але готовий їздити; C1-сертифіката немає; дата народження 03.09.2009; §24 до 03.2028 з можливим подовженням; приїзд у 03.2022, ≈6,5 років в українській школі; Deutsch-Förderung у школі невідома, Nachhilfe — готові; Schnupperpraktika — готовий; у Technik подобається <b>конструювання</b> (було креслення, без 3D-CAD); до IT (Fachinformatiker) інтересу «не дуже».</div>
+<p>Залишилось уточнити (по можливості):</p>
+<ol>
+  <li>Які оцінки <b>Halbjahr-Zeugnis 10 класу</b> з’являться 12.02.2027 — контрольна точка для Q-Vermerk.</li>
+  <li>Чи пропонує школа Deutsch-Förderung; запитати Klassenlehrer про Sprachfeststellungsprüfung з української та терміни.</li>
+  <li>Чи сподобається синові саме <b>3D-моделювання на комп'ютері</b> (у школі його не було)? Перевірити CAD-пробою вдома.</li>
+</ol>
+
+<!-- ============ 9 SOURCES ============ -->
+<h2 id="src">9. Джерела та застереження</h2>
+<h4>Файли</h4>
+<ul>
+  <li><code>learn_info.pdf</code> — фото 13 слайдів «Berufsorientierung» (Elterninformationsabend Jahrgang 10, 18.11.2026; Agentur für Arbeit «meinBERUF»).</li>
+  <li><code>weiterführende_schulen_sekundarstufe_ii_2027-2028.pdf</code> — брошура міста Кельн «Weiterführende Schulen in Köln, Sekundarstufe II 2027/2028» (157 с.).</li>
+</ul>
+<h4>Інтернет</h4>
+<ul>
+  <li><a href="https://www.ausbildung.de/berufe/industriemechaniker/gehalt/">ausbildung.de — оплата Industriemechaniker</a>; <a href="https://www.ihk.de/aachen/bildung/ausbildung/verguetungen-fuer-auszubildende-604598">IHK Aachen — Vergütungen</a>; <a href="https://www.make-it-in-germany.com/de/studium-ausbildung/ausbildung-in-deutschland/gefragte-ausbildungsberufe/elektro-und-metallgewerbe/print">Make it in Germany — Elektro/Metall</a></li>
+  <li><a href="https://karrierebibel.de/mechatroniker/">Karrierebibel — Mechatroniker</a>; <a href="https://studyflix.de/ausbildung/berufe-ausbildung/mechatroniker-mechatronikerin-3348/gehalt">Studyflix — Gehalt Mechatroniker</a>; <a href="https://www.arbeitsagentur.de/datei/metall-maschinenbau_ba147627.pdf">Agentur für Arbeit — Metall/Maschinenbau</a></li>
+  <li><a href="https://www.ausbildung.de/unternehmen/ford-aus-und-weiterbildung-e-v-1/faq/">Ford — FAQ Ausbildung</a>; <a href="https://www.ausbildung.de/stellen/ausbildung-industrieelektriker-in-2027-bei-deutsche-bahn-ag-in-koeln-b4f07db6-6b51-4f6c-a2f7-1b5ccf520eba/">Deutsche Bahn Köln — Industrieelektriker 2027</a>; <a href="https://www.stadt-koeln.de/politik-und-verwaltung/arbeiten-bei-der-stadt/ausbildung/ausbildungsangebot">Stadt Köln — Ausbildungsangebot</a></li>
+  <li><a href="https://www.bibb.de/dienst/ausbildungplus/de/dualer_studiengang/ansehen/11695">BIBB — Maschinenbau kooperativ (H-BRS)</a>; <a href="https://www.bayer.com/de-de/deutschland/karriere/dein-einstieg/ausbildung-und-duales-studium/duales-studium-elektrotechnik">Bayer — duales Studium Elektrotechnik</a>; <a href="https://www.daad.de/de/in-deutschland-studieren/hochschulen/alle-studiengaenge/detail/technische-hochschule-koeln-maschinenbau-campus-deutz-g342842/?hec-id=g342842">DAAD — TH Köln Maschinenbau</a></li>
+  <li><a href="https://www.schulministerium.nrw/hochschulzugang">Schulministerium NRW — Hochschulzugang</a>; <a href="https://www.ihk.de/koeln/hauptnavigation/ausbildung/ausbildungsthemen-von-a-bis-z/doppelqualifikation-fhr-und-ausbildung-5162668">IHK Köln — Doppelqualifikation</a>; <a href="https://www.schulministerium.nrw/themen/schulsystem/schulformen/realschule">Schulministerium — Realschule/Q-Vermerk</a></li>
+  <li><a href="https://www.jobvector.de/gehalt/maschinenbauingenieur/">Jobvector — Maschinenbauingenieur</a>; <a href="https://www.jobvector.de/gehalt/elektroingenieur/">Jobvector — Elektroingenieur</a>; <a href="https://www.stepstone.de/gehalt/Ingenieur-in-Maschinenbau.html">StepStone</a>; <a href="https://www.profiling-institut.de/studienabbruch/mint/">Profiling-Institut — Studienabbruch MINT</a>; <a href="https://www.kofa.de/media/Publikationen/Studien/Fachkraeftesituation_Metall-_und_Elektroberufen.pdf">KOFA — Fachkräftesituation</a></li>
+  <li><a href="https://www.bundesregierung.de/ib-de/ich-moechte-mehr-wissen-ueber/flucht-und-asyl/aufenthaltstitel-verlaengern-sich-erneut-automatisch-um-ein-jahr-bis-zum-4-maerz-2027-2266260">Bundesregierung — §24-Titel bis 04.03.2027</a>; <a href="https://migrando.de/news/aufenthaltstitel/ukraine-schutz-bis-2028-verlaengert-diese-neue-regel-gilt-bereits-jetzt/">Migrando — Bericht про 2028</a> (неофіційне); <a href="https://migrando.de/blog/aufenthaltstitel/leitfaden-wechsel-von-24-aufenthg-zu-einem-neuen-aufenthaltstitel/">Migrando — Wechsel von §24</a>; <a href="https://www.stwhh.de/fileadmin/user_upload/Internationales/__Downloads/Studierende_aus_dem_Ausland/Studierende_mit_Fluchthintergrund/BAfoeG_Studierende_Ukraine.pdf">Studierendenwerk Hamburg — BAföG für §24</a></li>
+  <li><a href="https://www.schulministerium.nrw/themen/schulsystem/schulformen/realschule">Schulministerium NRW — Qualifikationsvermerk</a>; <a href="https://www.schulministerium.nrw/system/files/media/document/file/apo_bk_neu.pdf">APO-BK — 2-га іноземна мова в Berufliches Gymnasium</a></li>
+  <li><a href="https://www.bra.nrw.de/themen/s/sprachpruefung/index.php">Bezirksregierung — Sprachprüfung/Feststellungsprüfung</a>; <a href="https://www.schulministerium.nrw/fragen-und-antworten-zur-sprachfeststellungspruefung">Schulministerium — FAQ Sprachfeststellungsprüfung</a>; <a href="https://www.standardsicherung.schulministerium.nrw.de/system/files/media/document/file/sfp_s_i_25_msa_lila_a_ukrainisch.pdf">зразок екзамену з української (MSA)</a></li>
+</ul>
+
+<div class="box bad">
+  <b class="t">Застереження</b>
+  Це інформаційний гід, а не юридична чи офіційна консультація. Дати й вимоги можуть змінюватися. Перед рішенням — звірити з: <a href="https://www.schulbewerbung-koeln.de">schulbewerbung-koeln.de</a>, школою сина, обраним Berufskolleg/фірмою/вишем, Berufsberatung Agentur für Arbeit та Bildungsberatung міста Köln (<code>bildungsberatung@stadt-koeln.de</code>). Дані про зарплати та відсів — з комерційних джерел, є лише орієнтиром. Деякі шкільні програми у брошурі позначені «vorbehaltlich der Genehmigung» (ще не затверджені).
+</div>
+
+<footer>Підготовлено 19.11.2026 на основі PDF-матеріалів школи/міста та відкритих джерел.</footer>
+</div>
+</body>
+</html>
